@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>CONTAINS</title>
+    <title>contains</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>CONTAINS</h1>
+      <h1>contains</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-          UMLAssociationEnd
+          <span class="node-icon staruml-icon icon-UMLDependency"></span>
+          UMLDependency
         </span>
         
       </section>
@@ -44,13 +44,10 @@
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionDataBase</a></span>
+          <span class="label label-info"><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionDataBase</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='04dd88784b1aedba7807451b0ae9b734.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionDataBase—SingleConnectionInterfaceStrategy)</a></span>
-        
-          <span>::</span>
-          <span class="label label-info"><a href='16da8ac3acec3f243b4f3b37b25da6c1.html'><span class='node-icon staruml-icon icon-UMLAssociationEnd'></span>CONTAINS</a></span>
+          <span class="label label-info"><a href='157b32688c5cf8229bca00df3f9e39a1.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>contains (PoolConnectionDataBase→PoolConnectionInterfaceStrategy)</a></span>
         
       </section>
 
@@ -77,6 +74,25 @@
 
       <!-- Directed Relationship -->
 
+      
+      <section class="element-list">
+        <table width="100%">
+          <tr>
+            <td width="50%">
+              <h3>Source</h3>
+              <ul class="nav nav-list">
+                <li><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionDataBase</a></a></li>
+              </ul>
+            </td>
+            <td width="50%">
+              <h3>Target</h3>
+              <ul class="nav nav-list">
+                <li><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></a></li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </section>
       
 
       <!-- Undirected Relationship -->
@@ -219,7 +235,7 @@
     
     <tr>
         <td>name</td>
-        <td>CONTAINS</td>
+        <td>contains</td>
     </tr>
     
     
@@ -233,8 +249,17 @@
     
     
     <tr>
-        <td>reference</td>
-        <td><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionDataBase</a></td>
+        <td>source</td>
+        <td><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionDataBase</a></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>target</td>
+        <td><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></td>
     </tr>
     
     
@@ -260,100 +285,8 @@
     
     
     <tr>
-        <td>navigable</td>
-        <td>unspecified</td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>aggregation</td>
-        <td>none</td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>multiplicity</td>
+        <td>mapping</td>
         <td></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>defaultValue</td>
-        <td></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isReadOnly</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isOrdered</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isUnique</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>qualifiers</td>
-        <td>
-            
-        </td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>ownerAttribute</td>
-        <td><span class='label label-info'>null</span></td>
     </tr>
     
     

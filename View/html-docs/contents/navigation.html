@@ -85,9 +85,9 @@
                                         
                                         <li>
                                             <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="b287d8cb012891236892d98b01f527d4.html" target="content" style="white-space: nowrap;">(DataBase→QueryInterface)</a>
+        <a href="86d21021ca056ce38a618ff8775c05ab.html" target="content" style="white-space: nowrap;">use (DataBase→LogEntryFactory)</a>
     
 </div>
                                             
@@ -118,6 +118,17 @@
 </div>
                                     
                                     <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="1e2c2e113ca7d3e746921c6f1e6b19b5.html" target="content" style="white-space: nowrap;">validate_fields_data</a>
+    
+</div>
+                                            
+                                        </li>
                                         
                                         
                                         <li>
@@ -176,17 +187,6 @@
                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
     
-        <a href="9076b544c5c8bb33ca037745f9eec803.html" target="content" style="white-space: nowrap;">(BaseLogger→LogInterface)</a>
-    
-</div>
-                                            
-                                        </li>
-                                        
-                                        
-                                        <li>
-                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
         <a href="e6b1e6360e58100c1548490ac4b82bdf.html" target="content" style="white-space: nowrap;">(BaseLogger→LoggerObserverInterface)</a>
     
 </div>
@@ -222,37 +222,11 @@
                                         
                                         <li>
                                             <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="04dd88784b1aedba7807451b0ae9b734.html" target="content" style="white-space: nowrap;">(SingleConnectionDataBase—SingleConnectionInterfaceStrategy)</a>
-    
-</div>
-                                            
-                                            <ol>
-                                                
-                                                
-                                                <li>
-                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="16da8ac3acec3f243b4f3b37b25da6c1.html" target="content" style="white-space: nowrap;">CONTAINS</a>
+        <a href="413308a0b7d7a6cf41235c030bc717df.html" target="content" style="white-space: nowrap;">contains (SingleConnectionDataBase→SingleConnectionInterfaceStrategy)</a>
     
 </div>
-                                                    
-                                                </li>
-                                                
-                                                
-                                                <li>
-                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="2f12e4a1b777a76318678e3eb6ba04a3.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                    
-                                                </li>
-                                                
-                                            </ol>
                                             
                                         </li>
                                         
@@ -307,9 +281,209 @@
                                         
                                         <li>
                                             <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="8d659cab8c7df08b304339656bca32b1.html" target="content" style="white-space: nowrap;">(PoolConnectionDataBase—PoolConnectionInterfaceStrategy)</a>
+        <a href="157b32688c5cf8229bca00df3f9e39a1.html" target="content" style="white-space: nowrap;">contains (PoolConnectionDataBase→PoolConnectionInterfaceStrategy)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="093056b60ee3458eabd9f807bd048694.html" target="content" style="white-space: nowrap;">(PoolConnectionDataBase→DataBase)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="927daab34ffcdae6299238dbf852e986.html" target="content" style="white-space: nowrap;">LogEntry</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="abc4b8ecf74151e5ffe8863de3423bc4.html" target="content" style="white-space: nowrap;">message_text</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="71ff57b14e491954eb61ecab05201495.html" target="content" style="white-space: nowrap;">source</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="4605d5424c0d8acf2b4bfc09f6a6e483.html" target="content" style="white-space: nowrap;">timestamp</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="13aa25bdcaaf565caa4b10b110d47cf8.html" target="content" style="white-space: nowrap;">get_level</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="9b39fc955b1d82901d068da59113b032.html" target="content" style="white-space: nowrap;">InfoLogEntry</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="8e5bac102a9c9c156c1bb3a8df67183d.html" target="content" style="white-space: nowrap;">(InfoLogEntry→LogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="6d5ecf1a4f7ef228874619dd48ab2196.html" target="content" style="white-space: nowrap;">WarningLogEntry</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="5f76468a5e7a83436e4fa815f7be11be.html" target="content" style="white-space: nowrap;">(WarningLogEntry→LogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="0a8da84e1c73430535537f282a8d983f.html" target="content" style="white-space: nowrap;">ErrorLogEntry</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="9a26574d0324e5678ac791ed5ff20a09.html" target="content" style="white-space: nowrap;">(ErrorLogEntry→LogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="06178ed155ce417ddc5e13b025915ebe.html" target="content" style="white-space: nowrap;">CriticalLogEntry</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="aeac0cb1653b92b8ba976edd4a136307.html" target="content" style="white-space: nowrap;">(CriticalLogEntry→LogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
+                                </li>
+                                
+                                
+                                <li>
+                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="8c7c5e1bd126dd8bad318a16c402b55e.html" target="content" style="white-space: nowrap;">LogEntryFactory</a>
+    
+</div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="d5ca9dd7c4e1a7e8aaf2d98b89ee8168.html" target="content" style="white-space: nowrap;">create_new_log_entry</a>
     
 </div>
                                             
@@ -318,9 +492,9 @@
                                                 
                                                 <li>
                                                     <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
     
-        <a href="863d80002120c1832aba805ad9dea941.html" target="content" style="white-space: nowrap;">CONTAINS</a>
+        <a href="dc001c117d1b9dc799f8b938fc3cacbf.html" target="content" style="white-space: nowrap;">level</a>
     
 </div>
                                                     
@@ -329,9 +503,31 @@
                                                 
                                                 <li>
                                                     <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
     
-        <a href="a00cb13064112d9588cca1882db749a3.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+        <a href="c528d0b7285e761feda20b3d1ab9818a.html" target="content" style="white-space: nowrap;">msg_text</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="b79fc28b2028ddde1a0c9304957352e7.html" target="content" style="white-space: nowrap;">source</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="a7fdf5e3b708459a3c21243f8a0ad53f.html" target="content" style="white-space: nowrap;">return_value</a>
     
 </div>
                                                     
@@ -344,9 +540,42 @@
                                         
                                         <li>
                                             <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="093056b60ee3458eabd9f807bd048694.html" target="content" style="white-space: nowrap;">(PoolConnectionDataBase→DataBase)</a>
+        <a href="6ee31bae93ea70e98a4d7ea9f943f3a4.html" target="content" style="white-space: nowrap;">create (LogEntryFactory→InfoLogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="2615cc8ecc61805dc73540e546c0a10d.html" target="content" style="white-space: nowrap;">create (LogEntryFactory→WarningLogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="0d2a3544e06d00701fdc340fa7ac4059.html" target="content" style="white-space: nowrap;">create (LogEntryFactory→ErrorLogEntry)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="3cc6dc05cfbe3966657a1e7f61080b91.html" target="content" style="white-space: nowrap;">create (LogEntryFactory→CriticalLogEntry)</a>
     
 </div>
                                             
@@ -376,20 +605,24 @@
     
 </div>
                                             
+                                            <ol>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="9daa79c95e6fc2a7b3cbcc403a2ace98.html" target="content" style="white-space: nowrap;">log_entry</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                            </ol>
+                                            
                                         </li>
                                         
                                     </ol>
-                                    
-                                </li>
-                                
-                                
-                                <li>
-                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterface"></span>
-    
-        <a href="ba8f0ce14bc919a58fb0ddf220b078b3.html" target="content" style="white-space: nowrap;">LogInterface</a>
-    
-</div>
                                     
                                 </li>
                                 
@@ -402,6 +635,54 @@
     
 </div>
                                     
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="353d313c408782f0a6feb2ec8788b770.html" target="content" style="white-space: nowrap;">execute_query_no_returns</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="5e23dd65c794c5a084711baf66ef9573.html" target="content" style="white-space: nowrap;">execute_query_returns_one</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="29d2a21688cf46f76e68cd29b7f3b663.html" target="content" style="white-space: nowrap;">execute_query_returns_many</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="4b92a10324e9b3e03f4fb997474ca280.html" target="content" style="white-space: nowrap;">execute_query_returns_all</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
                                 </li>
                                 
                                 
@@ -413,6 +694,21 @@
     
 </div>
                                     
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="bd9750e000748c228d44f838aa011f58.html" target="content" style="white-space: nowrap;">(SingleConnectionInterfaceStrategy→QueryInterface)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
+                                    
                                 </li>
                                 
                                 
@@ -423,6 +719,21 @@
         <a href="02d627461d522046f8d8882cad5fde90.html" target="content" style="white-space: nowrap;">PoolConnectionInterfaceStrategy</a>
     
 </div>
+                                    
+                                    <ol>
+                                        
+                                        
+                                        <li>
+                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="b2997b956297740f37300a2d4ea2e7d6.html" target="content" style="white-space: nowrap;">(PoolConnectionInterfaceStrategy→QueryInterface)</a>
+    
+</div>
+                                            
+                                        </li>
+                                        
+                                    </ol>
                                     
                                 </li>
                                 
@@ -446,6 +757,21 @@
     
 </div>
                                             
+                                            <ol>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="0392d590ef8decc4a9d2e57568f76951.html" target="content" style="white-space: nowrap;">new_observer</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                            </ol>
+                                            
                                         </li>
                                         
                                         
@@ -457,6 +783,21 @@
     
 </div>
                                             
+                                            <ol>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="9b30028a718a4dd824103d487fa603b5.html" target="content" style="white-space: nowrap;">removable_observer</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                            </ol>
+                                            
                                         </li>
                                         
                                         
@@ -467,6 +808,21 @@
         <a href="71db3593ef7ecc1daf7406017b33d04c.html" target="content" style="white-space: nowrap;">notify_logger_observers</a>
     
 </div>
+                                            
+                                            <ol>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="0077dcc92b9a27e196fe512a3ca416c9.html" target="content" style="white-space: nowrap;">log_entry</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
+                                            </ol>
                                             
                                         </li>
                                         

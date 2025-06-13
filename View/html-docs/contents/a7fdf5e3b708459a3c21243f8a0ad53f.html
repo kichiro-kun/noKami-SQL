@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>return_value</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,17 +19,15 @@
 
       <!-- Name Title -->
 
-      <h1>(unnamed)</h1>
+      <h1>return_value</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-          UMLAssociationEnd
+          <span class="node-icon staruml-icon icon-UMLParameter"></span>
+          UMLParameter
         </span>
-        
-          <span style="margin-left: 10px" class="alert alert-info">«»</span>
         
       </section>
 
@@ -46,13 +44,13 @@
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionDataBase</a></span>
+          <span class="label label-info"><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='8d659cab8c7df08b304339656bca32b1.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConnectionDataBase—PoolConnectionInterfaceStrategy)</a></span>
+          <span class="label label-info"><a href='d5ca9dd7c4e1a7e8aaf2d98b89ee8168.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>create_new_log_entry</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='a00cb13064112d9588cca1882db749a3.html'><span class='node-icon staruml-icon icon-UMLAssociationEnd'></span>(AssociationEnd)</a></span>
+          <span class="label label-info"><a href='a7fdf5e3b708459a3c21243f8a0ad53f.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></span>
         
       </section>
 
@@ -221,7 +219,7 @@
     
     <tr>
         <td>name</td>
-        <td></td>
+        <td>return_value</td>
     </tr>
     
     
@@ -229,15 +227,6 @@
     
     
     
-    
-    
-    
-    
-    
-    <tr>
-        <td>reference</td>
-        <td><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></td>
-    </tr>
     
     
     
@@ -245,7 +234,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td></td>
+        <td><span class='label label-info'>null</span></td>
     </tr>
     
     
@@ -261,9 +250,11 @@
     
     
     
+    
+    
     <tr>
-        <td>navigable</td>
-        <td>navigable</td>
+        <td>isStatic</td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -271,8 +262,26 @@
     
     
     <tr>
-        <td>aggregation</td>
-        <td>none</td>
+        <td>isLeaf</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>featureDirection</td>
+        <td>provided</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>type</td>
+        <td><a href='927daab34ffcdae6299238dbf852e986.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntry</a></td>
     </tr>
     
     
@@ -281,15 +290,6 @@
     
     <tr>
         <td>multiplicity</td>
-        <td></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>defaultValue</td>
         <td></td>
     </tr>
     
@@ -325,8 +325,8 @@
     
     
     <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
+        <td>defaultValue</td>
+        <td></td>
     </tr>
     
     
@@ -334,28 +334,8 @@
     
     
     <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>qualifiers</td>
-        <td>
-            
-        </td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>ownerAttribute</td>
-        <td><span class='label label-info'>null</span></td>
+        <td>direction</td>
+        <td>return</td>
     </tr>
     
     
@@ -369,6 +349,18 @@
       
 
       <!-- Constraints, Dependencies, Dependants -->
+
+      
+        
+        
+
+
+        
+        
+
+
+        
+        
 
       
 

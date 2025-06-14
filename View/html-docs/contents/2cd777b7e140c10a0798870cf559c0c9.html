@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>QueryInterface</title>
+    <title>FileExplorer</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>QueryInterface</h1>
+      <h1>FileExplorer</h1>
 
       <!-- Type and Stereotype -->
 
@@ -44,7 +44,7 @@
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='03d7d6bc986fb99c9c019d3f4fbcba48.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>QueryInterface</a></span>
+          <span class="label label-info"><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorer</a></span>
         
       </section>
 
@@ -110,9 +110,7 @@
     <h3>Implementing Classifiers</h3>
     <ul class="nav nav-list">
         
-        <li><a href='6a17b0046171be5287546a20e85c13d6.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterfaceStrategy</a></li>
-        
-        <li><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></li>
+        <li><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>BaseLogger</a></li>
         
     </ul>
 </section>
@@ -162,25 +160,37 @@
           
           <tr>
             <td>public</td>
-            <td><a href="353d313c408782f0a6feb2ec8788b770.html">execute_query_no_returns(query)</a></td>
+            <td><a href="f8d311079706ee79dcf659629f38dd46.html">create_file(path, file_name)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="5e23dd65c794c5a084711baf66ef9573.html">execute_query_returns_one(query)</a></td>
+            <td><a href="17d9e3800b80aa4522b112344590bdde.html">create_dir(path, dir_name)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="29d2a21688cf46f76e68cd29b7f3b663.html">execute_query_returns_many(query)</a></td>
+            <td><a href="22b00f4f104cd5216380023027f077f2.html">check_path_is_exists(path)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="4b92a10324e9b3e03f4fb997474ca280.html">execute_query_returns_all(query)</a></td>
+            <td><a href="5c8372fc9b6f1d7c688a9c86ccd647a4.html">read_from_file(path)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="f9a2836ce10a2ef36ced74ddc53b63ab.html">overwrite_file(path, content)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="c800ab8bd20e94c31d92784cf857c340.html">append_to_file(path, content)</a></td>
             <td></td>
           </tr>
           
@@ -284,7 +294,7 @@
     
     <tr>
         <td>name</td>
-        <td>QueryInterface</td>
+        <td>FileExplorer</td>
     </tr>
     
     
@@ -375,9 +385,7 @@
     <h3>Dependants</h3>
     <ul class="nav nav-list">
         
-        <li><a href='6a17b0046171be5287546a20e85c13d6.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterfaceStrategy</a></li>
-        
-        <li><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></li>
+        <li><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>BaseLogger</a></li>
         
     </ul>
 </section>
@@ -393,9 +401,7 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='bd9750e000748c228d44f838aa011f58.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(SingleConnectionInterfaceStrategy→QueryInterface)</a></li>
-        
-        <li><a href='b2997b956297740f37300a2d4ea2e7d6.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PoolConnectionInterfaceStrategy→QueryInterface)</a></li>
+        <li><a href='e376c61ef104af871a9dc089cc094df8.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→FileExplorer)</a></li>
         
     </ul>
 </section>

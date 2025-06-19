@@ -41,6 +41,9 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
@@ -115,6 +118,17 @@
       
         
         
+<section class="element-list">
+    <h3>Implementing Classifiers</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnectionStrategy</a></li>
+        
+        <li><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnectionStrategy</a></li>
+        
+    </ul>
+</section>
+
 
       
 
@@ -159,13 +173,13 @@
           </tr>
           
           <tr>
-            <td>private</td>
+            <td>public</td>
             <td><a href="61557aeec4f475baf2c32f1ee77e3775.html">initialize_pool(pool_config: PoolConfigDTO)</a></td>
             <td></td>
           </tr>
           
           <tr>
-            <td>private</td>
+            <td>public</td>
             <td><a href="4f66c22455a422d04acd9b2d3106b86b.html">deconstruct_pool()</a></td>
             <td></td>
           </tr>
@@ -390,6 +404,17 @@
 
         
         
+<section class="element-list">
+    <h3>Dependants</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnectionStrategy</a></li>
+        
+        <li><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnectionStrategy</a></li>
+        
+    </ul>
+</section>
+
 
       
 
@@ -403,7 +428,11 @@
         
         <li><a href='b2997b956297740f37300a2d4ea2e7d6.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PoolConnectionInterfaceStrategy→QueryInterface)</a></li>
         
-        <li><a href='b97719f916ae36f18b68723690828b04.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConnectionDataBase—PoolConnectionInterfaceStrategy)</a></li>
+        <li><a href='f7796b63a3da994ab9ae547162768b38.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConnectionDataBase—PoolConnectionInterfaceStrategy)</a></li>
+        
+        <li><a href='60d7aabe0e562d0d5dece8aa6a8de745.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLPoolConnectionStrategy→PoolConnectionInterfaceStrategy)</a></li>
+        
+        <li><a href='c82069cfd519f171c7b69932941fec09.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLPoolConnectionStrategy→PoolConnectionInterfaceStrategy)</a></li>
         
     </ul>
 </section>

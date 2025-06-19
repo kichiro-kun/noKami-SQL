@@ -29,6 +29,8 @@
           UMLClass
         </span>
         
+          <span style="margin-left: 10px" class="alert alert-info">«metaclass=ABCMeta»</span>
+        
       </section>
 
       <!-- Path -->
@@ -41,10 +43,13 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>BaseLogger</a></span>
+          <span class="label label-info"><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»BaseLogger</a></span>
         
       </section>
 
@@ -86,21 +91,21 @@
 
         
         
-
-
-        
-        
 <section class="element-list">
-    <h3>Interfaces</h3>
+    <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='95d425325a41327abff52e7e9fffd6c2.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerObserverInterface</a></li>
+        <li><a href='fb9b2bd866e06c195255341e5a7a4e26.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteBaseLoggerObserver</a></li>
         
-        <li><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorer</a></li>
+        <li><a href='e4832918f6a49febb4b44c07247afcbe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteBaseLogger</a></li>
         
     </ul>
 </section>
 
+
+
+        
+        
 
 
         
@@ -143,9 +148,47 @@
       <!-- Attributes -->
 
       
+      <section>
+        <h3>Attributes</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="210a4acc5c62b5bbef0f60b41757f758.html">perform_file_explorer</a></td>
+            <td><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorerInterfaceStrategy</a> </td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
+      
 
       <!-- Operations -->
 
+      
+      <section>
+        <h3>Operations</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="ef3c5caa98b89c21579cbcc325e41315.html">read_log_entry(log_entry: LogEntryDTO)</a></td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
       
 
       <!-- Receptions -->
@@ -259,7 +302,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td><span class='label label-info'>null</span></td>
+        <td>metaclass=ABCMeta</td>
     </tr>
     
     
@@ -340,9 +383,7 @@
     <h3>Dependencies</h3>
     <ul class="nav nav-list">
         
-        <li><a href='95d425325a41327abff52e7e9fffd6c2.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerObserverInterface</a></li>
-        
-        <li><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorer</a></li>
+        <li><a href='927daab34ffcdae6299238dbf852e986.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryDTO</a></li>
         
     </ul>
 </section>
@@ -362,9 +403,13 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='e6b1e6360e58100c1548490ac4b82bdf.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→LoggerObserverInterface)</a></li>
+        <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
         
-        <li><a href='e376c61ef104af871a9dc089cc094df8.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→FileExplorer)</a></li>
+        <li><a href='9a3477a6bc6a6895a3e35f6d91267a68.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteBaseLoggerObserver→BaseLogger)</a></li>
+        
+        <li><a href='8a759975ef5e953035a7ee6ab713ff21.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteBaseLogger→BaseLogger)</a></li>
+        
+        <li><a href='30ff5614d112d08a0843b4d55b01050c.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>processes (BaseLogger→LogEntryDTO)</a></li>
         
     </ul>
 </section>
@@ -379,9 +424,9 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='e6b1e6360e58100c1548490ac4b82bdf.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→LoggerObserverInterface)</a></li>
+        <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
         
-        <li><a href='e376c61ef104af871a9dc089cc094df8.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→FileExplorer)</a></li>
+        <li><a href='30ff5614d112d08a0843b4d55b01050c.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>processes (BaseLogger→LogEntryDTO)</a></li>
         
     </ul>
 </section>

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>LogEntry</title>
+    <title>LogEntryDTO</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>LogEntry</h1>
+      <h1>LogEntryDTO</h1>
 
       <!-- Type and Stereotype -->
 
@@ -41,10 +41,13 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='927daab34ffcdae6299238dbf852e986.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntry</a></span>
+          <span class="label label-info"><a href='927daab34ffcdae6299238dbf852e986.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryDTO</a></span>
         
       </section>
 
@@ -160,21 +163,21 @@
           <tr>
             <td>public</td>
             <td><a href="abc4b8ecf74151e5ffe8863de3423bc4.html">message_text</a></td>
-            <td><span class='label label-info'>none</span> </td>
+            <td>str </td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
             <td><a href="71ff57b14e491954eb61ecab05201495.html">source</a></td>
-            <td><span class='label label-info'>none</span> </td>
+            <td>str </td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="4605d5424c0d8acf2b4bfc09f6a6e483.html">timestamp</a></td>
-            <td><span class='label label-info'>none</span> </td>
+            <td><a href="4605d5424c0d8acf2b4bfc09f6a6e483.html">created_at</a></td>
+            <td>datetime </td>
             <td></td>
           </tr>
           
@@ -196,7 +199,7 @@
           
           <tr>
             <td>public</td>
-            <td><a href="13aa25bdcaaf565caa4b10b110d47cf8.html">get_level()</a></td>
+            <td><a href="13aa25bdcaaf565caa4b10b110d47cf8.html">get_level(): str</a></td>
             <td></td>
           </tr>
           
@@ -300,7 +303,7 @@
     
     <tr>
         <td>name</td>
-        <td>LogEntry</td>
+        <td>LogEntryDTO</td>
     </tr>
     
     
@@ -396,6 +399,15 @@
 
         
         
+<section class="element-list">
+    <h3>Dependants</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»BaseLogger</a></li>
+        
+    </ul>
+</section>
+
 
       
 
@@ -407,13 +419,15 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='8e5bac102a9c9c156c1bb3a8df67183d.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(InfoLogEntry→LogEntry)</a></li>
+        <li><a href='8e5bac102a9c9c156c1bb3a8df67183d.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(InfoLogEntry→LogEntryDTO)</a></li>
         
-        <li><a href='5f76468a5e7a83436e4fa815f7be11be.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(WarningLogEntry→LogEntry)</a></li>
+        <li><a href='5f76468a5e7a83436e4fa815f7be11be.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(WarningLogEntry→LogEntryDTO)</a></li>
         
-        <li><a href='9a26574d0324e5678ac791ed5ff20a09.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ErrorLogEntry→LogEntry)</a></li>
+        <li><a href='9a26574d0324e5678ac791ed5ff20a09.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ErrorLogEntry→LogEntryDTO)</a></li>
         
-        <li><a href='aeac0cb1653b92b8ba976edd4a136307.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(CriticalLogEntry→LogEntry)</a></li>
+        <li><a href='aeac0cb1653b92b8ba976edd4a136307.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(CriticalLogEntry→LogEntryDTO)</a></li>
+        
+        <li><a href='30ff5614d112d08a0843b4d55b01050c.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>processes (BaseLogger→LogEntryDTO)</a></li>
         
     </ul>
 </section>

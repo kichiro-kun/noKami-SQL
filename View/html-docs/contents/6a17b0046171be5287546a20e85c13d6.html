@@ -41,6 +41,9 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
@@ -115,6 +118,17 @@
       
         
         
+<section class="element-list">
+    <h3>Implementing Classifiers</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='7e15ed162b39af2e4ca75436100a7488.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLSingleConnectionStrategy</a></li>
+        
+        <li><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLSingleConnectionStrategy</a></li>
+        
+    </ul>
+</section>
+
 
       
 
@@ -159,13 +173,13 @@
           </tr>
           
           <tr>
-            <td>private</td>
+            <td>public</td>
             <td><a href="1045a2be84e1ababdb2a78ac9a3529bf.html">initialize_connection(connection_config)</a></td>
             <td></td>
           </tr>
           
           <tr>
-            <td>private</td>
+            <td>public</td>
             <td><a href="dda32ed654830533ce5246ff4e4154e1.html">deconstruct_connection()</a></td>
             <td></td>
           </tr>
@@ -384,6 +398,17 @@
 
         
         
+<section class="element-list">
+    <h3>Dependants</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='7e15ed162b39af2e4ca75436100a7488.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLSingleConnectionStrategy</a></li>
+        
+        <li><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLSingleConnectionStrategy</a></li>
+        
+    </ul>
+</section>
+
 
       
 
@@ -397,7 +422,11 @@
         
         <li><a href='bd9750e000748c228d44f838aa011f58.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(SingleConnectionInterfaceStrategy→QueryInterface)</a></li>
         
-        <li><a href='f49bfbe1f5fafff9676ec9e7a3dde8cd.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionDataBase—SingleConnectionInterfaceStrategy)</a></li>
+        <li><a href='ae31a6d16ef3a192f7349a91224a1019.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (SingleConnectionDataBase—SingleConnectionInterfaceStrategy)</a></li>
+        
+        <li><a href='ae390331ce577d71c2be238a6831cfe9.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLSingleConnectionStrategy→SingleConnectionInterfaceStrategy)</a></li>
+        
+        <li><a href='6db81a2e6157367961ceb677a67b61e8.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLSingleConnectionStrategy→SingleConnectionInterfaceStrategy)</a></li>
         
     </ul>
 </section>

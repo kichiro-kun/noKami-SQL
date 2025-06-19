@@ -41,6 +41,9 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
@@ -86,6 +89,17 @@
 
         
         
+<section class="element-list">
+    <h3>Specialized Elements</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='e7e151db4788b56cada9d8adad0fb3d0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConfigDTO</a></li>
+        
+        <li><a href='60de25958f087da18120aeb3a5992cc6.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConfigDTO</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -132,6 +146,26 @@
       <!-- Attributes -->
 
       
+      <section>
+        <h3>Attributes</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="cd0ce3a74eb56f6f30a737c3649af1af.html">connection_config</a></td>
+            <td><a href='60023d3cf6630a9ebee9edb48e98f807.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConnectionConfigDTO</a> </td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
+      
 
       <!-- Operations -->
 
@@ -148,6 +182,12 @@
           <tr>
             <td>private</td>
             <td><a href="1e2c2e113ca7d3e746921c6f1e6b19b5.html">validate_fields_data()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="87979b8c935925145239abdd2bac407a.html">set_new_connection_config(new_config: ConnectionConfigDTO)</a></td>
             <td></td>
           </tr>
           
@@ -360,6 +400,12 @@
         
         <li><a href='03bcfc0d700614c31a78e0234c8ad565.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         
+        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
+        
+        <li><a href='3ca45c7d5880a1b7fa4cdc24aedabb0a.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConfigDTO→PoolConfigDTO)</a></li>
+        
+        <li><a href='c7eb783d4d417d1b0ed35a3f2149063f.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConfigDTO→PoolConfigDTO)</a></li>
+        
     </ul>
 </section>
 
@@ -374,6 +420,8 @@
     <ul class="nav nav-list">
         
         <li><a href='03bcfc0d700614c31a78e0234c8ad565.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
+        
+        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
         
     </ul>
 </section>

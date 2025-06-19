@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>FileExplorer</title>
+    <title>FileExplorerInterfaceStrategy</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>FileExplorer</h1>
+      <h1>FileExplorerInterfaceStrategy</h1>
 
       <!-- Type and Stereotype -->
 
@@ -41,10 +41,13 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorer</a></span>
+          <span class="label label-info"><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorerInterfaceStrategy</a></span>
         
       </section>
 
@@ -110,7 +113,9 @@
     <h3>Implementing Classifiers</h3>
     <ul class="nav nav-list">
         
-        <li><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>BaseLogger</a></li>
+        <li><a href='f5ec7e05326e623d23f9b568044ec606.html'><span class='node-icon staruml-icon icon-UMLClass'></span>WindowsFileExplorer</a></li>
+        
+        <li><a href='784431364de67891081f49ae1fa4ec93.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LinuxFileExplorer</a></li>
         
     </ul>
 </section>
@@ -160,37 +165,37 @@
           
           <tr>
             <td>public</td>
-            <td><a href="f8d311079706ee79dcf659629f38dd46.html">create_file(path, file_name)</a></td>
+            <td><a href="f8d311079706ee79dcf659629f38dd46.html">create_file(path: str, file_name: str)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="17d9e3800b80aa4522b112344590bdde.html">create_dir(path, dir_name)</a></td>
+            <td><a href="17d9e3800b80aa4522b112344590bdde.html">create_dir(path: str, dir_name: str)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="22b00f4f104cd5216380023027f077f2.html">check_path_is_exists(path)</a></td>
+            <td><a href="22b00f4f104cd5216380023027f077f2.html">check_path_is_exists(path: str)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="5c8372fc9b6f1d7c688a9c86ccd647a4.html">read_from_file(path)</a></td>
+            <td><a href="5c8372fc9b6f1d7c688a9c86ccd647a4.html">read_from_file(path: str)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f9a2836ce10a2ef36ced74ddc53b63ab.html">overwrite_file(path, content)</a></td>
+            <td><a href="f9a2836ce10a2ef36ced74ddc53b63ab.html">overwrite_file(path: str, content: str)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="c800ab8bd20e94c31d92784cf857c340.html">append_to_file(path, content)</a></td>
+            <td><a href="c800ab8bd20e94c31d92784cf857c340.html">append_to_file(path: str, content: str)</a></td>
             <td></td>
           </tr>
           
@@ -294,7 +299,7 @@
     
     <tr>
         <td>name</td>
-        <td>FileExplorer</td>
+        <td>FileExplorerInterfaceStrategy</td>
     </tr>
     
     
@@ -385,7 +390,9 @@
     <h3>Dependants</h3>
     <ul class="nav nav-list">
         
-        <li><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>BaseLogger</a></li>
+        <li><a href='f5ec7e05326e623d23f9b568044ec606.html'><span class='node-icon staruml-icon icon-UMLClass'></span>WindowsFileExplorer</a></li>
+        
+        <li><a href='784431364de67891081f49ae1fa4ec93.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LinuxFileExplorer</a></li>
         
     </ul>
 </section>
@@ -401,7 +408,11 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='e376c61ef104af871a9dc089cc094df8.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(BaseLogger→FileExplorer)</a></li>
+        <li><a href='667a0975e253e4df76bde65f31949803.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(WindowsFileExplorer→FileExplorerInterfaceStrategy)</a></li>
+        
+        <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
+        
+        <li><a href='0ea977fe026a09edaaf623770ac62500.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(LinuxFileExplorer→FileExplorerInterfaceStrategy)</a></li>
         
     </ul>
 </section>

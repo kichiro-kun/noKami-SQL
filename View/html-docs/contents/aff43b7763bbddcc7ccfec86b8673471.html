@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>LogSubjectInterface</title>
+    <title>LoggerSubjectInterface</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>LogSubjectInterface</h1>
+      <h1>LoggerSubjectInterface</h1>
 
       <!-- Type and Stereotype -->
 
@@ -41,10 +41,13 @@
           <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
         
           <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
           <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagram&#39;s</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='aff43b7763bbddcc7ccfec86b8673471.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LogSubjectInterface</a></span>
+          <span class="label label-info"><a href='aff43b7763bbddcc7ccfec86b8673471.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerSubjectInterface</a></span>
         
       </section>
 
@@ -110,7 +113,7 @@
     <h3>Implementing Classifiers</h3>
     <ul class="nav nav-list">
         
-        <li><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>DataBase</a></li>
+        <li><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»DataBase</a></li>
         
     </ul>
 </section>
@@ -172,7 +175,7 @@
           
           <tr>
             <td>public</td>
-            <td><a href="71db3593ef7ecc1daf7406017b33d04c.html">notify_logger_observers(log_entry: LogEntry)</a></td>
+            <td><a href="71db3593ef7ecc1daf7406017b33d04c.html">notify_logger_observers(log_entry: LogEntryDTO)</a></td>
             <td></td>
           </tr>
           
@@ -276,7 +279,7 @@
     
     <tr>
         <td>name</td>
-        <td>LogSubjectInterface</td>
+        <td>LoggerSubjectInterface</td>
     </tr>
     
     
@@ -367,7 +370,7 @@
     <h3>Dependants</h3>
     <ul class="nav nav-list">
         
-        <li><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>DataBase</a></li>
+        <li><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»DataBase</a></li>
         
     </ul>
 </section>
@@ -383,9 +386,9 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='3c9e24017a8a9aac6cc615d16db8bd66.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LogSubjectInterface)</a></li>
+        <li><a href='3c9e24017a8a9aac6cc615d16db8bd66.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></li>
         
-        <li><a href='598f966df75bf6afc3b83f3156573abc.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>Observer&#39;s (LogSubjectInterface—LoggerObserverInterface)</a></li>
+        <li><a href='84f4052ed111cbd23852b9286446f50b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>observer&#39;s (LoggerSubjectInterface—LoggerObserverInterface)</a></li>
         
     </ul>
 </section>
@@ -400,7 +403,7 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='598f966df75bf6afc3b83f3156573abc.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>Observer&#39;s (LogSubjectInterface—LoggerObserverInterface)</a></li>
+        <li><a href='84f4052ed111cbd23852b9286446f50b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>observer&#39;s (LoggerSubjectInterface—LoggerObserverInterface)</a></li>
         
     </ul>
 </section>

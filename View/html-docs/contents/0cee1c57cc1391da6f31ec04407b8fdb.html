@@ -46,10 +46,13 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>System Elements</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='95513623e8e6be64546496a1ee58ca8a.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Logging</a></span>
+          <span class="label label-info"><a href='5938d8f89be291c9e8b058325ccb67e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Logging</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='c46a2ddc9a10c3e890d1f11861f98aaf.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>BaseLogger Component</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='0cee1c57cc1391da6f31ec04407b8fdb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»BaseLogger</a></span>
@@ -100,7 +103,7 @@
         
         <li><a href='fb9b2bd866e06c195255341e5a7a4e26.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteBaseLoggerObserver</a></li>
         
-        <li><a href='e4832918f6a49febb4b44c07247afcbe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteBaseLogger</a></li>
+        <li><a href='bfc8fa2abdd37e97a7fd99d386d76093.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteBaseLogger</a></li>
         
     </ul>
 </section>
@@ -168,6 +171,13 @@
             <td></td>
           </tr>
           
+          <tr>
+            <td>private</td>
+            <td><a href="84ad92d2aa825a55740d5bb26c99c795.html">config</a></td>
+            <td><a href='8d6b26f649100725aae72b112e6cb40c.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LoggerConfigDTO</a> </td>
+            <td></td>
+          </tr>
+          
         </table>
       </section>
       
@@ -186,7 +196,31 @@
           
           <tr>
             <td>public</td>
-            <td><a href="ef3c5caa98b89c21579cbcc325e41315.html">read_log_entry(log_entry: LogEntryDTO)</a></td>
+            <td><a href="542d34ada3cc6d29d7985cab4f59b0b9.html">process_log_msg(log_entry: LogEntryDTO)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="a360480f6871c6420cc66e22b9563d70.html">set_new_config(new_config: LoggerConfigDTO)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="4511627b68361f400db6bce7ff2bdac4.html">set_new_perform_file_explorer(new_file_explorer: FileExplorerInterfaceStrategy)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>protected</td>
+            <td><a href="ef3c5caa98b89c21579cbcc325e41315.html">read_log_entry(log_entry: LogEntryDTO): Dict[str, str]</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>protected</td>
+            <td><a href="7e615a66cc9a40dc4c242c0862b3c325.html">flush_log_msg()</a></td>
             <td></td>
           </tr>
           
@@ -382,15 +416,6 @@
 
         
         
-<section class="element-list">
-    <h3>Dependencies</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='927daab34ffcdae6299238dbf852e986.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryDTO</a></li>
-        
-    </ul>
-</section>
-
 
 
         
@@ -406,13 +431,13 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
-        
-        <li><a href='30ff5614d112d08a0843b4d55b01050c.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>processes (BaseLogger→LogEntryDTO)</a></li>
-        
         <li><a href='9a3477a6bc6a6895a3e35f6d91267a68.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteBaseLoggerObserver→BaseLogger)</a></li>
         
-        <li><a href='8a759975ef5e953035a7ee6ab713ff21.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteBaseLogger→BaseLogger)</a></li>
+        <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
+        
+        <li><a href='bf8b0d136b3ad9ee434b92ba0e2a4318.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LoggerConfigDTO—BaseLogger)</a></li>
+        
+        <li><a href='89d52beccc0f1869971e24aa2039941a.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteBaseLogger→BaseLogger)</a></li>
         
     </ul>
 </section>
@@ -428,8 +453,6 @@
     <ul class="nav nav-list">
         
         <li><a href='be14bcf9e89946b2182c3b09a912a872.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (BaseLogger—FileExplorerInterfaceStrategy)</a></li>
-        
-        <li><a href='30ff5614d112d08a0843b4d55b01050c.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>processes (BaseLogger→LogEntryDTO)</a></li>
         
     </ul>
 </section>

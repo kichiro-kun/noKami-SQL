@@ -29,6 +29,8 @@
           UMLClass
         </span>
         
+          <span style="margin-left: 10px" class="alert alert-info">«dataclass(frozen=True)»</span>
+        
       </section>
 
       <!-- Path -->
@@ -44,13 +46,16 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>System Elements</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='a97c982b14ea5e5397e94902858b8e7f.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Configuration</a></span>
+          <span class="label label-info"><a href='3afac985da82791f012de823acabdba1.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Connection Configuration</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='60023d3cf6630a9ebee9edb48e98f807.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConnectionConfigDTO</a></span>
+          <span class="label label-info"><a href='a07090c0f57d550e03dd426c9d50b5df.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Config Component</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='60023d3cf6630a9ebee9edb48e98f807.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«dataclass(frozen=True)»ConnectionConfigDTO</a></span>
         
       </section>
 
@@ -92,6 +97,17 @@
 
         
         
+<section class="element-list">
+    <h3>Specialized Elements</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='4a5b4b4a5709cf57b3702b710a2aad13.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLConnectionConfigDTO</a></li>
+        
+        <li><a href='2f1b6950cfdc7d8fa896d91ce4a60600.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLConnectionConfigDTO</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -171,7 +187,7 @@
           
           <tr>
             <td>public</td>
-            <td><a href="190c51f1dc821369726c56fe499bd8bd.html">host_name</a></td>
+            <td><a href="190c51f1dc821369726c56fe499bd8bd.html">host_address</a></td>
             <td>str </td>
             <td></td>
           </tr>
@@ -180,13 +196,6 @@
             <td>public</td>
             <td><a href="2cba95e35ecd0e6dfc563c884a64bfdb.html">port</a></td>
             <td>int </td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>public</td>
-            <td><a href="9e3c7781b487e7863c2ac48222ea1cb4.html">other_kwargs</a></td>
-            <td>Dict[str, Any] </td>
             <td></td>
           </tr>
           
@@ -309,7 +318,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td><span class='label label-info'>null</span></td>
+        <td>dataclass(frozen=True)</td>
     </tr>
     
     
@@ -337,7 +346,7 @@
     
     <tr>
         <td>isAbstract</td>
-        <td><span class='label label-info'>false</span></td>
+        <td><span class='label label-info'>true</span></td>
     </tr>
     
     
@@ -401,9 +410,13 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
+        <li><a href='2238308b16c055c417f6f7e1eb32f86c.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLConnectionConfigDTO→ConnectionConfigDTO)</a></li>
+        
+        <li><a href='dd1b0c398563209a48d12fa74b1cee06.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLConnectionConfigDTO→ConnectionConfigDTO)</a></li>
+        
         <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
         
-        <li><a href='e810d3bd608f8013da3ef0061811b28e.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionConfigDTO—SingleConnectionDataBase)</a></li>
+        <li><a href='f33f6e9f04d26a876517ed48d55b8068.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionConfigDTO—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>
@@ -418,7 +431,7 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='e810d3bd608f8013da3ef0061811b28e.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionConfigDTO—SingleConnectionDataBase)</a></li>
+        <li><a href='f33f6e9f04d26a876517ed48d55b8068.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionConfigDTO—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>

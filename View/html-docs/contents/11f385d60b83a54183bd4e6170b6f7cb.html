@@ -46,10 +46,13 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>System Elements</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='ebb7cb0569232f481292a9147efc9e44.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>DataBase Abstract</a></span>
+          <span class="label label-info"><a href='b755f5bae26ede4343715490514d98ac.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DataBase Imitation</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='1ac986d4061f15950539c19355e50a80.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Abstract DataBase Component</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»DataBase</a></span>
@@ -173,7 +176,7 @@
           <tr>
             <td>private</td>
             <td><a href="49f2d4018eaf0a850c26adb78a74682d.html">logger_observers_list</a></td>
-            <td>List[LoggerObserverInterface] </td>
+            <td><a href='95d425325a41327abff52e7e9fffd6c2.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerObserverInterface</a> [0..*]</td>
             <td></td>
           </tr>
           
@@ -377,6 +380,8 @@
     <h3>Dependencies</h3>
     <ul class="nav nav-list">
         
+        <li><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></li>
+        
         <li><a href='aff43b7763bbddcc7ccfec86b8673471.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerSubjectInterface</a></li>
         
         <li><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></li>
@@ -399,13 +404,15 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='3c9e24017a8a9aac6cc615d16db8bd66.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></li>
+        <li><a href='994dc116528b4c4f9a4e951fe304f570.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(SingleConnectionDataBase→DataBase)</a></li>
         
-        <li><a href='86d21021ca056ce38a618ff8775c05ab.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
+        <li><a href='d608ca1e42ba151da87a297be47bec7b.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PoolConnectionDataBase→DataBase)</a></li>
         
-        <li><a href='61df86d7f7c4a6fbc3e1dcb6baa4ab6f.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(SingleConnectionDataBase→DataBase)</a></li>
+        <li><a href='f04ba0b159c06aeaec3bbb761f4c01cc.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
         
-        <li><a href='093056b60ee3458eabd9f807bd048694.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PoolConnectionDataBase→DataBase)</a></li>
+        <li><a href='9c717f4ab1114f337ed325a0a637b674.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></li>
+        
+        <li><a href='2ba8480e78f45734320f9daae823cb32.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
         
     </ul>
 </section>
@@ -420,9 +427,11 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='3c9e24017a8a9aac6cc615d16db8bd66.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></li>
+        <li><a href='9c717f4ab1114f337ed325a0a637b674.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></li>
         
-        <li><a href='86d21021ca056ce38a618ff8775c05ab.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
+        <li><a href='f04ba0b159c06aeaec3bbb761f4c01cc.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
+        
+        <li><a href='2ba8480e78f45734320f9daae823cb32.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>use (DataBase→LogEntryFactory)</a></li>
         
     </ul>
 </section>

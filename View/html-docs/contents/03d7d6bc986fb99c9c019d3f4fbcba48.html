@@ -44,10 +44,13 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>System Elements</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='a643ac51c178259063558373e5e22842.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Query Processing</a></span>
+          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='56571998edb8575945ad5817ab40125b.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Query Interface Component</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='03d7d6bc986fb99c9c019d3f4fbcba48.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>QueryInterface</a></span>
@@ -116,9 +119,9 @@
     <h3>Implementing Classifiers</h3>
     <ul class="nav nav-list">
         
-        <li><a href='6a17b0046171be5287546a20e85c13d6.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterfaceStrategy</a></li>
+        <li><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»PoolConnectionDataBase</a></li>
         
-        <li><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></li>
+        <li><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»SingleConnectionDataBase</a></li>
         
     </ul>
 </section>
@@ -168,25 +171,25 @@
           
           <tr>
             <td>public</td>
-            <td><a href="353d313c408782f0a6feb2ec8788b770.html">execute_query_no_returns(query: str)</a></td>
+            <td><a href="353d313c408782f0a6feb2ec8788b770.html">execute_query_no_returns(query: str, *params)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="5e23dd65c794c5a084711baf66ef9573.html">execute_query_returns_one(query: str)</a></td>
+            <td><a href="5e23dd65c794c5a084711baf66ef9573.html">execute_query_returns_one(query: str, *params)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="29d2a21688cf46f76e68cd29b7f3b663.html">execute_query_returns_many(query: str)</a></td>
+            <td><a href="29d2a21688cf46f76e68cd29b7f3b663.html">execute_query_returns_many(query: str, returns_count: int, *params)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="4b92a10324e9b3e03f4fb997474ca280.html">execute_query_returns_all(query: str)</a></td>
+            <td><a href="4b92a10324e9b3e03f4fb997474ca280.html">execute_query_returns_all(query: str, *params)</a></td>
             <td></td>
           </tr>
           
@@ -381,9 +384,9 @@
     <h3>Dependants</h3>
     <ul class="nav nav-list">
         
-        <li><a href='6a17b0046171be5287546a20e85c13d6.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterfaceStrategy</a></li>
+        <li><a href='684d193496352e0bbfb229f7961f6a10.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»PoolConnectionDataBase</a></li>
         
-        <li><a href='02d627461d522046f8d8882cad5fde90.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterfaceStrategy</a></li>
+        <li><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»SingleConnectionDataBase</a></li>
         
     </ul>
 </section>
@@ -399,9 +402,9 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='bd9750e000748c228d44f838aa011f58.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(SingleConnectionInterfaceStrategy→QueryInterface)</a></li>
+        <li><a href='fc80d3f6ca98f48aacc95884c4f1c5d7.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PoolConnectionDataBase→QueryInterface)</a></li>
         
-        <li><a href='b2997b956297740f37300a2d4ea2e7d6.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PoolConnectionInterfaceStrategy→QueryInterface)</a></li>
+        <li><a href='3b9ca0b1b1195707cc1cfe2fa9145c0a.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(SingleConnectionDataBase→QueryInterface)</a></li>
         
     </ul>
 </section>

@@ -29,6 +29,8 @@
           UMLClass
         </span>
         
+          <span style="margin-left: 10px" class="alert alert-info">«dataclass(frozen=True)»</span>
+        
       </section>
 
       <!-- Path -->
@@ -44,13 +46,16 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>System Elements</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='a97c982b14ea5e5397e94902858b8e7f.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Configuration</a></span>
+          <span class="label label-info"><a href='3afac985da82791f012de823acabdba1.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Connection Configuration</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='6ce9683ce5629a1645107066b51497b7.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConfigDTO</a></span>
+          <span class="label label-info"><a href='6b07e768f07f73ade01e1e8290baea75.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Pool Config Component</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='6ce9683ce5629a1645107066b51497b7.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«dataclass(frozen=True)»PoolConfigDTO</a></span>
         
       </section>
 
@@ -96,9 +101,9 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='e7e151db4788b56cada9d8adad0fb3d0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConfigDTO</a></li>
-        
         <li><a href='60de25958f087da18120aeb3a5992cc6.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConfigDTO</a></li>
+        
+        <li><a href='e7e151db4788b56cada9d8adad0fb3d0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConfigDTO</a></li>
         
     </ul>
 </section>
@@ -309,7 +314,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td><span class='label label-info'>null</span></td>
+        <td>dataclass(frozen=True)</td>
     </tr>
     
     
@@ -401,13 +406,13 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='03bcfc0d700614c31a78e0234c8ad565.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
-        
-        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
+        <li><a href='c7eb783d4d417d1b0ed35a3f2149063f.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConfigDTO→PoolConfigDTO)</a></li>
         
         <li><a href='3ca45c7d5880a1b7fa4cdc24aedabb0a.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConfigDTO→PoolConfigDTO)</a></li>
         
-        <li><a href='c7eb783d4d417d1b0ed35a3f2149063f.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConfigDTO→PoolConfigDTO)</a></li>
+        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
+        
+        <li><a href='1ef80138b71dd9c043773320e7a53d99.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         
     </ul>
 </section>
@@ -422,9 +427,9 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='03bcfc0d700614c31a78e0234c8ad565.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
-        
         <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
+        
+        <li><a href='1ef80138b71dd9c043773320e7a53d99.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         
     </ul>
 </section>

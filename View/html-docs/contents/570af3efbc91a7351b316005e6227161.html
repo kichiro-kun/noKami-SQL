@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>TransactionManager</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../assets/css/bootstrap.css">
+<link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/icon-font/icons.css">
+<script type="text/javascript" src="../assets/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript" src="../assets/js/bootstrap.js"></script>
+<script type="text/javascript" src="../assets/js/jquery.bonsai.js"></script>
+<script type="text/javascript" src="../assets/js/imageMapResizer.min.js"></script>
+
+  </head>
+  <body>
+    <div>
+
+      <!-- Name Title -->
+
+      <h1>TransactionManager</h1>
+
+      <!-- Type and Stereotype -->
+
+      <section style="margin-top: .5em;">
+        <span class="alert alert-info">
+          <span class="node-icon staruml-icon icon-UMLClass"></span>
+          UMLClass
+        </span>
+        
+          <span style="margin-left: 10px" class="alert alert-info">«metaclass=ABCMeta»</span>
+        
+      </section>
+
+      <!-- Path -->
+
+      <section style="margin-top: 10px">
+        
+        
+        
+          
+          <span class="label label-info"><a href='cf9c8b720f3815adeccaf3ef6e48c6c4.html'><span class='node-icon staruml-icon icon-Project'></span>noKami-SQL view</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='7c229d7031a82db6dd0af498b9dd790d.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Transaction Manager Component</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='570af3efbc91a7351b316005e6227161.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»TransactionManager</a></span>
+        
+      </section>
+
+      <!-- Diagram -->
+
+      
+
+      <!-- Description -->
+
+      
+      <section>
+        <h3>Description</h3>
+        <div>
+          
+            <span class="label label-info">none</span>
+          
+        </div>
+      </section>
+      
+
+      <!-- Specification -->
+
+      
+
+      <!-- Directed Relationship -->
+
+      
+
+      <!-- Undirected Relationship -->
+
+      
+
+      <!-- Classifier -->
+
+      
+        
+        
+
+
+        
+        
+<section class="element-list">
+    <h3>Specialized Elements</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='1c3971e87146c3f0fa636d50e19b6d0e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLTransactionManager</a></li>
+        
+        <li><a href='e7256561bede9d70f0825e3bc93545e0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLTransactionManager</a></li>
+        
+    </ul>
+</section>
+
+
+
+        
+        
+
+
+        
+        
+
+
+        
+        
+
+      
+
+      <!-- Interface -->
+
+      
+
+      <!-- Component -->
+
+      
+
+      <!-- Node -->
+
+      
+
+      <!-- Actor -->
+
+      
+
+      <!-- Use Case -->
+
+      
+
+      <!-- Template Parameters -->
+
+      
+
+      <!-- Literals -->
+
+      
+
+      <!-- Attributes -->
+
+      
+      <section>
+        <h3>Attributes</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="979d9aaff28fb53074e6e5d70659c37a.html">state</a></td>
+            <td><a href='24ea51e411f11488470e7e5a11f327d5.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionState</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="fa63edde9a3ccf67b2d84a6b811ec89b.html">isolation_level</a></td>
+            <td><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>IsolationLevel</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="748ac5e7c8bddfeaa4df00da3666f19e.html">current_connection</a></td>
+            <td><span class='label label-info'>none</span> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="c7fa1a275bee5e1f86badd80c468aad0.html">query_param_placeholder</a></td>
+            <td>str </td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
+      
+
+      <!-- Operations -->
+
+      
+      <section>
+        <h3>Operations</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="8a3f7f0b15d51cdd7806b3419459d684.html">begin(connection, query_param_placeholder: str)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="0e1bbc802b963cfc582e18eff54e98ca.html">execute_in_active_transaction(query: str, *params)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="361c40deeadc4e85e4a842c93606e042.html">commit()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="7d0c26bf8fce17a90c292a1991e7ff60.html">rollback()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="e7bfde4d8d3dd0494b7a99a31a60762f.html">apply_isolation_level(isolation_level: IsolationLevel)</a></td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
+      
+
+      <!-- Receptions -->
+
+      
+
+      <!-- Extension Points -->
+
+      
+
+      <!-- Parameters -->
+
+      
+
+      <!-- Diagrams -->
+
+      
+      
+
+      <!-- Behavior -->
+
+      
+
+      <!-- Action -->
+
+      
+
+      <!-- Interaction -->
+
+      
+
+      <!-- CombinedFragment -->
+
+      
+
+      <!-- Activity -->
+
+      
+
+      <!-- State Machine -->
+
+      
+
+      <!-- State Machine -->
+
+      
+
+      <!-- State -->
+
+      
+
+      <!-- Vertex -->
+
+      
+
+      <!-- Transition -->
+
+      
+
+      <!-- Data Model (ERD) -->
+
+      
+
+      <!-- Columns (ERD) -->
+
+      
+
+      <!-- Related Entities (ERD) -->
+
+      
+
+      <!-- Data Flows (DFD) -->
+
+      
+
+      <!-- Flows (Flowchart) -->
+
+      
+
+      <!-- Properties -->
+
+      <section>
+        <h3>Properties</h3>
+        
+        <table class="table table-striped table-bordered">
+    <tr>
+        <th width="50%">Name</th>
+        <th width="50%">Value</th>
+    </tr>
+    
+    
+    
+    
+    
+    
+    
+    <tr>
+        <td>name</td>
+        <td>TransactionManager</td>
+    </tr>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <tr>
+        <td>stereotype</td>
+        <td>metaclass=ABCMeta</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>visibility</td>
+        <td>public</td>
+    </tr>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <tr>
+        <td>isAbstract</td>
+        <td><span class='label label-info'>true</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isFinalSpecialization</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isLeaf</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isActive</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+</table>                
+
+      </section>
+
+      <!-- Tags -->
+
+      
+
+      <!-- Constraints, Dependencies, Dependants -->
+
+      
+        
+        
+
+
+        
+        
+<section class="element-list">
+    <h3>Dependencies</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='24ea51e411f11488470e7e5a11f327d5.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«Enum»TransactionState</a></li>
+        
+        <li><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«Enum»IsolationLevel</a></li>
+        
+    </ul>
+</section>
+
+
+
+        
+        
+
+      
+
+      <!-- Relationships -->
+
+      
+      
+<section class="element-list">
+    <h3>Relationships</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='a7f4986983c6a18d0c9752e1c0424c67.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLTransactionManager→TransactionManager)</a></li>
+        
+        <li><a href='03be88d7f852686d7a07e336d3edc86e.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLTransactionManager→TransactionManager)</a></li>
+        
+        <li><a href='b70d24de82728936c43aa9c94e3ae499.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→TransactionState)</a></li>
+        
+        <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
+        
+        <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
+        
+        <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
+        
+    </ul>
+</section>
+
+
+
+      <!-- Owned Elements -->
+
+      
+      
+<section class="element-list">
+    <h3>Owned Elements</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='b70d24de82728936c43aa9c94e3ae499.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→TransactionState)</a></li>
+        
+        <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
+        
+        <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
+        
+        <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
+        
+    </ul>
+</section>
+
+
+
+      <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
+      <script>
+      imageMapResize();
+      </script>
+    </div>
+  </body>
+</html>

@@ -44,7 +44,13 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagrams</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='cf97400202eea879ab5290fb95495bae.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Use</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='c1043432d798a53bcaaeed401d5098af.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>DataBase Factory</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='368c9c94dbbf945d59a107084e6b8928.html'><span class='node-icon staruml-icon icon-UMLClass'></span>DataBaseFactory</a></span>
@@ -161,7 +167,14 @@
           
           <tr>
             <td>private</td>
-            <td><a href="9032833397f3bf64b0877924b72b46f2.html">baked_connection_config</a></td>
+            <td><a href="d7811b87e6a42a79b70944b66cbf288d.html">baked_transaction_manager</a></td>
+            <td><span class='label label-info'>none</span> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="33eee429598808797ebb0a10be2d4a87.html">baked_pool_config</a></td>
             <td><span class='label label-info'>none</span> </td>
             <td></td>
           </tr>
@@ -184,31 +197,25 @@
           
           <tr>
             <td>public</td>
-            <td><a href="c15903e35092c10bbf505381827218f4.html">create_database(dbms_type: DBMS, connection_mode: ConnectionMode, loggers: LoggerObserverInterface[0..*]): DataBase</a></td>
+            <td><a href="c15903e35092c10bbf505381827218f4.html">create_database(dbms_type: DBMS, connection_mode: ConnectionMode, connection_config: Dict[str, Any], loggers: LoggerObserverInterface[0..*] = None): DataBase</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="23b9e15f0ce571db273b0f3da86c44ba.html">inizialize_database_by_dbms_type(dbms_type: DBMS)</a></td>
+            <td><a href="23b9e15f0ce571db273b0f3da86c44ba.html">bake_database_by_dbms_type()</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="5978cea1f7f9abc556d879bc993357a9.html">initialize_connection_interface_by_connection_mode(connection_mode: ConnectionMode)</a></td>
+            <td><a href="5978cea1f7f9abc556d879bc993357a9.html">bake_connection_interface_by_connection_mode()</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="317ce4bbadc4e17f6fee45667335303a.html">inizialize_default_connection_config()</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="a73ec7a5c1d3effa395a191a9cdb19d9.html">set_baked_connection_config_to_connection_interface()</a></td>
+            <td><a href="5d4a77a78b8455fedb45581e02f28dc5.html">bake_transaction_manager()</a></td>
             <td></td>
           </tr>
           
@@ -220,7 +227,25 @@
           
           <tr>
             <td>private</td>
-            <td><a href="8eb1c829d852da915c1d9c4527ed7ed9.html">set_loggers_to_database_observers_list(loggers: LoggerObserverInterface[1..*])</a></td>
+            <td><a href="5cf33db602a187201826e9655d3594f8.html">set_baked_transaction_manager_to_database()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="8eb1c829d852da915c1d9c4527ed7ed9.html">set_loggers_to_database_observers_list()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="a3490c819464d54d97fd20fcc09fd1aa.html">if_mode_is_pool_bake_pool_config()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="5274c65ccba294a87b780aee542e4e36.html">set_baked_pool_config_to_connection_interface()</a></td>
             <td></td>
           </tr>
           

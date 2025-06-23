@@ -29,8 +29,6 @@
           UMLClass
         </span>
         
-          <span style="margin-left: 10px" class="alert alert-info">«dataclass(frozen=True)»</span>
-        
       </section>
 
       <!-- Path -->
@@ -55,7 +53,7 @@
           <span class="label label-info"><a href='6b07e768f07f73ade01e1e8290baea75.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Pool Config Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='6ce9683ce5629a1645107066b51497b7.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«dataclass(frozen=True)»PoolConfigDTO</a></span>
+          <span class="label label-info"><a href='6ce9683ce5629a1645107066b51497b7.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConfigDTO</a></span>
         
       </section>
 
@@ -167,7 +165,14 @@
           <tr>
             <td>private</td>
             <td><a href="cd0ce3a74eb56f6f30a737c3649af1af.html">connection_config</a></td>
-            <td><a href='60023d3cf6630a9ebee9edb48e98f807.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConnectionConfigDTO</a> </td>
+            <td>Dict[str, Any] </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="a72b43edd1669584b4bef0291ea0d736.html">pool_size</a></td>
+            <td>int </td>
             <td></td>
           </tr>
           
@@ -195,7 +200,7 @@
           
           <tr>
             <td>public</td>
-            <td><a href="87979b8c935925145239abdd2bac407a.html">set_new_connection_config(new_config: ConnectionConfigDTO)</a></td>
+            <td><a href="87979b8c935925145239abdd2bac407a.html">set_new_connection_config(new_config: Dict[str, Any])</a></td>
             <td></td>
           </tr>
           
@@ -314,7 +319,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td>dataclass(frozen=True)</td>
+        <td><span class='label label-info'>null</span></td>
     </tr>
     
     
@@ -410,8 +415,6 @@
         
         <li><a href='3ca45c7d5880a1b7fa4cdc24aedabb0a.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConfigDTO→PoolConfigDTO)</a></li>
         
-        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
-        
         <li><a href='1ef80138b71dd9c043773320e7a53d99.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         
     </ul>
@@ -426,8 +429,6 @@
 <section class="element-list">
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
-        
-        <li><a href='092c015500e3bc64723b7da808562d58.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>contains (PoolConfigDTO—ConnectionConfigDTO)</a></li>
         
         <li><a href='1ef80138b71dd9c043773320e7a53d99.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         

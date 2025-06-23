@@ -110,9 +110,9 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='3895c57a4613ce6c443510513f2a3711.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteSingleConnectionDataBase1</a></li>
-        
         <li><a href='4e9a11500de96f85869cafd112abcaa8.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteSingleConnectionDataBase2</a></li>
+        
+        <li><a href='3895c57a4613ce6c443510513f2a3711.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcreteSingleConnectionDataBase1</a></li>
         
     </ul>
 </section>
@@ -184,7 +184,7 @@
           
           <tr>
             <td>private</td>
-            <td><a href="66456b4aef0c39b7ae574a6ca45b7875.html">perform_connection_interface</a></td>
+            <td><a href="66456b4aef0c39b7ae574a6ca45b7875.html">perform_connection_manager</a></td>
             <td><a href='798d68c42b056a6969bdf15b7de79941.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionManagerStrategy</a> </td>
             <td></td>
           </tr>
@@ -192,7 +192,14 @@
           <tr>
             <td>private</td>
             <td><a href="80156795c421f8c3cdef4f49cff5d259.html">config</a></td>
-            <td><a href='60023d3cf6630a9ebee9edb48e98f807.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConnectionConfigDTO</a> </td>
+            <td>Dict[str, Any] </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="aaa0b7cabc8e037daed3f4a694323968.html">transaction_manager</a></td>
+            <td><a href='570af3efbc91a7351b316005e6227161.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManager</a> </td>
             <td></td>
           </tr>
           
@@ -214,13 +221,19 @@
           
           <tr>
             <td>public</td>
-            <td><a href="83ef10030bcced8a237dcba03454067d.html">set_new_connection_config(new_config: ConnectionConfigDTO)</a></td>
+            <td><a href="83ef10030bcced8a237dcba03454067d.html">set_new_connection_config(new_config: Dict[str, Any])</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="20e400ac496da1cdde163ed8004803d0.html">set_new_connection_interface(new_interface: SingleConnectionManagerStrategy)</a></td>
+            <td><a href="20e400ac496da1cdde163ed8004803d0.html">set_new_connection_manager(new_manager: SingleConnectionManagerStrategy)</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="77828b4e5ad32bdab4e023e9dbdd1533.html">set_new_transaction_manager(new_manager: TransactionManager)</a></td>
             <td></td>
           </tr>
           
@@ -440,17 +453,17 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
+        <li><a href='5631c4ab4b53268cabcc9f05f963a111.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteSingleConnectionDataBase2→SingleConnectionDataBase)</a></li>
+        
         <li><a href='e754220ed097bea34de3beb7a8ca7f40.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteSingleConnectionDataBase1→SingleConnectionDataBase)</a></li>
         
-        <li><a href='5631c4ab4b53268cabcc9f05f963a111.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcreteSingleConnectionDataBase2→SingleConnectionDataBase)</a></li>
+        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManagerStrategy—SingleConnectionDataBase)</a></li>
+        
+        <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
         
         <li><a href='994dc116528b4c4f9a4e951fe304f570.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(SingleConnectionDataBase→DataBase)</a></li>
         
-        <li><a href='f33f6e9f04d26a876517ed48d55b8068.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionConfigDTO—SingleConnectionDataBase)</a></li>
-        
         <li><a href='3b9ca0b1b1195707cc1cfe2fa9145c0a.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(SingleConnectionDataBase→QueryInterface)</a></li>
-        
-        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManagerStrategy—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>

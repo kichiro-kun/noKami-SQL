@@ -5,10 +5,12 @@ Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
-__all__: list[str] = ['LogEntryFactory']
+__all__: list[str] = [
+    'LogEntryFactory',
+]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 # ========================================================================================
 from shared.constants._logging import SUPPORTED_LOG_ENTRY_LEVELS
@@ -26,74 +28,70 @@ if TYPE_CHECKING:
 # _______________________________________________________________________________________
 class LogEntryFactory:
     """
-    Factory class for creating log entries based on log level.
+    Фабричный класс для создания записей журнала на основе уровня логирования.
 
-    This factory implements the Factory design pattern to create appropriate LogEntry
-    instances based on the provided log level. It ensures type safety and consistency
-    by validating the internal mapping against global supported levels during
-    initialization.
+    Фабрика создает соответствующие экземпляры LogEntryDTO на основе предоставленного
+    уровня логирования с автоматической валидацией согласованности конфигурации.
 
-    The factory supports case-insensitive log level input and automatically normalizes
-    levels to Title Case format for internal processing.
+    Фабрика поддерживает ввод уровня логирования без учета регистра и автоматически
+    нормализует уровни в формат Title Case для внутренней обработки. При инициализации
+    выполняется проверка согласованности внутреннего сопоставления с глобальными
+    поддерживаемыми уровнями.
 
-    Supported Log Levels:
-        - Info: General informational messages
-        - Warning: Warning messages for potential issues
-        - Error: Error messages for recoverable errors
-        - Critical: Critical error messages for severe issues
+    Поддерживаемые уровни логирования:
+        - Info: Общие информационные сообщения
+        - Warning: Предупреждающие сообщения о потенциальных проблемах
+        - Error: Сообщения об ошибках для восстанавливаемых ошибок
+        - Critical: Критические сообщения об ошибках для серьезных проблем
 
-    Thread Safety:
-        This factory is thread-safe for read operations. Multiple threads can safely
-        call create_new_log_entry() simultaneously.
-
-    Example:
+    Пример:
         >>> factory = LogEntryFactory()
         >>> log_entry = factory.create_new_log_entry(
-        ...     level="info",  # Case-insensitive
-        ...     msg_text="Application started successfully",
+        ...     level="info",  # Без учета регистра
+        ...     msg_text="Приложение успешно запущено",
         ...     context="MainApplication"
         ... )
-        >>> print(log_entry.get_level())  # Output: "Info"
-        >>> print(log_entry.message_text)  # Output: "Application started successfully"
+        >>> print(log_entry.get_level())  # Вывод: "Info"
+        >>> print(log_entry.message_text)  # Вывод: "Приложение успешно запущено"
 
-    Note:
-        Supported log levels are defined in the SUPPORTED_LOG_ENTRY_LEVELS constant
-        from shared.constants._logging module.
+    Примечание:
+        Поддерживаемые уровни логирования определены в константе SUPPORTED_LOG_ENTRY_LEVELS
+        из модуля shared.constants._logging. Фабрика автоматически проверяет согласованность
+        своего внутреннего сопоставления с этими глобальными константами при инициализации.
     """
 
-    # Internal mapping of log levels to their corresponding LogEntry implementation classes.
-    # Keys are in Title Case format to match SUPPORTED_LOG_ENTRY_LEVELS constant.
-    # This mapping is used by the factory to instantiate the correct LogEntry type
-    # based on the normalized log level provided to create_new_log_entry().
+    # Внутреннее сопоставление уровней логирования с соответствующими классами реализации LogEntryDTO.
+    # Ключи в формате Title Case для соответствия константе SUPPORTED_LOG_ENTRY_LEVELS.
+    # Это сопоставление используется фабрикой для создания экземпляра правильного типа LogEntryDTO
+    # на основе нормализованного уровня логирования, переданного в create_new_log_entry().
     __LOG_LEVEL_MAPPING: Dict[str, Type['LogEntryDTO']] = {
-        'Info': InfoLogEntry,        # For informational messages
-        'Warning': WarningLogEntry,  # For warning messages
-        'Error': ErrorLogEntry,      # For error messages
-        'Critical': CriticalLogEntry,  # For critical error messages
+        'Info': InfoLogEntry,        # Для информационных сообщений
+        'Warning': WarningLogEntry,  # Для предупреждающих сообщений
+        'Error': ErrorLogEntry,      # Для сообщений об ошибках
+        'Critical': CriticalLogEntry,  # Для критических сообщений об ошибках
     }
 
     def __init__(self) -> None:
         """
-        Initialize the factory and validate mapping consistency.
+        Инициализирует фабрику и проверяет согласованность сопоставления.
 
-        Performs validation to ensure that the internal log level mapping is consistent
-        with the globally defined supported log levels. This validation prevents runtime
-        errors that could occur due to configuration mismatches.
+        Выполняет проверку для обеспечения согласованности внутреннего сопоставления
+        уровней логирования с глобально определенными поддерживаемыми уровнями.
+        Эта проверка предотвращает ошибки времени выполнения, которые могут возникнуть
+        из-за несоответствий конфигурации.
 
-        The validation compares the keys in __LOG_LEVEL_MAPPING with the values in
-        SUPPORTED_LOG_ENTRY_LEVELS to ensure they match exactly.
+        Исключения:
+            ValueError: Если внутреннее сопоставление __LOG_LEVEL_MAPPING не согласуется
+                       с константой SUPPORTED_LOG_ENTRY_LEVELS. Это указывает на ошибку
+                       конфигурации, где внутреннее сопоставление фабрики не соответствует
+                       глобально поддерживаемым уровням логирования.
 
-        Raises:
-            ValueError: If the internal mapping is inconsistent with supported levels.
-                       This indicates a configuration error where the factory's internal
-                       mapping doesn't match the globally supported log levels.
-
-        Example:
+        Пример:
             >>> try:
             ...     factory = LogEntryFactory()
-            ...     print("Factory initialized successfully")
+            ...     print("Фабрика успешно инициализирована")
             ... except ValueError as e:
-            ...     print(f"Initialization failed: {e}")
+            ...     print(f"Инициализация не удалась: {e}")
         """
         if not self.__validate_mapping_consistency():
             raise ValueError(
@@ -104,75 +102,71 @@ class LogEntryFactory:
 
     def create_new_log_entry(self, level: str, msg_text: str, context: str) -> 'LogEntryDTO':
         """
-        Create a new log entry based on the specified level.
+        Создает новую запись лога на основе указанного уровня.
 
-        This method is the main entry point for creating log entries. It validates the
-        provided log level, normalizes it to Title Case, and creates the appropriate
-        LogEntry instance with the current timestamp.
+        Этот метод является основной точкой входа для создания LogEntry.
+        Он проверяет предоставленный уровень логирования, нормализует его в формат
+        Title Case и создает соответствующий экземпляр LogEntryDTO с текущей меткой времени.
 
-        The method supports case-insensitive log level input (e.g., "info", "INFO",
-        "Info" are all valid and equivalent).
+        Аргументы:
+            level (str): Уровень логирования для записи. Строка без учета регистра,
+                        которая должна соответствовать одному из поддерживаемых уровней.
+            msg_text (str): Текст сообщения для записи журнала. Это основное содержимое
+                           сообщения журнала, которое описывает, что произошло.
+            context (str): Контекстная информация для записи журнала. Обычно включает
+                          источник журнала (например, имя класса, имя модуля, имя функции).
 
-        Args:
-            level (str): The log level for the entry. Case-insensitive string that must
-                        match one of the supported levels.
-            msg_text (str): The message text for the log entry. This is the main content
-                           of the log message that describes what happened.
-            context (str): The context information for the log entry. Typically includes
-                          the source of the log (e.g., class name, module name, function name).
+        Возвращает:
+            LogEntryDTO: Экземпляр замороженного dataclass, представляющий LogEntry
+                        со следующими атрибутами:
+                        - message_text: Предоставленный текст сообщения
+                        - context: Предоставленная контекстная информация
+                        - created_at: Метка времени создания записи (datetime)
+                        - get_level(): Нормализованный уровень логирования в формате Title Case
 
-        Returns:
-            LogEntryDTO: A frozen dataclass instance representing the log entry with the
-                        following attributes:
-                        - message_text: The provided message text
-                        - context: The provided context information
-                        - created_at: Timestamp when the entry was created
-                        - get_level(): Normalized log level in Title Case
+        Исключения:
+            UnsupportedLogLevelException: Если предоставленный уровень не находится в списке
+                                        поддерживаемых уровней логирования. Сообщение об
+                                        исключении будет включать недопустимый уровень и
+                                        список допустимых уровней.
 
-        Raises:
-            UnsupportedLogLevelException: If the provided level is not in the list of
-                                        supported log levels. The exception message will
-                                        include the invalid level and list of valid levels.
-
-        Example:
+        Пример:
             >>> factory = LogEntryFactory()
             >>>
-            >>> # Create an info log entry
+            >>> # Создание информационной записи журнала
             >>> info_entry = factory.create_new_log_entry(
             ...     level="info",
-            ...     msg_text="User logged in successfully",
+            ...     msg_text="Пользователь успешно вошел в систему",
             ...     context="AuthenticationService"
             ... )
             >>>
-            >>> # Create an error log entry (case-insensitive)
+            >>> # Создание записи об ошибке (без учета регистра)
             >>> error_entry = factory.create_new_log_entry(
             ...     level="ERROR",
-            ...     msg_text="Database connection failed",
+            ...     msg_text="Не удалось подключиться к базе данных",
             ...     context="DatabaseManager"
             ... )
-            >>>
-            >>> print(f"Level: {info_entry.get_level()}")  # Output: "Info"
-            >>> print(f"Message: {info_entry.message_text}")
-            >>> print(f"Context: {info_entry.context}")
-            >>> print(f"Created: {info_entry.created_at}")
 
-        Note:
-            Each call to this method creates a new instance with a fresh timestamp.
-            The returned LogEntry instances are immutable (frozen dataclasses).
+        Примечание:
+            Каждый вызов этого метода создает новый экземпляр с новой меткой времени.
+            Возвращаемые экземпляры LogEntryDTO являются неизменяемыми (замороженные dataclass).
+            Уровень логирования автоматически нормализуется в формат Title Case.
         """
         normalized_level: str = level.title()
 
-        # Validate level using constants
+        # Проверка поддерживаемости уровня
         if not self.__is_supported_level(level=level):
-            supported_levels: str = ', '.join(SUPPORTED_LOG_ENTRY_LEVELS)
+            supported_levels: str = ', '.join(self.__LOG_LEVEL_MAPPING.keys())
             raise UnsupportedLogLevelException(
-                f"Unsupported log level!\n Passed level: *{level}*\n Supported levels: *{supported_levels}*"
+                f"Неподдерживаемый уровень логирования!\n"
+                f"Переданный уровень: *{level}*\n"
+                f"Поддерживаемые уровни: *{supported_levels}*"
             )
 
-        # Get the appropriate log entry class
+        # Получение соответствующего класса LogEntry
         log_entry_class = self.__LOG_LEVEL_MAPPING[normalized_level]
 
-        # Create the log entry
+        # Создание LogEntry
         log_entry: 'LogEntryDTO' = log_entry_class(
             message_text=msg_text,
             context=context,
@@ -183,48 +177,37 @@ class LogEntryFactory:
 
     def __is_supported_level(self, level: str) -> bool:
         """
-        Check if the provided level is supported by the factory.
+        Проверяет, поддерживается ли предоставленный уровень логирования фабрикой.
 
-        This private method performs case-insensitive validation of log levels by
-        normalizing the input to Title Case format and checking it against the
-        global SUPPORTED_LOG_ENTRY_LEVELS constant.
+        Этот приватный метод выполняет проверку уровней логирования без учета регистра
+        путем нормализации входных данных в формат Title Case и проверки их с
+        ключами внутреннего сопоставления __LOG_LEVEL_MAPPING.
 
-        The normalization ensures consistent behavior regardless of the input case
-        (e.g., "info", "INFO", "Info" all become "Info").
+        Аргументы:
+            level (str): Уровень логирования для проверки.
 
-        Args:
-            level (str): The log level to check. Can be in any case format.
-                        Examples: "info", "WARNING", "Error", "cRiTiCal"
-
-        Returns:
-            bool: True if the level is supported (exists in SUPPORTED_LOG_ENTRY_LEVELS),
-                 False otherwise.
-
-        Example:
-            >>> factory = LogEntryFactory()
-            >>> factory._LogEntryFactory__is_supported_level("info")     # True
-            >>> factory._LogEntryFactory__is_supported_level("INFO")     # True
-            >>> factory._LogEntryFactory__is_supported_level("debug")    # False
+        Возвращает:
+            bool: True, если уровень поддерживается (существует в __LOG_LEVEL_MAPPING),
+                 False в противном случае.
         """
         normalized_level: str = level.title()
-        is_supported: bool = normalized_level in SUPPORTED_LOG_ENTRY_LEVELS
+        is_supported: bool = normalized_level in self.__LOG_LEVEL_MAPPING.keys()
 
         return is_supported
 
     def __get_current_time(self) -> datetime:
         """
-        Get the current timestamp for log entry creation.
+        Получает текущую метку времени для создания LogEntry
 
-        This private method provides a centralized way to obtain timestamps for
-        log entries. It uses datetime.now() to get the current local time.
+        Этот приватный метод предоставляет централизованный способ получения меток
+        времени. Он использует datetime.now() для получения текущего локального времени.
 
-        Returns:
-            datetime: Current timestamp using datetime.now(). The timestamp represents
-                     the local time when the method is called.
+        Возвращает:
+            datetime: Текущая метка времени с использованием datetime.now(). Метка времени
+                     представляет локальное время на момент вызова метода.
 
-        Note:
-            This method is called internally by create_new_log_entry() to set the
-            created_at field of each log entry. Each call returns a fresh timestamp.
+        Примечание:
+            Каждый вызов возвращает новую метку времени, что обеспечивает их уникальность.
         """
         current_time: datetime = datetime.now()
 
@@ -232,36 +215,34 @@ class LogEntryFactory:
 
     def __validate_mapping_consistency(self) -> bool:
         """
-        Validate that factory mapping is consistent with supported levels.
+        Проверяет согласованность сопоставления фабрики с поддерживаемыми уровнями.
 
-        This private method performs a critical validation check to ensure that the
-        factory's internal log level mapping (__LOG_LEVEL_MAPPING) is perfectly
-        synchronized with the globally defined supported levels (SUPPORTED_LOG_ENTRY_LEVELS).
+        Этот приватный метод выполняет критическую проверку для обеспечения того,
+        чтобы внутреннее сопоставление уровней логирования фабрики (__LOG_LEVEL_MAPPING)
+        было идеально синхронизировано с глобально определенными поддерживаемыми
+        уровнями (SUPPORTED_LOG_ENTRY_LEVELS).
 
-        The validation performs a set comparison to ensure that:
-        1. All levels in __LOG_LEVEL_MAPPING exist in SUPPORTED_LOG_ENTRY_LEVELS
-        2. All levels in SUPPORTED_LOG_ENTRY_LEVELS have corresponding entries in __LOG_LEVEL_MAPPING
-        3. No extra or missing levels exist in either collection
+        Проверка выполняет сравнение множеств для обеспечения того, что:
+        1. Все уровни в __LOG_LEVEL_MAPPING существуют в SUPPORTED_LOG_ENTRY_LEVELS
+        2. Все уровни в SUPPORTED_LOG_ENTRY_LEVELS имеют соответствующие записи в __LOG_LEVEL_MAPPING
+        3. В любой из коллекций нет лишних или отсутствующих уровней
 
-        This validation prevents runtime errors that could occur when trying to create
-        log entries for levels that don't have corresponding implementation classes,
-        or when supported levels are defined but not implemented in the factory.
+        Эта проверка предотвращает ошибки времени выполнения, которые могут возникнуть
+        при попытке создания записей журнала для уровней, которые не имеют соответствующих
+        классов реализации, или когда поддерживаемые уровни определены, но не реализованы
+        в фабрике.
 
-        Returns:
-            bool: True if the mapping is perfectly consistent (sets are equal),
-                 False if there are any discrepancies between the two collections.
+        Возвращает:
+            bool: True, если сопоставление идеально согласовано (множества равны),
+                 False, если есть какие-либо расхождения между двумя коллекциями.
 
-        Example:
-            If SUPPORTED_LOG_ENTRY_LEVELS = ('Info', 'Warning', 'Error', 'Critical')
-            and __LOG_LEVEL_MAPPING has keys ('Info', 'Warning', 'Error', 'Critical'),
-            then this method returns True.
+        Пример:
+            Если SUPPORTED_LOG_ENTRY_LEVELS = ('Info', 'Warning', 'Error', 'Critical')
+            и __LOG_LEVEL_MAPPING имеет ключи ('Info', 'Warning', 'Error', 'Critical'),
+            то этот метод возвращает True.
 
-            If there's a mismatch (e.g., missing 'Debug' level or extra 'Trace' level),
-            then this method returns False.
-
-        Note:
-            This method is called during factory initialization (__init__) to ensure
-            configuration consistency before the factory can be used.
+            Если есть несоответствие (например, отсутствует уровень 'Debug' или есть
+            лишний уровень 'Trace'), то этот метод возвращает False.
         """
         factory_mapping: set[str] = set(self.__LOG_LEVEL_MAPPING.keys())
         supported_levels: set[str] = set(SUPPORTED_LOG_ENTRY_LEVELS)

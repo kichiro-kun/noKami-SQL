@@ -9,5 +9,7 @@ SUPPORTED_LOG_ENTRY_LEVELS: Tuple[str, ...] = (
     'Info',
     'Warning',
     'Error',
-    'Critical'
+    'Critical',
+    'Debug',
+    'Trace',
 )  # Title Case

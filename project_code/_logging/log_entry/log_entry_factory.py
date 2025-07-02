@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
+Фабрика для создания записей журнала различных уровней логирования.
+
+Этот модуль содержит фабрику LogEntryFactory для создания записей журнала
+на основе указанного уровня логирования. Поддерживает все стандартные
+уровни логирования и автоматически добавляет временные метки.
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
@@ -10,7 +16,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 # ========================================================================================
 from shared.constants._logging import SUPPORTED_LOG_ENTRY_LEVELS
@@ -28,47 +34,45 @@ if TYPE_CHECKING:
 # _______________________________________________________________________________________
 class LogEntryFactory:
     """
-    Фабричный класс для создания записей журнала на основе уровня логирования.
+    Простая фабрика для создания записей журнала различных уровней логирования.
 
-    Фабрика создает соответствующие экземпляры LogEntryDTO на основе предоставленного
-    уровня логирования с автоматической валидацией согласованности конфигурации.
-
-    Фабрика поддерживает ввод уровня логирования без учета регистра и автоматически
-    нормализует уровни в формат Title Case для внутренней обработки. При инициализации
-    выполняется проверка согласованности внутреннего сопоставления с глобальными
-    поддерживаемыми уровнями.
+    Создает экземпляры LogEntryDTO на основе указанного уровня логирования.
+    Поддерживает ввод уровней без учета регистра и автоматически добавляет
+    временные метки к создаваемым записям.
 
     Поддерживаемые уровни логирования:
+        - Trace: Максимально детальная трассировка выполнения
+        - Debug: Подробная информация для отладки
         - Info: Общие информационные сообщения
-        - Warning: Предупреждающие сообщения о потенциальных проблемах
-        - Error: Сообщения об ошибках для восстанавливаемых ошибок
-        - Critical: Критические сообщения об ошибках для серьезных проблем
+        - Warning: Предупреждения о потенциальных проблемах
+        - Error: Сообщения об ошибках для восстанавливаемых сбоев
+        - Critical: Критические ошибки, угрожающие стабильности системы
 
     Пример:
         >>> factory = LogEntryFactory()
-        >>> log_entry = factory.create_new_log_entry(
-        ...     level="info",  # Без учета регистра
-        ...     msg_text="Приложение успешно запущено",
+        >>>
+        >>> # Создание записи (уровень без учета регистра)
+        >>> entry = factory.create_new_log_entry(
+        ...     level="info",
+        ...     msg_text="Приложение запущено",
         ...     context="MainApplication"
         ... )
-        >>> print(log_entry.get_level())  # Вывод: "Info"
-        >>> print(log_entry.message_text)  # Вывод: "Приложение успешно запущено"
+        >>>
+        >>> print(entry.get_level())  # "Info"
+        >>> print(entry.message_text)  # "Приложение запущено"
 
-    Примечание:
-        Поддерживаемые уровни логирования определены в константе SUPPORTED_LOG_ENTRY_LEVELS
-        из модуля shared.constants._logging. Фабрика автоматически проверяет согласованность
-        своего внутреннего сопоставления с этими глобальными константами при инициализации.
+    Исключения:
+        UnsupportedLogLevelException: При использовании неподдерживаемого уровня
+        ValueError: При ошибке конфигурации фабрики
     """
 
-    # Внутреннее сопоставление уровней логирования с соответствующими классами реализации LogEntryDTO.
-    # Ключи в формате Title Case для соответствия константе SUPPORTED_LOG_ENTRY_LEVELS.
-    # Это сопоставление используется фабрикой для создания экземпляра правильного типа LogEntryDTO
-    # на основе нормализованного уровня логирования, переданного в create_new_log_entry().
     __LOG_LEVEL_MAPPING: Dict[str, Type['LogEntryDTO']] = {
-        'Info': InfoLogEntry,        # Для информационных сообщений
-        'Warning': WarningLogEntry,  # Для предупреждающих сообщений
-        'Error': ErrorLogEntry,      # Для сообщений об ошибках
-        'Critical': CriticalLogEntry,  # Для критических сообщений об ошибках
+        'Trace': TraceLogEntry,
+        'Debug': DebugLogEntry,
+        'Info': InfoLogEntry,
+        'Warning': WarningLogEntry,
+        'Error': ErrorLogEntry,
+        'Critical': CriticalLogEntry,
     }
 
     def __init__(self) -> None:
@@ -95,34 +99,23 @@ class LogEntryFactory:
         """
         if not self.__validate_mapping_consistency():
             raise ValueError(
-                "Mapping inconsistency detected!"
-                f"Factory: *{self.__class__.__name__}* - mapping keys do not match!"
+                "Mapping inconsistency detected!\n"
+                f"Factory: *{self.__class__.__name__}* - mapping keys do not match!\n"
                 f"With global supported levels: *{SUPPORTED_LOG_ENTRY_LEVELS}*"
             )
 
     def create_new_log_entry(self, level: str, msg_text: str, context: str) -> 'LogEntryDTO':
         """
-        Создает новую запись лога на основе указанного уровня.
+        Создает новую запись журнала указанного уровня.
 
-        Этот метод является основной точкой входа для создания LogEntry.
-        Он проверяет предоставленный уровень логирования, нормализует его в формат
-        Title Case и создает соответствующий экземпляр LogEntryDTO с текущей меткой времени.
+        Args:
+            level (str): Уровень логирования (без учета регистра).
+                        Должен быть одним из поддерживаемых уровней.
+            msg_text (str): Текст сообщения для записи журнала.
+            context (str): Контекстная информация (источник события).
 
-        Аргументы:
-            level (str): Уровень логирования для записи. Строка без учета регистра,
-                        которая должна соответствовать одному из поддерживаемых уровней.
-            msg_text (str): Текст сообщения для записи журнала. Это основное содержимое
-                           сообщения журнала, которое описывает, что произошло.
-            context (str): Контекстная информация для записи журнала. Обычно включает
-                          источник журнала (например, имя класса, имя модуля, имя функции).
-
-        Возвращает:
-            LogEntryDTO: Экземпляр замороженного dataclass, представляющий LogEntry
-                        со следующими атрибутами:
-                        - message_text: Предоставленный текст сообщения
-                        - context: Предоставленная контекстная информация
-                        - created_at: Метка времени создания записи (datetime)
-                        - get_level(): Нормализованный уровень логирования в формате Title Case
+        Returns:
+            LogEntryDTO: Неизменяемая запись журнала с автоматической временной меткой.
 
         Исключения:
             UnsupportedLogLevelException: Если предоставленный уровень не находится в списке
@@ -133,24 +126,11 @@ class LogEntryFactory:
         Пример:
             >>> factory = LogEntryFactory()
             >>>
-            >>> # Создание информационной записи журнала
-            >>> info_entry = factory.create_new_log_entry(
-            ...     level="info",
-            ...     msg_text="Пользователь успешно вошел в систему",
-            ...     context="AuthenticationService"
-            ... )
+            >>> # Различные уровни логирования
+            >>> info_entry = factory.create_new_log_entry("info", "Запуск", "App")
+            >>> error_entry = factory.create_new_log_entry("ERROR", "Ошибка", "DB")
             >>>
-            >>> # Создание записи об ошибке (без учета регистра)
-            >>> error_entry = factory.create_new_log_entry(
-            ...     level="ERROR",
-            ...     msg_text="Не удалось подключиться к базе данных",
-            ...     context="DatabaseManager"
-            ... )
-
-        Примечание:
-            Каждый вызов этого метода создает новый экземпляр с новой меткой времени.
-            Возвращаемые экземпляры LogEntryDTO являются неизменяемыми (замороженные dataclass).
-            Уровень логирования автоматически нормализуется в формат Title Case.
+            >>> print(info_entry.get_level())  # "Info"
         """
         normalized_level: str = level.title()
 
@@ -191,6 +171,7 @@ class LogEntryFactory:
                  False в противном случае.
         """
         normalized_level: str = level.title()
+
         is_supported: bool = normalized_level in self.__LOG_LEVEL_MAPPING.keys()
 
         return is_supported
@@ -235,14 +216,6 @@ class LogEntryFactory:
         Возвращает:
             bool: True, если сопоставление идеально согласовано (множества равны),
                  False, если есть какие-либо расхождения между двумя коллекциями.
-
-        Пример:
-            Если SUPPORTED_LOG_ENTRY_LEVELS = ('Info', 'Warning', 'Error', 'Critical')
-            и __LOG_LEVEL_MAPPING имеет ключи ('Info', 'Warning', 'Error', 'Critical'),
-            то этот метод возвращает True.
-
-            Если есть несоответствие (например, отсутствует уровень 'Debug' или есть
-            лишний уровень 'Trace'), то этот метод возвращает False.
         """
         factory_mapping: set[str] = set(self.__LOG_LEVEL_MAPPING.keys())
         supported_levels: set[str] = set(SUPPORTED_LOG_ENTRY_LEVELS)

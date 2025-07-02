@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
+Реализации типов записей журнала для различных уровней логирования.
+
+Этот модуль содержит конкретные реализации LogEntryDTO для всех стандартных
+уровней логирования: Trace, Debug, Info, Warning, Error и Critical.
+Каждый класс представляет определенный уровень серьезности сообщений журнала.
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
@@ -9,33 +15,41 @@ __all__: list[str] = [
     'InfoLogEntry',
     'WarningLogEntry',
     'ErrorLogEntry',
-    'CriticalLogEntry'
+    'CriticalLogEntry',
+    'DebugLogEntry',
+    'TraceLogEntry'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 # ========================================================================================
+from typing import Literal
+
 from ..abstract.log_entry_dto import LogEntryDTO
 
 
 # _______________________________________________________________________________________
 class InfoLogEntry(LogEntryDTO):
     """
-    Concrete implementation of LogEntryDTO for informational log entries.
+    Конкретная реализация LogEntryDTO для информационных записей журнала.
 
-    This class represents log entries with "Info" severity level, typically used for
-    general informational messages that track normal application flow and operations.
-    Info level logs are usually the most verbose and provide detailed information
-    about application behavior.
+    Этот класс представляет записи журнала с уровнем серьезности "Info", используемые
+    для общих информационных сообщений, которые отслеживают нормальный поток выполнения
+    приложения и операции.
+
+    Характеристики уровня Info:
+    - Информационные сообщения о нормальной работе приложения
+    - Подтверждение успешного выполнения операций
+    - Общая информация о состоянии системы
     """
 
-    def get_level(self) -> str:
+    def get_level(self) -> Literal['Info']:
         """
-        Get the log level for info entries.
+        Получить уровень журналирования для информационных записей.
 
         Returns:
-            str: Always returns "Info" to identify this as an informational log entry.
+            str: Всегда возвращает "Info" для идентификации как информационной записи журнала.
         """
         return 'Info'
 
@@ -43,22 +57,25 @@ class InfoLogEntry(LogEntryDTO):
 # _______________________________________________________________________________________
 class WarningLogEntry(LogEntryDTO):
     """
-    Concrete implementation of LogEntryDTO for warning log entries.
+    Конкретная реализация LogEntryDTO для предупреждающих записей журнала.
 
-    This class represents log entries with "Warning" severity level, used for messages
-    that indicate potential issues or unexpected conditions that don't prevent the
-    application from continuing to function, but may require attention.
+    Этот класс представляет записи журнала с уровнем серьезности "Warning", используемые
+    для сообщений, которые указывают на потенциальные проблемы или неожиданные условия,
+    которые не препятствуют продолжению работы приложения, но могут потребовать внимания.
 
-    Warning level logs help identify situations that could lead to problems if not
-    addressed, or indicate that something unexpected happened but was handled gracefully.
+    Характеристики уровня Warning:
+    - Потенциальные проблемы, которые могут привести к ошибкам
+    - Неожиданные условия, обработанные корректно
+    - Устаревшие функции или методы
+    - Ситуации, требующие внимания
     """
 
-    def get_level(self) -> str:
+    def get_level(self) -> Literal['Warning']:
         """
-        Get the log level for warning entries.
+        Получить уровень журналирования для предупреждающих записей.
 
         Returns:
-            str: Always returns "Warning" to identify this as a warning log entry.
+            str: Всегда возвращает "Warning" для идентификации как предупреждающей записи журнала.
         """
         return 'Warning'
 
@@ -66,22 +83,25 @@ class WarningLogEntry(LogEntryDTO):
 # _______________________________________________________________________________________
 class ErrorLogEntry(LogEntryDTO):
     """
-    Concrete implementation of LogEntryDTO for error log entries.
+    Конкретная реализация LogEntryDTO для записей журнала об ошибках.
 
-    This class represents log entries with "Error" severity level, used for messages
-    that indicate significant problems or failures that prevent normal operation but
-    don't necessarily cause the application to terminate.
+    Этот класс представляет записи журнала с уровнем серьезности "Error", используемые
+    для сообщений, которые указывают на значительные проблемы или сбои, преп��тствующие
+    нормальной работе, но не обязательно приводящие к завершению работы приложения.
 
-    Error level logs represent recoverable failures where the application can continue
-    running, but specific operations or features may not work as expected.
+    Характеристики уровня Error:
+    - Ошибки, препятствующие выполнению операций
+    - Исключения, которые были перехвачены и обработаны
+    - Сбои в работе отдельных компонентов
+    - Проблемы, требующие немедленного внимания
     """
 
-    def get_level(self) -> str:
+    def get_level(self) -> Literal['Error']:
         """
-        Get the log level for error entries.
+        Получить уровень журналирования для записей об ошибках.
 
         Returns:
-            str: Always returns "Error" to identify this as an error log entry.
+            str: Всегда возвращает "Error" для идентификации как записи журнала об ошибке.
         """
         return 'Error'
 
@@ -89,22 +109,75 @@ class ErrorLogEntry(LogEntryDTO):
 # _______________________________________________________________________________________
 class CriticalLogEntry(LogEntryDTO):
     """
-    Concrete implementation of LogEntryDTO for critical log entries.
+    Конкретная реализация LogEntryDTO для критических записей журнала.
 
-    This class represents log entries with "Critical" severity level, used for messages
-    that indicate severe errors or failures that may cause the application to terminate
-    or become completely unusable.
+    Этот класс представляет записи журнала с уровнем серьезности "Critical", используемые
+    для сообщений, которые указывают на серьезные ошибки или сбои, которые могут привести
+    к завершению работы приложения или сделать его полностью непригодным для использования.
 
-    Critical level logs represent the most severe issues that require immediate attention
-    and typically indicate system-wide failures or conditions that compromise the
-    application's ability to function.
+    Характеристики уровня Critical:
+    - Критические ошибки, угрожающие стабильности системы
+    - Сбои, которые могут привести к остановке приложения
+    - Проблемы безопасности и целостности данных
+    - Ситуации, требующие экстренного вмешательства
     """
 
-    def get_level(self) -> str:
+    def get_level(self) -> Literal['Critical']:
         """
-        Get the log level for critical entries.
+        Получить уровень журналирования для критических записей.
 
         Returns:
-            str: Always returns "Critical" to identify this as a critical log entry.
+            str: Всегда возвращает "Critical" для идентификации как критической записи журнала.
         """
         return 'Critical'
+
+
+# _______________________________________________________________________________________
+class DebugLogEntry(LogEntryDTO):
+    """
+    Конкретная реализация LogEntryDTO для отладочных записей журнала.
+
+    Этот класс представляет записи журнала с уровнем серьезности "Debug", используемые
+    для детальных диагностических сообщений, которые помогают разработчикам отслеживать
+    выполнение кода и выявлять проблемы во время разработки и тестирования.
+
+    Характеристики уровня Debug:
+    - Подробная информация о выполнении программы
+    - Значения переменных и состояние объектов
+    - Промежуточные результаты вычислений
+    """
+
+    def get_level(self) -> Literal['Debug']:
+        """
+        Получить уровень журналирования для отладочных записей.
+
+        Returns:
+            str: Всегда возвращает "Debug" для идентификации как отладочной записи журнала.
+        """
+        return 'Debug'
+
+
+# _______________________________________________________________________________________
+class TraceLogEntry(LogEntryDTO):
+    """
+    Конкретная реализация LogEntryDTO для трассировочных записей журнала.
+
+    Этот класс представляет записи журнала с уровнем серьезности "Trace", используемые
+    для самых детальных диагностических сообщений, которые отслеживают каждый шаг
+    выполнения программы. Это самый низкий и подробный уровень логирования.
+
+    Характеристики уровня Trace:
+    - Максимально детальная трассировка выполнения
+    - Входы и выходы из каждой функции
+    - Пошаговое выполнение алгоритмов
+    - Используется только для глубокой отладки сложных проблем
+    """
+
+    def get_level(self) -> Literal['Trace']:
+        """
+        Получить уровень журналирования для трассировочных записей.
+
+        Returns:
+            str: Всегда возвращает "Trace" для идентификации как трассировочной записи журнала.
+        """
+        return 'Trace'

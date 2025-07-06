@@ -16,7 +16,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '1.0.2'
+__version__ = '0.2.0'
 
 # ========================================================================================
 from shared.constants._logging import SUPPORTED_LOG_ENTRY_LEVELS
@@ -25,7 +25,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Dict, Type
 
 from .realization.log_entry_types import *
-from shared.exceptions._logging import UnsupportedLogLevelException
+from shared.exceptions._logging import UnsupportedLogLevelError
 
 if TYPE_CHECKING:
     from .abstract.log_entry_dto import LogEntryDTO
@@ -137,7 +137,7 @@ class LogEntryFactory:
         # Проверка поддерживаемости уровня
         if not self.__is_supported_level(level=level):
             supported_levels: str = ', '.join(self.__LOG_LEVEL_MAPPING.keys())
-            raise UnsupportedLogLevelException(
+            raise UnsupportedLogLevelError(
                 f"Неподдерживаемый уровень логирования!\n"
                 f"Переданный уровень: *{level}*\n"
                 f"Поддерживаемые уровни: *{supported_levels}*"

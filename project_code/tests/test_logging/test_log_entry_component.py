@@ -13,7 +13,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '1.0.1'
+__version__ = '0.2.0'
 
 # ========================================================================================
 from shared.constants._logging import SUPPORTED_LOG_ENTRY_LEVELS
@@ -156,7 +156,7 @@ class TestLogEntryFactory(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
     def test_factory_raise_expected_exception_when_log_level_unsupported(self) -> None:
-        from shared.exceptions._logging import UnsupportedLogLevelException as ExpectedException
+        from shared.exceptions._logging import UnsupportedLogLevelError as ExpectedException
 
         # Build
         factory: tested_class = self._factory

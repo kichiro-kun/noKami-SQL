@@ -8,9 +8,9 @@ Apache license, version 2.0 (Apache-2.0 license)
 __all__: list[str] = ['LoggerObserverInterface']
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
-#========================================================================================
+# ========================================================================================
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -20,6 +20,8 @@ if TYPE_CHECKING:
 
 # _______________________________________________________________________________________
 class LoggerObserverInterface(ABC):
+
+    # -----------------------------------------------------------------------------------
     @abstractmethod
-    def update(self, log_entry: LogEntryDTO) -> None:
+    def update(self, log_entry: 'LogEntryDTO') -> None:
         ...

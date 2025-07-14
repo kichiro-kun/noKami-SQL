@@ -10,18 +10,16 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
-from typing import TYPE_CHECKING, List
+from typing import List
 
 from _logging.log_entry.log_entry_factory import LogEntryFactory
 from _logging.logger_subject.logger_subject_interface import LoggerSubjectInterface
 from _logging.logger_subject.logger_observer_interface import LoggerObserverInterface
-
-if TYPE_CHECKING:
-    from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
+from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 
 
 # _______________________________________________________________________________________
@@ -65,7 +63,7 @@ class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
         return True
 
     # -----------------------------------------------------------------------------------
-    def notify_logger_observers(self, log_entry: 'LogEntryDTO') -> bool:
+    def notify_logger_observers(self, log_entry: LogEntryDTO) -> bool:
         observers_list: List[LoggerObserverInterface] = self.__logger_observers_list
 
         if len(observers_list) == 0:

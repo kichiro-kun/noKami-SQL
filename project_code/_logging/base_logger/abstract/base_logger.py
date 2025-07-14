@@ -10,23 +10,23 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
 from typing import Dict
 
-from _logging.logger_config.abstract.logger_config_dto import LoggerConfigDTO
+from _logging.logger_config.abstract.logger_config_dto import LoggerConfigDTO, NoLoggerConfig
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
-from os_interaction.file_explorer.abstract.file_explorer_interface import FileExplorerInterfaceStrategy
+from os_interaction.file_explorer.abstract.file_explorer_interface import FileExplorerInterfaceStrategy, NoFileExplorer
 
 
 # _______________________________________________________________________________________
 class BaseLogger(metaclass=ABCMeta):
 
     def __init__(self) -> None:
-        self.__logger_config: LoggerConfigDTO = None
-        self.__perform_file_explorer: FileExplorerInterfaceStrategy = None
+        self.__logger_config: LoggerConfigDTO = NoLoggerConfig()
+        self.__perform_file_explorer: FileExplorerInterfaceStrategy = NoFileExplorer()
 
     # ...................................................................................
     @property

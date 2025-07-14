@@ -6,13 +6,14 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # ========================================================================================
 import unittest as UT
 from unittest import mock as UM
 from typing import Any, Dict, Tuple
 
+import _logging.base_logger.abstract.base_logger as tested_module
 from _logging.base_logger.abstract.base_logger import BaseLogger as tested_class
 from _logging.logger_config.abstract.logger_config_dto import LoggerConfigDTO
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
@@ -22,20 +23,38 @@ from os_interaction.file_explorer.abstract.file_explorer_interface import FileEx
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class TestedClassStub(tested_class):
     def _read_log_entry(self, log_entry: LogEntryDTO) -> Dict[str, str]:
-        pass
+        return {"": ""}
 
     def _flush_log_msg(self, data: Dict[str, str]) -> bool:
-        pass
+        return False
 
 
 # _______________________________________________________________________________________
 class TestComponentPositive(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
+    @staticmethod
+    def create_mock_logger_config() -> UM.MagicMock:
+        mock_logger_config: UM.MagicMock = UM.MagicMock(spec=LoggerConfigDTO)
+        return mock_logger_config
+
+    # -----------------------------------------------------------------------------------
+    @staticmethod
+    def create_mock_file_explorer() -> UM.MagicMock:
+        mock_file_explorer: UM.MagicMock = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+        return mock_file_explorer
+
+    # -----------------------------------------------------------------------------------
+    @staticmethod
+    def create_mock_log_entry() -> UM.MagicMock:
+        mock_log_entry: UM.MagicMock = UM.MagicMock(spec=LogEntryDTO)
+        return mock_log_entry
+
+    # -----------------------------------------------------------------------------------
     def test_set_new_logger_config_accepts_valid_config(self) -> None:
         # Build
         instance = TestedClassStub()
-        mock_logger_config = UM.MagicMock(spec=LoggerConfigDTO)
+        mock_logger_config: UM.MagicMock = self.create_mock_logger_config()
 
         # Operate & Check
         instance.set_new_config(new_config=mock_logger_config)
@@ -44,7 +63,7 @@ class TestComponentPositive(UT.TestCase):
     def test_set_new_file_explorer_accepts_valid_file_explorer(self) -> None:
         # Build
         instance = TestedClassStub()
-        mock_file_explorer = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+        mock_file_explorer: UM.MagicMock = self.create_mock_file_explorer()
 
         # Operate & Check
         instance.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer)
@@ -90,7 +109,7 @@ class TestComponentPositive(UT.TestCase):
                                                               mock_read_log_entry: UM.MagicMock) -> None:
         # Build
         instance = TestedClassStub()
-        mock_log_entry: UM.MagicMock = UM.MagicMock(spec=LogEntryDTO)
+        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
         expected_log_entry_data: Dict[str, str] = {
             'Banana': 'Strawberry',
             'Test?': 'Yes'
@@ -115,8 +134,8 @@ class TestComponentPositive(UT.TestCase):
     def test_setters_update_public_configuration_fields_correctly(self) -> None:
         # Build
         instance = TestedClassStub()
-        mock_config = UM.MagicMock(spec=LoggerConfigDTO)
-        mock_file_explorer = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+        mock_config: UM.MagicMock = self.create_mock_logger_config()
+        mock_file_explorer: UM.MagicMock = self.create_mock_file_explorer()
 
         # Operate
         instance.set_new_config(new_config=mock_config)
@@ -141,10 +160,10 @@ class TestComponentPositive(UT.TestCase):
         # Build
         instance1 = TestedClassStub()
         instance2 = TestedClassStub()
-        mock_config1 = UM.MagicMock(spec=LoggerConfigDTO)
-        mock_config2 = UM.MagicMock(spec=LoggerConfigDTO)
-        mock_file_explorer1 = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
-        mock_file_explorer2 = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+        mock_config1: UM.MagicMock = self.create_mock_logger_config()
+        mock_config2: UM.MagicMock = self.create_mock_logger_config()
+        mock_file_explorer1: UM.MagicMock = self.create_mock_file_explorer()
+        mock_file_explorer2: UM.MagicMock = self.create_mock_file_explorer()
 
         mock_config2.return_value = 10
 
@@ -174,6 +193,37 @@ class TestComponentPositive(UT.TestCase):
                     expr1=instance1_field,
                     expr2=instance2_field
                 )
+
+    # -----------------------------------------------------------------------------------
+    @UM.patch.object(target=tested_module, attribute='NoLoggerConfig', autospec=True)
+    @UM.patch.object(target=tested_module, attribute='NoFileExplorer', autospec=True)
+    def test_configuration_fields_are_null_objects_by_default(self,
+                                                              mock_file_explorer: UM.MagicMock,
+                                                              mock_logger_config: UM.MagicMock) -> None:
+        # Build
+        expected_data1 = 'I am a NullObject Logger Config!!!'
+        expected_data2 = 'I am a NullObject File Explorer!?!'
+
+        # Prepare mocks
+        mock_logger_config.return_value = expected_data1
+        mock_file_explorer.return_value = expected_data2
+
+        # Operate
+        instance = TestedClassStub()
+
+        # Extract
+        actual_data1 = instance.logger_config
+        actual_data2 = instance.perform_file_explorer
+
+        # Check
+        self.assertIs(
+            expr1=actual_data1,
+            expr2=expected_data1
+        )
+        self.assertIs(
+            expr1=actual_data2,
+            expr2=expected_data2
+        )
 
 
 # _______________________________________________________________________________________
@@ -241,7 +291,7 @@ class TestComponentNegative(UT.TestCase):
                                                             mock_read_log_entry: UM.MagicMock) -> None:
         # Build
         instance = TestedClassStub()
-        mock_log_entry: UM.MagicMock = UM.MagicMock(spec=LogEntryDTO)
+        mock_log_entry: UM.MagicMock = TestComponentPositive.create_mock_log_entry()
         expected_log_entry_data: Dict[str, str] = {
             'Banana': 'Blueberry',
             'Test?': 'I think yes!'

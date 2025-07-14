@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # ========================================================================================
 import unittest as UT
@@ -22,7 +22,7 @@ from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class DataBaseStub(tested_class):
+class TestedClassStub(tested_class):
     def deconstruct_database_and_components(self) -> None:
         pass
 
@@ -64,7 +64,7 @@ class TestDataBasePositive(UT.TestCase):
         expected_default_placeholder = '?'
 
         # Operate
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Extract
         actual_placeholder: str = instance.query_param_placeholder
@@ -84,7 +84,7 @@ class TestDataBasePositive(UT.TestCase):
         for expected_placeholder in expected_placeholders:
             with self.subTest(pattern=expected_placeholder):
                 # Operate
-                instance = DataBaseStub(query_param_placeholder=expected_placeholder)
+                instance = TestedClassStub(query_param_placeholder=expected_placeholder)
 
                 # Extract
                 actual_placeholder: str = instance.query_param_placeholder
@@ -99,7 +99,7 @@ class TestDataBasePositive(UT.TestCase):
     def test_deconstruct_database_and_components_called_on_delete(self) -> None:
         # Build
         expected_method_name = 'deconstruct_database_and_components'
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Prepare mock
         with UM.patch.object(
@@ -114,8 +114,8 @@ class TestDataBasePositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_log_entry_factory_is_singleton_shared_across_instances(self) -> None:
         # Operate
-        instance1 = DataBaseStub()
-        instance2 = DataBaseStub()
+        instance1 = TestedClassStub()
+        instance2 = TestedClassStub()
 
         # Extract
         factory1: LogEntryFactory = instance1.log_entry_factory
@@ -155,7 +155,7 @@ class TestDataBasePositive(UT.TestCase):
     def test_register_logger_observer_returns_true_for_valid_observer(self) -> None:
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Operate & Extract
         result: bool = instance.register_logger_observer(new_observer=mock_observer)
@@ -171,7 +171,7 @@ class TestDataBasePositive(UT.TestCase):
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Prepare
         instance.register_logger_observer(new_observer=mock_observer)
@@ -189,7 +189,7 @@ class TestDataBasePositive(UT.TestCase):
     def test_remove_logger_observer_returns_true_when_observer_removed(self) -> None:
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Prepare
         instance.register_logger_observer(new_observer=mock_observer)
@@ -208,7 +208,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer1: UM.MagicMock = self.create_mock_observer()
         mock_observer2: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = DataBaseStub()
+        instance1 = TestedClassStub()
 
         # Prepare
         instance1.register_logger_observer(new_observer=mock_observer1)
@@ -227,8 +227,8 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer1: UM.MagicMock = self.create_mock_observer()
         mock_observer2: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = DataBaseStub()
-        instance2 = DataBaseStub()
+        instance1 = TestedClassStub()
+        instance2 = TestedClassStub()
 
         # Prepare
         register_observer1_result: bool = instance1.register_logger_observer(new_observer=mock_observer1)
@@ -275,7 +275,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer: UM.MagicMock = self.create_mock_observer()
         prepared_mock_observer: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Prepare
         instance.register_logger_observer(new_observer=prepared_mock_observer)
@@ -306,7 +306,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_log_entry_1: UM.MagicMock = self.create_mock_log_entry()
         mock_log_entry_2: UM.MagicMock = self.create_mock_log_entry()
         mock_log_entry_3: UM.MagicMock = self.create_mock_log_entry()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Operate & Extract
         register_result: bool = instance.register_logger_observer(
@@ -386,7 +386,7 @@ class TestDataBaseNegative(UT.TestCase):
             with self.subTest(pattern=invalid_placeholder):
                 # Operate & Check
                 with self.assertRaises(expected_exception=ValueError):
-                    DataBaseStub(query_param_placeholder=invalid_placeholder)
+                    TestedClassStub(query_param_placeholder=invalid_placeholder)
 
     # -----------------------------------------------------------------------------------
     def test_cannot_instantiate_abstract_database_directly_raises_TypeError(self) -> None:
@@ -400,7 +400,7 @@ class TestDataBaseNegative(UT.TestCase):
         invalid_observers: Tuple[Any, ...] = (
             'observer', 1234, -1234, -0.12, 0.12, True, False
         )
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Prepare test cycle
         for invalid_observer in invalid_observers:
@@ -420,7 +420,7 @@ class TestDataBaseNegative(UT.TestCase):
     def test_register_logger_observer_returns_false_for_duplicate_observer(self) -> None:
         # Build
         mock_observer: UM.MagicMock = TestDataBasePositive.create_mock_observer()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Operate
         result1: bool = instance.register_logger_observer(new_observer=mock_observer)
@@ -440,7 +440,7 @@ class TestDataBaseNegative(UT.TestCase):
     def test_notify_logger_observers_returns_false_when_no_observers_registered(self) -> None:
        # Build
         mock_log_entry: UM.MagicMock = TestDataBasePositive.create_mock_log_entry()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Operate & Extract
         result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
@@ -455,7 +455,7 @@ class TestDataBaseNegative(UT.TestCase):
     def test_remove_logger_observer_returns_false_when_observer_not_registered(self) -> None:
         # Build
         mock_observer: UM.MagicMock = TestDataBasePositive.create_mock_observer()
-        instance = DataBaseStub()
+        instance = TestedClassStub()
 
         # Operate & Extract
         result: bool = instance.remove_logger_observer(removable_observer=mock_observer)

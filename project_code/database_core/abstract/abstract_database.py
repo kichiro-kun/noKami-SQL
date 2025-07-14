@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
@@ -33,7 +33,7 @@ class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
         if not isinstance(query_param_placeholder, str):
             raise ValueError(
                 "Error! Argument: *query_param_placeholder* - should be a string!\n"
-                f"Given: {query_param_placeholder} - is Type of {type(query_param_placeholder)}"
+                f"Given: *{query_param_placeholder}* - is Type of *{type(query_param_placeholder)}*!"
             )
 
         self.query_param_placeholder: str = query_param_placeholder

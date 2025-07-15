@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
 import unittest as UT
@@ -27,6 +27,27 @@ class TestedClassStub(tested_class):
 
     def _flush_log_msg(self, data: Dict[str, str]) -> bool:
         return False
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class CheckStubClass(UT.TestCase):
+    def test_methods_returns(self) -> None:
+        # Build
+        instance = TestedClassStub()
+
+        # Extract
+        value1 = instance._read_log_entry(log_entry=None)  # type: ignore
+        value2 = instance._flush_log_msg(data=None)  # type: ignore
+
+        # Check
+        self.assertDictEqual(
+            d1=value1,
+            d2={"": ""}
+        )
+        self.assertIs(
+            expr1=value2,
+            expr2=False
+        )
 
 
 # _______________________________________________________________________________________

@@ -1,246 +1,180 @@
 # -*- coding: utf-8 -*-
 
 """
-Положительный набор тестов, для проверки корректного поведения и интерфейса простой фабрики.
-Из компонента `LogEntry`.
-
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
-__all__: list[str] = [
-    'TestLogEntryFactory',
-]
-
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
-from shared.constants._logging import SUPPORTED_LOG_ENTRY_LEVELS
-
+from typing import Dict, Tuple
 import unittest as UT
 from unittest import mock as UM
-from datetime import datetime
-from typing import Callable, Dict, List, Tuple
 
 import _logging.log_entry.log_entry_factory as tested_module
 from _logging.log_entry.log_entry_factory import LogEntryFactory as tested_class
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
+from shared.exceptions._logging import UnsupportedLogLevelError
 
 
 # _______________________________________________________________________________________
-class TestLogEntryFactory(UT.TestCase):
+class TestLogEntryFactoryPositive(UT.TestCase):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.__tested_module = tested_module
-        cls.__tested_class: Callable = tested_class
-        cls.__supported_log_levels: Tuple[str, ...] = SUPPORTED_LOG_ENTRY_LEVELS
 
-        cls.__base_kwargs_for_factory: Dict[str, str] = {
-            'level': SUPPORTED_LOG_ENTRY_LEVELS[0],
-            'msg_text': 'Test LogEntry',
-            'context': f'{cls.__name__}'
+        cls.factory = tested_class
+        cls.base_kwargs_for_create_method: Dict[str, str] = {
+            'level': 'Info',
+            'msg_text': 'Hello! Can you see test data?',
+            'context': 'Test',
         }
 
     # -----------------------------------------------------------------------------------
-    def setUp(self) -> None:
-        super().setUp()
-        self._factory: tested_class = self.__tested_class()
+    def test_has_static_create_method_with_required_parameters(self) -> None:
+        # Build
+        required_kwargs: Dict[str, str] = self.base_kwargs_for_create_method
+
+        # Operate & Check
+        self.factory.create_new_log_entry(**required_kwargs)
 
     # -----------------------------------------------------------------------------------
-    def test_factory_create_LogEntryDTO_instance(self) -> None:
+    def test_create_all_supported_level_log_entries(self) -> None:
         # Build
-        factory: tested_class = self._factory
-        required_kwargs: Dict[str, str] = self.__base_kwargs_for_factory
-
-        # Operate
-        instance: LogEntryDTO = factory.create_new_log_entry(**required_kwargs)
-
-        # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=LogEntryDTO
+        supported_levels: Tuple[str, ...] = (
+            'Info', 'Warning', 'Error', 'Critical', 'Debug', 'Trace'
         )
-
-    # -----------------------------------------------------------------------------------
-    def test_factory_create_log_entry_with_expected_data(self) -> None:
-        # Build
-        factory: tested_class = self._factory
-        expected_data: Dict[str, str] = self.__base_kwargs_for_factory
-
-        # Operate
-        instance: LogEntryDTO = factory.create_new_log_entry(**expected_data)
-
-        # Measure
-        actual_data: Dict[str, str] = {
-            'level': instance.get_level(),
-            'msg_text': instance.message_text,
-            'context': instance.context
+        other_kwargs: Dict[str, str] = {
+            'msg_text': 'I check log level',
+            'context': 'Test Supported Levels'
         }
 
-        # Check
-        self.assertDictEqual(
-            d1=actual_data,
-            d2=expected_data
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_factory_set_current_time_to_log_entry(self) -> None:
-        # Build
-        tested_module = self.__tested_module
-        factory: tested_class = self._factory
-        required_kwargs: Dict[str, str] = self.__base_kwargs_for_factory
-
-        # Mock setup
-        with UM.patch.object(
-                target=tested_module,
-                attribute='datetime',
-                autospec=True
-        ) as mock_datetime:
-            # Prepare mock data
-            expected_time: datetime = datetime.now()
-            mock_datetime.now.return_value = expected_time
-
-            # Operate
-            instance: LogEntryDTO = factory.create_new_log_entry(**required_kwargs)
-
-            # Check
-            self.assertIs(
-                expr1=instance.created_at,
-                expr2=expected_time
-            )
-
-    # -----------------------------------------------------------------------------------
-    def test_log_entry_field_change_raise_FrozenInstanceError(self) -> None:
-        from dataclasses import FrozenInstanceError as ExpectedException
-
-        # Build
-        factory: tested_class = self._factory
-        required_kwargs: Dict[str, str] = self.__base_kwargs_for_factory
-
-        # Operate
-        instance: LogEntryDTO = factory.create_new_log_entry(**required_kwargs)
-
-        # Check
-        with self.assertRaises(expected_exception=ExpectedException):
-            instance.message_text = 'I think that not a test!'  # type: ignore
-
-    # -----------------------------------------------------------------------------------
-    def test_factory_create_supported_log_level_entries(self) -> None:
-        # Build
-        factory: tested_class = self._factory
-        supported_levels: Tuple[str, ...] = self.__supported_log_levels
-
-        # Operate & Prepare test data
-        created_entries: List[LogEntryDTO] = []
-        for level in supported_levels:
-            log_entry: LogEntryDTO = factory.create_new_log_entry(
-                level=level,
-                msg_text=f'Create log entry with specific level!',
-                context=f'level - {level}'
-            )
-            created_entries.append(log_entry)
-
-        # Check
-        for expected_level, log_entry in zip(supported_levels, created_entries):
+        # Prepare test cycle
+        for expected_level in supported_levels:
             with self.subTest(pattern=expected_level):
-                # Measure
-                actual_level: str = log_entry.get_level()
+                # Operate
+                instance: LogEntryDTO = self.factory.create_new_log_entry(
+                    level=expected_level, **other_kwargs
+                )
 
-                # Assert
+                # Pre-Check
+                self.assertIsInstance(
+                    obj=instance,
+                    cls=LogEntryDTO
+                )
+
+                # Extract
+                actual_level: str = instance.get_level()
+
+                # Check
                 self.assertEqual(
                     first=actual_level,
                     second=expected_level
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_factory_raise_expected_exception_when_log_level_unsupported(self) -> None:
-        from shared.exceptions._logging import UnsupportedLogLevelError as ExpectedException
-
+    def test_parameter_level_unsensitive_to_case(self) -> None:
         # Build
-        factory: tested_class = self._factory
-        unsupported_level = 'Check'
-        supported_levels: Tuple[str, ...] = self.__supported_log_levels
-
-        # Pre-Check
-        self.assertNotIn(
-            member=unsupported_level.lower(),
-            container=[level.lower() for level in supported_levels],
-            msg=f"Failure! Test setup error: *{unsupported_level}* - should not be in supported levels!"
+        levels: Tuple[str, ...] = (
+            'Info', 'info', 'INFO', 'infO', 'InFo', 'iNfO', 'WARNING', 'ERROR', 'ErroR'
         )
+        other_kwargs: Dict[str, str] = {
+            'msg_text': 'Check parameters case',
+            'context': 'Test levels'
+        }
 
-        # Check
-        with self.assertRaises(expected_exception=ExpectedException):
-            # Operate
-            factory.create_new_log_entry(
-                level=unsupported_level,
-                msg_text='Hi!',
-                context=f'{self.__class__.__name__}'
-            )
-
-    # -----------------------------------------------------------------------------------
-    def test_factory_ignore_level_parameter_case(self) -> None:
-        # Build
-        factory: tested_class = self._factory
-        test_data: Tuple[str, ...] = (
-            'Info',
-            'INFO',
-            'info',
-            'infO',
-            'InFo',
-            'iNfO'
-        )
-
-        # Check
-        for level in test_data:
+        # Prepare
+        for level in levels:
             with self.subTest(pattern=level):
                 # Operate
-                instance: LogEntryDTO = factory.create_new_log_entry(
-                    level=level,
-                    msg_text="Hello!",
-                    context=f'{self.__class__.__name__}'
+                instance: LogEntryDTO = self.factory.create_new_log_entry(
+                    level=level, **other_kwargs
+                )
+
+                # Pre-Check
+                self.assertIsInstance(
+                    obj=instance,
+                    cls=LogEntryDTO
+                )
+
+                # Extract
+                actual_level: str = instance.get_level()
+
+                # Check
+                self.assertEqual(
+                    first=actual_level.lower(),
+                    second=level.lower()
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_factory_create_unique_log_entries(self) -> None:
+    def test_accept_specific_kwargs(self) -> None:
         # Build
-        factory: tested_class = self._factory
-        required_data: Dict[str, str] = self.__base_kwargs_for_factory
+        kwargs: Dict[str, str] = self.base_kwargs_for_create_method
 
         # Operate
-        instance1: LogEntryDTO = factory.create_new_log_entry(**required_data)
-        instance2: LogEntryDTO = factory.create_new_log_entry(**required_data)
+        instance: LogEntryDTO = self.factory.create_new_log_entry(
+            **kwargs
+        )
 
         # Check
-        self.assertIsNot(
-            expr1=instance1,
-            expr2=instance2
+        self.assertEqual(
+            first=instance.message_text,
+            second=kwargs['msg_text']
+        )
+        self.assertEqual(
+            first=instance.context,
+            second=kwargs['context']
         )
 
     # -----------------------------------------------------------------------------------
-    def test_factory_initialization_raise_ValueError_when_log_level_mapping_inconsistent(self) -> None:
+    @UM.patch.object(target=tested_module, attribute='datetime', autospec=True)
+    def test_factory_set_current_time_to_log_entry_by_datetime(self,
+                                                               mock_datetime: UM.MagicMock) -> None:
         # Build
-        factory_class = tested_class
+        expected_value = 'Today'
 
-        # Mock setup
-        with UM.patch.object(
-            target=tested_module,
-            attribute='SUPPORTED_LOG_ENTRY_LEVELS',
-            new=('Test1', 'Test2')
-        ):
-            # Check
-            with self.assertRaises(expected_exception=ValueError):
-                # Operate
-                factory = factory_class()
+        # Prepare mock
+        mock_datetime.now.return_value = expected_value
 
-        # Mock setup
-        with UM.patch.object(
-            target=tested_module,
-            attribute='SUPPORTED_LOG_ENTRY_LEVELS',
-            new=(*SUPPORTED_LOG_ENTRY_LEVELS, 'a3jkdw3qbrwmkcnrwt')
-        ):
-            # Check
-            with self.assertRaises(expected_exception=ValueError):
-                # Operate
-                factory = factory_class()
+        # Operate
+        instance = self.factory.create_new_log_entry(**self.base_kwargs_for_create_method)
+
+        # Extract
+        actual_value = instance.created_at
+
+        # Pre-Check
+        mock_datetime.now.assert_called_once()
+
+        # Check
+        self.assertEqual(
+            first=actual_value,
+            second=expected_value
+        )
+
+
+# _______________________________________________________________________________________
+class TestLogEntryFactoryNegative(UT.TestCase):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls.factory = tested_class
+
+    # -----------------------------------------------------------------------------------
+    def test_unsupported_level_raise_UnsupportedLogLevelError(self) -> None:
+        # Build
+        kwargs: Dict[str, str] = {
+            'level': 'W2lcktjq252j6cBCR',
+            'msg_text': 'Cherry',
+            'context': 'Test'
+        }
+
+        # Operate & Check
+        with self.assertRaises(expected_exception=UnsupportedLogLevelError):
+            self.factory.create_new_log_entry(**kwargs)

@@ -6,12 +6,13 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # ========================================================================================
-from typing import Dict, Tuple
 import unittest as UT
 from unittest import mock as UM
+from typing import Any, Dict, Tuple
+from datetime import datetime
 
 import _logging.log_entry.log_entry_factory as tested_module
 from _logging.log_entry.log_entry_factory import LogEntryFactory as tested_class
@@ -35,7 +36,7 @@ class TestLogEntryFactoryPositive(UT.TestCase):
         }
 
     # -----------------------------------------------------------------------------------
-    def test_has_static_create_method_with_required_parameters(self) -> None:
+    def test_create_new_log_entry_with_required_parameters_returns_instance(self) -> None:
         # Build
         required_kwargs: Dict[str, str] = self.base_kwargs_for_create_method
 
@@ -43,7 +44,7 @@ class TestLogEntryFactoryPositive(UT.TestCase):
         self.factory.create_new_log_entry(**required_kwargs)
 
     # -----------------------------------------------------------------------------------
-    def test_create_all_supported_level_log_entries(self) -> None:
+    def test_create_new_log_entry_creates_entries_for_all_supported_levels(self) -> None:
         # Build
         supported_levels: Tuple[str, ...] = (
             'Info', 'Warning', 'Error', 'Critical', 'Debug', 'Trace'
@@ -77,7 +78,7 @@ class TestLogEntryFactoryPositive(UT.TestCase):
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_parameter_level_unsensitive_to_case(self) -> None:
+    def test_create_new_log_entry_accepts_case_insensitive_level_parameter(self) -> None:
         # Build
         levels: Tuple[str, ...] = (
             'Info', 'info', 'INFO', 'infO', 'InFo', 'iNfO', 'WARNING', 'ERROR', 'ErroR'
@@ -111,7 +112,7 @@ class TestLogEntryFactoryPositive(UT.TestCase):
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_accept_specific_kwargs(self) -> None:
+    def test_create_new_log_entry_correctly_accepts_specific_kwargs(self) -> None:
         # Build
         kwargs: Dict[str, str] = self.base_kwargs_for_create_method
 
@@ -132,8 +133,8 @@ class TestLogEntryFactoryPositive(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
     @UM.patch.object(target=tested_module, attribute='datetime', autospec=True)
-    def test_factory_set_current_time_to_log_entry_by_datetime(self,
-                                                               mock_datetime: UM.MagicMock) -> None:
+    def test_create_new_log_entry_sets_current_time_using_datetime(self,
+                                                                   mock_datetime: UM.MagicMock) -> None:
         # Build
         expected_value = 'Today'
 
@@ -167,7 +168,7 @@ class TestLogEntryFactoryNegative(UT.TestCase):
         cls.factory = tested_class
 
     # -----------------------------------------------------------------------------------
-    def test_unsupported_level_raise_UnsupportedLogLevelError(self) -> None:
+    def test_create_new_log_entry_with_unsupported_level_raises_exception(self) -> None:
         # Build
         kwargs: Dict[str, str] = {
             'level': 'W2lcktjq252j6cBCR',
@@ -178,3 +179,113 @@ class TestLogEntryFactoryNegative(UT.TestCase):
         # Operate & Check
         with self.assertRaises(expected_exception=UnsupportedLogLevelError):
             self.factory.create_new_log_entry(**kwargs)
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class TestLogEntryDTO(LogEntryDTO):
+    def get_level(self) -> str:
+        return 'Test'
+
+
+# _______________________________________________________________________________________
+class CheckLogEntryDTO(UT.TestCase):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls._tested_class = LogEntryDTO
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.required_kwargs: Dict[str, Any] = {
+            'message_text': 'I have a test!',
+            'context': 'Test case',
+            'created_at': datetime.now(),
+        }
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _create_instance_of_tested_class(self, params_dict: Dict[str, Any]) -> TestLogEntryDTO:
+        return TestLogEntryDTO(**params_dict)
+
+    # -----------------------------------------------------------------------------------
+    def test_LogEntryDTO_initializes_and_stores_all_fields_correctly(self) -> None:
+        # Build
+        expected_kwargs: Dict[str, Any] = self.required_kwargs
+
+        # Operate
+        instance: TestLogEntryDTO = self._create_instance_of_tested_class(
+            params_dict=expected_kwargs
+        )
+
+        # Extract
+        actual_data: Dict[str, Any] = {
+            'message_text': instance.message_text,
+            'context': instance.context,
+            'created_at': instance.created_at,
+        }
+
+        # Check
+        self.assertDictEqual(
+            d1=actual_data,
+            d2=expected_kwargs
+        )
+        self.assertEqual(
+            first=instance.get_level(),
+            second='Test'
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_LogEntryDTO_is_immutable(self) -> None:
+        from dataclasses import FrozenInstanceError
+
+        # Build
+        instance: TestLogEntryDTO = self._create_instance_of_tested_class(
+            params_dict=self.required_kwargs
+        )
+
+        # Operate & Check
+        with self.assertRaises(expected_exception=FrozenInstanceError):
+            instance.context = 'Not Test, bro!'  # type: ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_instantiating_abstract_LogEntryDTO_raises_TypeError(self) -> None:
+        # Operate & Check
+        with self.assertRaises(expected_exception=TypeError):
+            self._tested_class(**self.required_kwargs)  # type: ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_LogEntryDTO_defines_abstract_methods(self) -> None:
+        # Build
+        test_cls = self._tested_class
+        expected_abstract_methods: Tuple[str, ...] = (
+            'get_level',
+        )
+
+        # Prepare test cycle
+        for method_name in expected_abstract_methods:
+            with self.subTest(pattern=method_name):
+                # Extract
+                actual_abstract_methods: frozenset[str] = test_cls.__abstractmethods__
+
+                # Check
+                self.assertIn(
+                    member=method_name,
+                    container=actual_abstract_methods
+                )
+
+    # -----------------------------------------------------------------------------------
+    def test_LogEntryDTO_is_dataclass(self) -> None:
+        from dataclasses import is_dataclass
+
+        # Build
+        test_cls = self._tested_class
+
+        # Check
+        self.assertTrue(
+            expr=is_dataclass(test_cls),
+            msg=f'Failure! *{test_cls.__name__}* -  should be a *dataclass*!'
+        )

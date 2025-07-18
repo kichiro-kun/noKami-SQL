@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from abc import ABC, abstractmethod
@@ -53,20 +53,27 @@ class FileExplorerInterfaceStrategy(ABC):
 
 # _______________________________________________________________________________________
 class NoFileExplorer(FileExplorerInterfaceStrategy):
+
+    # -----------------------------------------------------------------------------------
     def create_file(self, path: str, file_name: str) -> bool:
         return False
 
+    # -----------------------------------------------------------------------------------
     def create_dir(self, path: str, dir_name: str) -> bool:
         return False
 
+    # -----------------------------------------------------------------------------------
     def check_path_is_exists(self, path: str) -> bool:
         return False
 
+    # -----------------------------------------------------------------------------------
     def read_from_file(self, path: str) -> str:
         return ""
 
+    # -----------------------------------------------------------------------------------
     def overwrite_file(self, path: str, content: str) -> bool:
         return False
 
+    # -----------------------------------------------------------------------------------
     def append_to_file(self, path: str, content: str) -> bool:
         return False

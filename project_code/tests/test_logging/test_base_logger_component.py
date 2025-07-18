@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # ========================================================================================
 import unittest as UT
@@ -31,6 +31,8 @@ class TestedClassStub(tested_class):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class CheckStubClass(UT.TestCase):
+
+    # -----------------------------------------------------------------------------------
     def test_methods_returns(self) -> None:
         # Build
         instance = TestedClassStub()

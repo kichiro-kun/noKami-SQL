@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>LOG_LEVEL_MAPPING</title>
+    <title>return_value</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>LOG_LEVEL_MAPPING</h1>
+      <h1>return_value</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-          UMLAttribute
+          <span class="node-icon staruml-icon icon-UMLParameter"></span>
+          UMLParameter
         </span>
         
       </section>
@@ -47,16 +47,19 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='5938d8f89be291c9e8b058325ccb67e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Logging</a></span>
+          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='521eea5068a10a1876e0643759918c86.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>LogEntry Component</a></span>
+          <span class="label label-info"><a href='56571998edb8575945ad5817ab40125b.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Query Interface Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></span>
+          <span class="label label-info"><a href='03d7d6bc986fb99c9c019d3f4fbcba48.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>QueryInterface</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='677395676ff09ae49d4f4afe8be22eda.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>LOG_LEVEL_MAPPING</a></span>
+          <span class="label label-info"><a href='29d2a21688cf46f76e68cd29b7f3b663.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>execute_query_returns_many</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='47d61d80718b9da77331e383b83423fe.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></span>
         
       </section>
 
@@ -225,7 +228,7 @@
     
     <tr>
         <td>name</td>
-        <td>LOG_LEVEL_MAPPING</td>
+        <td>return_value</td>
     </tr>
     
     
@@ -249,7 +252,7 @@
     
     <tr>
         <td>visibility</td>
-        <td>private</td>
+        <td>public</td>
     </tr>
     
     
@@ -287,7 +290,7 @@
     
     <tr>
         <td>type</td>
-        <td>Dict[str, Type[LogEntryDTO]]</td>
+        <td>Tuple[str, ...]</td>
     </tr>
     
     
@@ -340,26 +343,8 @@
     
     
     <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>aggregation</td>
-        <td>none</td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
+        <td>direction</td>
+        <td>return</td>
     </tr>
     
     

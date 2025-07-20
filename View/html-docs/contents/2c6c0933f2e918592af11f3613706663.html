@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>transaction_manager</title>
+    <title>return_value</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>transaction_manager</h1>
+      <h1>return_value</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-          UMLAttribute
+          <span class="node-icon staruml-icon icon-UMLParameter"></span>
+          UMLParameter
         </span>
         
       </section>
@@ -47,16 +47,19 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b755f5bae26ede4343715490514d98ac.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DataBase Core</a></span>
+          <span class="label label-info"><a href='5938d8f89be291c9e8b058325ccb67e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Logging</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='6dbae367b49daa2515bc227d93c7527b.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Connection DataBase Component</a></span>
+          <span class="label label-info"><a href='5ed0671598459012f6fdb63c7609b7b4.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Logger Subject Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»SingleConnectionDataBase</a></span>
+          <span class="label label-info"><a href='aff43b7763bbddcc7ccfec86b8673471.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerSubjectInterface</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='aaa0b7cabc8e037daed3f4a694323968.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>transaction_manager</a></span>
+          <span class="label label-info"><a href='71db3593ef7ecc1daf7406017b33d04c.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>notify_logger_observers</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='2c6c0933f2e918592af11f3613706663.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></span>
         
       </section>
 
@@ -225,7 +228,7 @@
     
     <tr>
         <td>name</td>
-        <td>transaction_manager</td>
+        <td>return_value</td>
     </tr>
     
     
@@ -249,7 +252,7 @@
     
     <tr>
         <td>visibility</td>
-        <td>protected</td>
+        <td>public</td>
     </tr>
     
     
@@ -287,7 +290,7 @@
     
     <tr>
         <td>type</td>
-        <td><a href='570af3efbc91a7351b316005e6227161.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»TransactionManager</a></td>
+        <td>bool</td>
     </tr>
     
     
@@ -340,26 +343,8 @@
     
     
     <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>aggregation</td>
-        <td>none</td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
+        <td>direction</td>
+        <td>return</td>
     </tr>
     
     

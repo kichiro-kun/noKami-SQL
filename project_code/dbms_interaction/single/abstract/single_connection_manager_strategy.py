@@ -1,0 +1,2 @@
+class SingleConnectionManagerStrategy:
+    pass

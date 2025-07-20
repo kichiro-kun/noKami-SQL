@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>return_value</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,17 +19,15 @@
 
       <!-- Name Title -->
 
-      <h1>(unnamed)</h1>
+      <h1>return_value</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-          UMLAssociationEnd
+          <span class="node-icon staruml-icon icon-UMLParameter"></span>
+          UMLParameter
         </span>
-        
-          <span style="margin-left: 10px" class="alert alert-info">«»</span>
         
       </section>
 
@@ -49,19 +47,19 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='5938d8f89be291c9e8b058325ccb67e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Logging</a></span>
+          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='521eea5068a10a1876e0643759918c86.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>LogEntry Component</a></span>
+          <span class="label label-info"><a href='56571998edb8575945ad5817ab40125b.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Query Interface Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></span>
+          <span class="label label-info"><a href='03d7d6bc986fb99c9c019d3f4fbcba48.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>QueryInterface</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='df36777778d083dc377ad3941dd0a94a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LogEntryFactory—DataBase)</a></span>
+          <span class="label label-info"><a href='5e23dd65c794c5a084711baf66ef9573.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>execute_query_returns_one</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='0fc1a406bebd27f7cad0231c80f5b72d.html'><span class='node-icon staruml-icon icon-UMLAssociationEnd'></span>(AssociationEnd)</a></span>
+          <span class="label label-info"><a href='a68f81847e9d11531bd07e9e8bb675d1.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></span>
         
       </section>
 
@@ -230,7 +228,7 @@
     
     <tr>
         <td>name</td>
-        <td></td>
+        <td>return_value</td>
     </tr>
     
     
@@ -238,15 +236,6 @@
     
     
     
-    
-    
-    
-    
-    
-    <tr>
-        <td>reference</td>
-        <td><a href='8c7c5e1bd126dd8bad318a16c402b55e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>LogEntryFactory</a></td>
-    </tr>
     
     
     
@@ -254,7 +243,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td></td>
+        <td><span class='label label-info'>null</span></td>
     </tr>
     
     
@@ -270,9 +259,11 @@
     
     
     
+    
+    
     <tr>
-        <td>navigable</td>
-        <td>navigable</td>
+        <td>isStatic</td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -280,8 +271,26 @@
     
     
     <tr>
-        <td>aggregation</td>
-        <td>none</td>
+        <td>isLeaf</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>featureDirection</td>
+        <td>provided</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>type</td>
+        <td>str</td>
     </tr>
     
     
@@ -290,15 +299,6 @@
     
     <tr>
         <td>multiplicity</td>
-        <td></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>defaultValue</td>
         <td></td>
     </tr>
     
@@ -334,8 +334,8 @@
     
     
     <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
+        <td>defaultValue</td>
+        <td></td>
     </tr>
     
     
@@ -343,28 +343,8 @@
     
     
     <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>qualifiers</td>
-        <td>
-            
-        </td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>ownerAttribute</td>
-        <td><span class='label label-info'>null</span></td>
+        <td>direction</td>
+        <td>return</td>
     </tr>
     
     
@@ -378,6 +358,18 @@
       
 
       <!-- Constraints, Dependencies, Dependants -->
+
+      
+        
+        
+
+
+        
+        
+
+
+        
+        
 
       
 

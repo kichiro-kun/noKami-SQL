@@ -141,26 +141,6 @@
       <!-- Attributes -->
 
       
-      <section>
-        <h3>Attributes</h3>
-        <table class="table table-striped table-bordered">
-          <tr>
-            <th>Visibility</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="677395676ff09ae49d4f4afe8be22eda.html">LOG_LEVEL_MAPPING</a></td>
-            <td>Dict[str, Type[LogEntryDTO]] </td>
-            <td></td>
-          </tr>
-          
-        </table>
-      </section>
-      
 
       <!-- Operations -->
 
@@ -177,24 +157,6 @@
           <tr>
             <td>public</td>
             <td><a href="d5ca9dd7c4e1a7e8aaf2d98b89ee8168.html">create_new_log_entry(level: str, msg_text: str, context: str): LogEntryDTO</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="adc864bd596f59a7d47475494686a040.html">get_current_time(): datetime</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="5cc40440845f747977fa1cc3df719faa.html">is_supported_level(level: str): bool</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="17e635ab195f258d5ae6e9e2a7bf7e76.html">validate_mapping_consistency(): bool</a></td>
             <td></td>
           </tr>
           
@@ -447,11 +409,11 @@
         
         <li><a href='6da957b154c175877939ba5615fd4e85.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→NewLevelLogEntry)</a></li>
         
-        <li><a href='df36777778d083dc377ad3941dd0a94a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LogEntryFactory—DataBase)</a></li>
-        
         <li><a href='f8c852e1869ea6f1cabc5a6621d2cc97.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→DebugLogEntry)</a></li>
         
         <li><a href='0ef72cd8ea8ef25f8f9a44c0ec648423.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→TraceLogEntry)</a></li>
+        
+        <li><a href='588a71593479ff7a78befde34c345aa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LogEntryFactory—DataBase)</a></li>
         
     </ul>
 </section>
@@ -476,11 +438,11 @@
         
         <li><a href='6da957b154c175877939ba5615fd4e85.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→NewLevelLogEntry)</a></li>
         
-        <li><a href='df36777778d083dc377ad3941dd0a94a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LogEntryFactory—DataBase)</a></li>
-        
         <li><a href='f8c852e1869ea6f1cabc5a6621d2cc97.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→DebugLogEntry)</a></li>
         
         <li><a href='0ef72cd8ea8ef25f8f9a44c0ec648423.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>create (LogEntryFactory→TraceLogEntry)</a></li>
+        
+        <li><a href='588a71593479ff7a78befde34c345aa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(LogEntryFactory—DataBase)</a></li>
         
     </ul>
 </section>

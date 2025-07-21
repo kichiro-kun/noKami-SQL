@@ -6,11 +6,11 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from abc import ABCMeta
-from typing import Tuple
+from typing import Any, Tuple, Dict
 
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
@@ -21,15 +21,25 @@ from query_core.transaction_manager.abstract.transaction_manager import Transact
 # _______________________________________________________________________________________
 class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
-    _perform_connection_manager = None
-    _transaction_manager = None
-
     # -----------------------------------------------------------------------------------
-    def __init__(self, query_param_placeholder: str = None) -> None:
-        if query_param_placeholder is None:
+    def __init__(self, query_param_placeholder: str = '') -> None:
+        if query_param_placeholder == '':
             DataBase.__init__(self=self)
         else:
             DataBase.__init__(self=self, query_param_placeholder=query_param_placeholder)
+
+        self._perform_connection_manager = SingleConnectionManagerStrategy()
+        self._transaction_manager = TransactionManager()
+        self._config = dict()
+
+    # -----------------------------------------------------------------------------------
+    def set_new_connection_config(self, new_config: Dict[str, Any]) -> None:
+        if not isinstance(new_config, dict):
+            raise ValueError(
+                f"Error! Argument: *new_config* - should be a *{dict.__name__}*!\n"
+                f"Given: *{new_config}* - is Type of *{type(new_config)}*!"
+            )
+        self._config: Dict[str, Any] = new_config
 
     # -----------------------------------------------------------------------------------
     def set_new_connection_manager(self, new_manager: SingleConnectionManagerStrategy) -> None:

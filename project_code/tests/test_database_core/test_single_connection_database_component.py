@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # ========================================================================================
 import unittest as UT
@@ -125,10 +125,6 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_config(self) -> None:
-        pass
-
-    # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
@@ -162,6 +158,103 @@ class TestComponentPositive(UT.TestCase):
         self.assertIs(
             expr1=value,
             expr2=transaction_manager
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_connection_config(self) -> None:
+        # Build
+        instance = self.get_instance_of_stub_cls()
+        connection_config: Dict[str, Any] = {
+            'user': 'root',
+            'password': '0123456789',
+            'strawberry': 'yes',
+        }
+
+        # Operate
+        instance.set_new_connection_config(new_config=connection_config)
+
+        # Extract
+        value = instance._config
+
+        # Check
+        self.assertIs(
+            expr1=value,
+            expr2=connection_config
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_configuration_fields_are_isolated_between_instances(self) -> None:
+        # Build
+        instance1 = self.get_instance_of_stub_cls()
+        instance2 = self.get_instance_of_stub_cls()
+        connection_manager1 = SingleConnectionManagerStrategyStub()
+        connection_manager2 = SingleConnectionManagerStrategyStub()
+        transaction_manager1 = TransactionManagerStub()
+        transaction_manager2 = TransactionManagerStub()
+        config1 = {
+            'Banana': 'Yes',
+            'Strawberry': 'No',
+            'Milk': 'Yes',
+            'Orange Juice': 'No',
+        }
+        config2 = {
+            'Banana': 'No',
+            'Strawberry': 'Yes',
+            'Milk': 'Yes',
+            'Orange Juice': 'No',
+        }
+
+        # Operate
+        instance1.set_new_connection_config(new_config=config1)
+        instance1.set_new_connection_manager(new_manager=connection_manager1)
+        instance1.set_new_transaction_manager(new_manager=transaction_manager1)
+
+        instance2.set_new_connection_config(new_config=config2)
+        instance2.set_new_connection_manager(new_manager=connection_manager2)
+        instance2.set_new_transaction_manager(new_manager=transaction_manager2)
+
+        # Extract
+        actual_fields_instance1: Tuple[Any, ...] = (
+            instance1._config, instance1._perform_connection_manager, instance1._transaction_manager
+        )
+        actual_fields_instance2: Tuple[Any, ...] = (
+            instance2._config, instance2._perform_connection_manager, instance2._transaction_manager
+        )
+
+        # Prepare check cycle
+        for instance1_field, instance2_field in zip(actual_fields_instance1,
+                                                    actual_fields_instance2):
+            with self.subTest(
+                pattern=(instance1_field, instance2_field)
+            ):
+                # Check
+                self.assertIsNot(
+                    expr1=instance1_field,
+                    expr2=instance2_field
+                )
+
+    # -----------------------------------------------------------------------------------
+    def test_configuration_fields_has_default_values_before_initialization(self) -> None:
+        # Build
+        instance = self.get_instance_of_stub_cls()
+
+        # Extract
+        conn_config = instance._config
+        conn_manager = instance._perform_connection_manager
+        transaction_manager = instance._transaction_manager
+
+        # Check
+        self.assertDictEqual(
+            d1=conn_config,
+            d2=dict()
+        )
+        self.assertIsInstance(
+            obj=conn_manager,
+            cls=SingleConnectionManagerStrategy
+        )
+        self.assertIsInstance(
+            obj=transaction_manager,
+            cls=TransactionManager
         )
 
 
@@ -203,3 +296,37 @@ class TestComponentNegative(UT.TestCase):
                     instance.set_new_transaction_manager(
                         new_manager=invalid_manager
                     )
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_config_raises_ValueError_for_invalid_types(self) -> None:
+        # Build
+        invalid_configs: Tuple[Any, ...] = (
+            'real_config', ['key1', 'value1', 'key2', 'value2'],
+            ('key1', 'value1', 'key2', 'value2')
+        )
+        instance = TestedClassStub()
+
+        # Prepare test cycle
+        for invalid_config in invalid_configs:
+            with self.subTest(pattern=invalid_config):
+                # Check
+                with self.assertRaises(expected_exception=ValueError):
+                    # Operate
+                    instance.set_new_connection_config(
+                        new_config=invalid_config
+                    )
+
+    # -----------------------------------------------------------------------------------
+    def test_invalid_types_of_param_placeholder_raises_ValueError_when_initialize(self) -> None:
+        # Build
+        invalid_placeholders: Tuple[Any, ...] = (
+            5, False, True, 01.01, ['*'], set('&'), ('$',)
+        )
+
+        # Prepare test cycle
+        for invalid_placeholder in invalid_placeholders:
+            with self.subTest(pattern=invalid_placeholder):
+                # Check
+                with self.assertRaises(expected_exception=ValueError):
+                    # Operate
+                    TestedClassStub(query_param_placeholder=invalid_placeholder)

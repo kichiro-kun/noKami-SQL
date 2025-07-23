@@ -6,23 +6,27 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
 import unittest as UT
 from unittest import mock as UM
 from typing import Dict, Tuple, Any
 
+import database_core.single.abstract.single_connection_database as tested_module
 from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_class
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
-from dbms_interaction.single.abstract.single_connection_manager_strategy import SingleConnectionManagerStrategy
-from query_core.transaction_manager.abstract.transaction_manager import TransactionManager
+from dbms_interaction.single.abstract.single_connection_manager_strategy \
+    import SingleConnectionManagerStrategy, NoSingleConnectionManager
+from query_core.transaction_manager.abstract.transaction_manager \
+    import TransactionManager, NoTransactionManager
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class TestedClassStub(tested_class):
-    pass
+    def __del__(self) -> None:
+        pass
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +47,7 @@ class TestComponentPositive(UT.TestCase):
         return TestedClassStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
-    def test_generalization_DataBase(self) -> None:
+    def test_instance_inherits_from_DataBase(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
 
@@ -54,7 +58,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_placeholder_initialization(self) -> None:
+    def test_initialization_with_and_without_query_param_placeholder(self) -> None:
         # Build
         kwargs: Dict[str, Any] = {
             'query_param_placeholder': '&',
@@ -87,7 +91,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_realization_QueryInterface(self) -> None:
+    def test_execute_query_methods_return_expected_types(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
         sql_query = 'I am a SQL Query!'
@@ -125,7 +129,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_manager(self) -> None:
+    def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
         connection_manager = SingleConnectionManagerStrategyStub()
@@ -143,7 +147,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_transaction_manager(self) -> None:
+    def test_set_new_transaction_manager_assigns_transaction_manager_correctly(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
         transaction_manager = TransactionManagerStub()
@@ -161,7 +165,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_config(self) -> None:
+    def test_set_new_connection_config_assigns_configuration_correctly(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
         connection_config: Dict[str, Any] = {
@@ -183,7 +187,7 @@ class TestComponentPositive(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_configuration_fields_are_isolated_between_instances(self) -> None:
+    def test_configuration_fields_are_independent_between_instances(self) -> None:
         # Build
         instance1 = self.get_instance_of_stub_cls()
         instance2 = self.get_instance_of_stub_cls()
@@ -234,7 +238,7 @@ class TestComponentPositive(UT.TestCase):
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_configuration_fields_has_default_values_before_initialization(self) -> None:
+    def test_default_configuration_fields_have_expected_default_values(self) -> None:
         # Build
         instance = self.get_instance_of_stub_cls()
 
@@ -250,12 +254,53 @@ class TestComponentPositive(UT.TestCase):
         )
         self.assertIsInstance(
             obj=conn_manager,
-            cls=SingleConnectionManagerStrategy
+            cls=NoSingleConnectionManager
         )
         self.assertIsInstance(
             obj=transaction_manager,
-            cls=TransactionManager
+            cls=NoTransactionManager
         )
+
+    # -----------------------------------------------------------------------------------
+    def test_deconstruct_database_removes_internal_managers(self) -> None:
+        # Build
+        instance = self.get_instance_of_stub_cls()
+        conn_manager = SingleConnectionManagerStrategyStub()
+        transaction_manager = TransactionManagerStub()
+
+        # Prepare Instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+        instance.set_new_transaction_manager(new_manager=transaction_manager)
+
+        # Operate
+        instance.deconstruct_database_and_components()
+
+        # Check
+        self.assertFalse(expr=hasattr(instance, '_transaction_manager'))
+        self.assertFalse(expr=hasattr(instance, '_perform_connection_manager'))
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_methods_call_get_active_connection_from_manager(self) -> None:
+        # Build
+        instance = self.get_instance_of_stub_cls()
+        conn_manager = SingleConnectionManagerStrategyStub()
+        query = 'Pass Query'
+
+        # Prepare
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock method
+        with UM.patch.object(target=conn_manager, attribute='get_active_connection') as mock_method:
+            # Operate
+            instance.execute_query_no_returns(query=query)
+            instance.execute_query_returns_one(query=query)
+            instance.execute_query_returns_many(query=query, returns_count=2)
+            instance.execute_query_returns_all(query=query)
+
+            # Check
+            self.assertTrue(
+                expr=(mock_method.call_count == 4)
+            )
 
 
 # _______________________________________________________________________________________

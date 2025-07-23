@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -14,8 +14,10 @@ from typing import Any, Tuple, Dict
 
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
-from dbms_interaction.single.abstract.single_connection_manager_strategy import SingleConnectionManagerStrategy
-from query_core.transaction_manager.abstract.transaction_manager import TransactionManager
+from dbms_interaction.single.abstract.single_connection_manager_strategy \
+    import SingleConnectionManagerStrategy, NoSingleConnectionManager
+from query_core.transaction_manager.abstract.transaction_manager \
+    import TransactionManager, NoTransactionManager
 
 
 # _______________________________________________________________________________________
@@ -28,8 +30,8 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         else:
             DataBase.__init__(self=self, query_param_placeholder=query_param_placeholder)
 
-        self._perform_connection_manager = SingleConnectionManagerStrategy()
-        self._transaction_manager = TransactionManager()
+        self._perform_connection_manager = NoSingleConnectionManager()
+        self._transaction_manager = NoTransactionManager()
         self._config = dict()
 
     # -----------------------------------------------------------------------------------
@@ -61,20 +63,24 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
     # -----------------------------------------------------------------------------------
     def execute_query_no_returns(self, *params, query: str) -> None:
-        pass
+        conn = self._perform_connection_manager.get_active_connection()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_one(self, *params, query: str) -> str:
+        conn = self._perform_connection_manager.get_active_connection()
         return ''
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
+        conn = self._perform_connection_manager.get_active_connection()
         return tuple()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
+        conn = self._perform_connection_manager.get_active_connection()
         return tuple()
 
     # -----------------------------------------------------------------------------------
     def deconstruct_database_and_components(self) -> None:
-        pass
+        del self._transaction_manager
+        del self._perform_connection_manager

@@ -25,9 +25,11 @@
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
-          UMLGeneralization
+          <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+          UMLAssociationEnd
         </span>
+        
+          <span style="margin-left: 10px" class="alert alert-info">«»</span>
         
       </section>
 
@@ -44,19 +46,22 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagrams</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='7284acf533ee883630215d4a6bcee3eb.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Dummies</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='72d98f18e8d83d02f94a054f965a4f17.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Main Concept</a></span>
+          <span class="label label-info"><a href='733b7d45734a6ea7fe7bf8c3488e470d.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Pool Manager Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnection</a></span>
+          <span class="label label-info"><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManager</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='8897cb41ce99f0382acd805df1a2d6c6.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConnection→PoolConnectionManagerStrategy)</a></span>
+          <span class="label label-info"><a href='1bfd6b321a5fa3d284c9bb5674d4bd35.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConnectionManager—PoolConnectionInterface)</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='a70bce3d43f38b690a4379691aa02363.html'><span class='node-icon staruml-icon icon-UMLAssociationEnd'></span>(AssociationEnd)</a></span>
         
       </section>
 
@@ -83,25 +88,6 @@
 
       <!-- Directed Relationship -->
 
-      
-      <section class="element-list">
-        <table width="100%">
-          <tr>
-            <td width="50%">
-              <h3>Source</h3>
-              <ul class="nav nav-list">
-                <li><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnection</a></a></li>
-              </ul>
-            </td>
-            <td width="50%">
-              <h3>Target</h3>
-              <ul class="nav nav-list">
-                <li><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></a></li>
-              </ul>
-            </td>
-          </tr>
-        </table>
-      </section>
       
 
       <!-- Undirected Relationship -->
@@ -258,17 +244,8 @@
     
     
     <tr>
-        <td>source</td>
-        <td><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnection</a></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>target</td>
-        <td><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></td>
+        <td>reference</td>
+        <td><a href='4561be1cdce7827c10bce2a807a9aec5.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterface</a></td>
     </tr>
     
     
@@ -277,7 +254,7 @@
     
     <tr>
         <td>stereotype</td>
-        <td><span class='label label-info'>null</span></td>
+        <td></td>
     </tr>
     
     
@@ -294,8 +271,100 @@
     
     
     <tr>
-        <td>discriminator</td>
+        <td>navigable</td>
+        <td>navigable</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>aggregation</td>
+        <td>none</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>multiplicity</td>
         <td></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>defaultValue</td>
+        <td></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isReadOnly</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isOrdered</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isUnique</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isDerived</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isID</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>qualifiers</td>
+        <td>
+            
+        </td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>ownerAttribute</td>
+        <td><span class='label label-info'>null</span></td>
     </tr>
     
     

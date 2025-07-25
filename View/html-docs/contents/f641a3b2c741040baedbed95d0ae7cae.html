@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>MySQLSingleConnection</title>
+    <title>commit</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>MySQLSingleConnection</h1>
+      <h1>commit</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLClass"></span>
-          UMLClass
+          <span class="node-icon staruml-icon icon-UMLOperation"></span>
+          UMLOperation
         </span>
         
       </section>
@@ -44,16 +44,19 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagrams</a></span>
+          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='7284acf533ee883630215d4a6bcee3eb.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Dummies</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='72d98f18e8d83d02f94a054f965a4f17.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Main Concept</a></span>
+          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLSingleConnection</a></span>
+          <span class="label label-info"><a href='9acd0f938365b0c5be4a67eb320624c0.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='f641a3b2c741040baedbed95d0ae7cae.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>commit</a></span>
         
       </section>
 
@@ -87,35 +90,6 @@
       
 
       <!-- Classifier -->
-
-      
-        
-        
-<section class="element-list">
-    <h3>Generalized Elements</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='798d68c42b056a6969bdf15b7de79941.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionManagerStrategy</a></li>
-        
-    </ul>
-</section>
-
-
-
-        
-        
-
-
-        
-        
-
-
-        
-        
-
-
-        
-        
 
       
 
@@ -251,7 +225,7 @@
     
     <tr>
         <td>name</td>
-        <td>MySQLSingleConnection</td>
+        <td>commit</td>
     </tr>
     
     
@@ -284,25 +258,8 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     <tr>
-        <td>isAbstract</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isFinalSpecialization</td>
+        <td>isStatic</td>
         <td><span class='label label-info'>false</span></td>
     </tr>
     
@@ -320,9 +277,73 @@
     
     
     <tr>
-        <td>isActive</td>
+        <td>featureDirection</td>
+        <td>provided</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>parameters</td>
+        <td>
+            
+        </td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>raisedExceptions</td>
+        <td>
+            
+        </td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>concurrency</td>
+        <td>sequential</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isQuery</td>
         <td><span class='label label-info'>false</span></td>
     </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isAbstract</td>
+        <td><span class='label label-info'>true</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>specification</td>
+        <td></td>
+    </tr>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -354,30 +375,12 @@
 
       
       
-<section class="element-list">
-    <h3>Relationships</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='c311d73fd9030dbd73337227a3ec8574.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLSingleConnection→SingleConnectionManagerStrategy)</a></li>
-        
-    </ul>
-</section>
-
 
 
       <!-- Owned Elements -->
 
       
       
-<section class="element-list">
-    <h3>Owned Elements</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='c311d73fd9030dbd73337227a3ec8574.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLSingleConnection→SingleConnectionManagerStrategy)</a></li>
-        
-    </ul>
-</section>
-
 
 
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->

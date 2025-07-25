@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>MySQLPoolConnection</title>
+    <title>PostgreSQLSingleConnectionAdapter</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>MySQLPoolConnection</h1>
+      <h1>PostgreSQLSingleConnectionAdapter</h1>
 
       <!-- Type and Stereotype -->
 
@@ -53,7 +53,7 @@
           <span class="label label-info"><a href='72d98f18e8d83d02f94a054f965a4f17.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Main Concept</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnection</a></span>
+          <span class="label label-info"><a href='c20300aaab1374e8b26cd22a30d813b0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLSingleConnectionAdapter</a></span>
         
       </section>
 
@@ -91,23 +91,23 @@
       
         
         
+
+
+        
+        
+
+
+        
+        
 <section class="element-list">
-    <h3>Generalized Elements</h3>
+    <h3>Interfaces</h3>
     <ul class="nav nav-list">
         
-        <li><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></li>
+        <li><a href='9acd0f938365b0c5be4a67eb320624c0.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a></li>
         
     </ul>
 </section>
 
-
-
-        
-        
-
-
-        
-        
 
 
         
@@ -149,6 +149,26 @@
 
       <!-- Attributes -->
 
+      
+      <section>
+        <h3>Attributes</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Visibility</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="d4f3007b7f7dac13069eb543eae24be0.html">adapted_connection</a></td>
+            <td><span class='label label-info'>none</span> </td>
+            <td></td>
+          </tr>
+          
+        </table>
+      </section>
       
 
       <!-- Operations -->
@@ -251,7 +271,7 @@
     
     <tr>
         <td>name</td>
-        <td>MySQLPoolConnection</td>
+        <td>PostgreSQLSingleConnectionAdapter</td>
     </tr>
     
     
@@ -343,6 +363,15 @@
 
         
         
+<section class="element-list">
+    <h3>Dependencies</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='9acd0f938365b0c5be4a67eb320624c0.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -358,7 +387,7 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='1348bd6a17cf6ba6e3cd421473fef696.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConnection→PoolConnectionManagerStrategy)</a></li>
+        <li><a href='ca2c09db4abe621d539362011abe5776.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLSingleConnectionAdapter→SingleConnectionInterface)</a></li>
         
     </ul>
 </section>
@@ -373,7 +402,7 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='1348bd6a17cf6ba6e3cd421473fef696.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConnection→PoolConnectionManagerStrategy)</a></li>
+        <li><a href='ca2c09db4abe621d539362011abe5776.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLSingleConnectionAdapter→SingleConnectionInterface)</a></li>
         
     </ul>
 </section>

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>SingleConnectionManagerStrategy</title>
+    <title>SingleConnectionManager</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>SingleConnectionManagerStrategy</h1>
+      <h1>SingleConnectionManager</h1>
 
       <!-- Type and Stereotype -->
 
@@ -53,7 +53,7 @@
           <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='798d68c42b056a6969bdf15b7de79941.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionManagerStrategy</a></span>
+          <span class="label label-info"><a href='798d68c42b056a6969bdf15b7de79941.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionManager</a></span>
         
       </section>
 
@@ -99,9 +99,7 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='7e15ed162b39af2e4ca75436100a7488.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLSingleConnection</a></li>
-        
-        <li><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLSingleConnection</a></li>
+        <li><a href='99c65076f3f08027b53f3a7cd882de25.html'><span class='node-icon staruml-icon icon-UMLClass'></span>NoSingleConnectionManager</a></li>
         
     </ul>
 </section>
@@ -164,8 +162,8 @@
           
           <tr>
             <td>private</td>
-            <td><a href="447636b8d5da7a20f3dc246c40a7d362.html">active_connection</a></td>
-            <td><span class='label label-info'>none</span> </td>
+            <td><a href="447636b8d5da7a20f3dc246c40a7d362.html">connection_adapter</a></td>
+            <td><a href='9acd0f938365b0c5be4a67eb320624c0.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a> </td>
             <td></td>
           </tr>
           
@@ -187,31 +185,31 @@
           
           <tr>
             <td>public</td>
-            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection(connection_config)</a></td>
+            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection(connection_config: Dict[str, Any])</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_active_connection(connection_config)</a></td>
+            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_connection(connection_config: Dict[str, Any])</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_active_connection()</a></td>
+            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_connection()</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">read_active_connection_status()</a></td>
+            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">read_connection_status()</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_active_connection()</a></td>
+            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_connection()</a></td>
             <td></td>
           </tr>
           
@@ -315,7 +313,7 @@
     
     <tr>
         <td>name</td>
-        <td>SingleConnectionManagerStrategy</td>
+        <td>SingleConnectionManager</td>
     </tr>
     
     
@@ -358,7 +356,7 @@
     
     <tr>
         <td>isAbstract</td>
-        <td><span class='label label-info'>true</span></td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -422,11 +420,11 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='73a16499d24166f362c6bd365efa6aa0.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLSingleConnection→SingleConnectionManagerStrategy)</a></li>
+        <li><a href='b7c1e25817a8e5d672673fd8f9ac4acb.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoSingleConnectionManager→SingleConnectionManager)</a></li>
         
-        <li><a href='c311d73fd9030dbd73337227a3ec8574.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLSingleConnection→SingleConnectionManagerStrategy)</a></li>
+        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
-        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManagerStrategy—SingleConnectionDataBase)</a></li>
+        <li><a href='5e0ba247365356b8c1ad142313952144.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
         
     </ul>
 </section>
@@ -441,7 +439,9 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManagerStrategy—SingleConnectionDataBase)</a></li>
+        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
+        
+        <li><a href='5e0ba247365356b8c1ad142313952144.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
         
     </ul>
 </section>

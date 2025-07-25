@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>PostgreSQLPoolConnection</title>
+    <title>MySQLPoolConnectionAdapter</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>PostgreSQLPoolConnection</h1>
+      <h1>MySQLPoolConnectionAdapter</h1>
 
       <!-- Type and Stereotype -->
 
@@ -53,7 +53,7 @@
           <span class="label label-info"><a href='72d98f18e8d83d02f94a054f965a4f17.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Main Concept</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='1f5c40f1f57cb621f133b6525c6a65fe.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLPoolConnection</a></span>
+          <span class="label label-info"><a href='d444d537255df95efd79b7e7031b4f84.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnectionAdapter</a></span>
         
       </section>
 
@@ -91,23 +91,23 @@
       
         
         
+
+
+        
+        
+
+
+        
+        
 <section class="element-list">
-    <h3>Generalized Elements</h3>
+    <h3>Interfaces</h3>
     <ul class="nav nav-list">
         
-        <li><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></li>
+        <li><a href='4561be1cdce7827c10bce2a807a9aec5.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterface</a></li>
         
     </ul>
 </section>
 
-
-
-        
-        
-
-
-        
-        
 
 
         
@@ -251,7 +251,7 @@
     
     <tr>
         <td>name</td>
-        <td>PostgreSQLPoolConnection</td>
+        <td>MySQLPoolConnectionAdapter</td>
     </tr>
     
     
@@ -343,6 +343,15 @@
 
         
         
+<section class="element-list">
+    <h3>Dependencies</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='4561be1cdce7827c10bce2a807a9aec5.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>PoolConnectionInterface</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -358,7 +367,7 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='8897cb41ce99f0382acd805df1a2d6c6.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConnection→PoolConnectionManagerStrategy)</a></li>
+        <li><a href='c5cd3d8ef835a8b144e75d45a07f59c4.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLPoolConnectionAdapter→PoolConnectionInterface)</a></li>
         
     </ul>
 </section>
@@ -373,7 +382,7 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='8897cb41ce99f0382acd805df1a2d6c6.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLPoolConnection→PoolConnectionManagerStrategy)</a></li>
+        <li><a href='c5cd3d8ef835a8b144e75d45a07f59c4.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLPoolConnectionAdapter→PoolConnectionInterface)</a></li>
         
     </ul>
 </section>

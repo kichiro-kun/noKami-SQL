@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>adapted_connection</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>(unnamed)</h1>
+      <h1>adapted_connection</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
-          UMLGeneralization
+          <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+          UMLAttribute
         </span>
         
       </section>
@@ -53,10 +53,10 @@
           <span class="label label-info"><a href='72d98f18e8d83d02f94a054f965a4f17.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Main Concept</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnection</a></span>
+          <span class="label label-info"><a href='211b192b639953dc2bddf8dc5b02e861.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLSingleConnectionAdapter</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='1348bd6a17cf6ba6e3cd421473fef696.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLPoolConnection→PoolConnectionManagerStrategy)</a></span>
+          <span class="label label-info"><a href='b78a893e5b6bf621b8ddb4b8f51c89ae.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>adapted_connection</a></span>
         
       </section>
 
@@ -83,25 +83,6 @@
 
       <!-- Directed Relationship -->
 
-      
-      <section class="element-list">
-        <table width="100%">
-          <tr>
-            <td width="50%">
-              <h3>Source</h3>
-              <ul class="nav nav-list">
-                <li><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnection</a></a></li>
-              </ul>
-            </td>
-            <td width="50%">
-              <h3>Target</h3>
-              <ul class="nav nav-list">
-                <li><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></a></li>
-              </ul>
-            </td>
-          </tr>
-        </table>
-      </section>
       
 
       <!-- Undirected Relationship -->
@@ -244,7 +225,7 @@
     
     <tr>
         <td>name</td>
-        <td></td>
+        <td>adapted_connection</td>
     </tr>
     
     
@@ -252,24 +233,6 @@
     
     
     
-    
-    
-    
-    
-    
-    <tr>
-        <td>source</td>
-        <td><a href='c37194f5bea47a138e59f2f8c4118b8f.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLPoolConnection</a></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>target</td>
-        <td><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a></td>
-    </tr>
     
     
     
@@ -286,7 +249,18 @@
     
     <tr>
         <td>visibility</td>
-        <td>public</td>
+        <td>private</td>
+    </tr>
+    
+    
+    
+    
+    
+    
+    
+    <tr>
+        <td>isStatic</td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -294,8 +268,98 @@
     
     
     <tr>
-        <td>discriminator</td>
+        <td>isLeaf</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>featureDirection</td>
+        <td>provided</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>type</td>
+        <td><span class='label label-info'>null</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>multiplicity</td>
         <td></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isReadOnly</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isOrdered</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isUnique</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>defaultValue</td>
+        <td></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isDerived</td>
+        <td><span class='label label-info'>false</span></td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>aggregation</td>
+        <td>none</td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td>isID</td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -309,6 +373,18 @@
       
 
       <!-- Constraints, Dependencies, Dependants -->
+
+      
+        
+        
+
+
+        
+        
+
+
+        
+        
 
       
 

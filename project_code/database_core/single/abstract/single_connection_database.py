@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -14,8 +14,8 @@ from typing import Any, Tuple, Dict
 
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
-from dbms_interaction.single.abstract.single_connection_manager_strategy \
-    import SingleConnectionManagerStrategy, NoSingleConnectionManager
+from dbms_interaction.single.abstract.single_connection_manager \
+    import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
@@ -44,13 +44,13 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         self._config: Dict[str, Any] = new_config
 
     # -----------------------------------------------------------------------------------
-    def set_new_connection_manager(self, new_manager: SingleConnectionManagerStrategy) -> None:
-        if not isinstance(new_manager, SingleConnectionManagerStrategy):
+    def set_new_connection_manager(self, new_manager: SingleConnectionManager) -> None:
+        if not isinstance(new_manager, SingleConnectionManager):
             raise ValueError(
-                f"Error! Argument: *new_manager* - should be a *{SingleConnectionManagerStrategy.__name__}*!\n"
+                f"Error! Argument: *new_manager* - should be a *{SingleConnectionManager.__name__}*!\n"
                 f"Given: *{new_manager}* - is Type of *{type(new_manager)}*!"
             )
-        self._perform_connection_manager: SingleConnectionManagerStrategy = new_manager
+        self._perform_connection_manager: SingleConnectionManager = new_manager
 
     # -----------------------------------------------------------------------------------
     def set_new_transaction_manager(self, new_manager: TransactionManager) -> None:
@@ -63,21 +63,21 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
     # -----------------------------------------------------------------------------------
     def execute_query_no_returns(self, *params, query: str) -> None:
-        conn = self._perform_connection_manager.get_active_connection()
+        conn = self._perform_connection_manager.get_connection()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_one(self, *params, query: str) -> str:
-        conn = self._perform_connection_manager.get_active_connection()
+        conn = self._perform_connection_manager.get_connection()
         return ''
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
-        conn = self._perform_connection_manager.get_active_connection()
+        conn = self._perform_connection_manager.get_connection()
         return tuple()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
-        conn = self._perform_connection_manager.get_active_connection()
+        conn = self._perform_connection_manager.get_connection()
         return tuple()
 
     # -----------------------------------------------------------------------------------

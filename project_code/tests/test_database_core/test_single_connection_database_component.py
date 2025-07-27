@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # ========================================================================================
 import unittest as UT
@@ -37,7 +37,7 @@ class SingleConnectionManagerStub(SingleConnectionManager):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class SingleConnectionAdapterStub(SingleConnectionInterface):
-    def connect(self) -> bool:
+    def connect(self, **kwargs) -> bool:
         return True
 
     def reconnect(self) -> bool:
@@ -50,6 +50,9 @@ class SingleConnectionAdapterStub(SingleConnectionInterface):
         return True
 
     def close(self) -> bool:
+        return True
+
+    def is_active(self) -> bool:
         return True
 
 
@@ -72,6 +75,7 @@ class CheckAdapterStub(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
     def test_expected_contract(self) -> None:
+        # Build
         instance = SingleConnectionAdapterStub()
 
         # Extract values
@@ -80,6 +84,7 @@ class CheckAdapterStub(UT.TestCase):
         method_get_cursor = instance.get_cursor()
         method_commit = instance.commit()
         method_close = instance.close()
+        method_is_active = instance.is_active()
 
         # Check
         self.assertTrue(expr=method_connect)
@@ -87,6 +92,7 @@ class CheckAdapterStub(UT.TestCase):
         self.assertTrue(expr=method_get_cursor)
         self.assertTrue(expr=method_commit)
         self.assertTrue(expr=method_close)
+        self.assertTrue(expr=method_is_active)
 
 
 # _______________________________________________________________________________________
@@ -337,7 +343,7 @@ class TestComponentPositive(UT.TestCase):
         self.assertFalse(expr=hasattr(instance, '_perform_connection_manager'))
 
     # -----------------------------------------------------------------------------------
-    def test_execute_query_methods_call_get_active_connection_from_manager(self) -> None:
+    def test_execute_query_methods_call_get_cursor_from_manager(self) -> None:
         # Build
         instance = self.get_stub_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
@@ -347,7 +353,7 @@ class TestComponentPositive(UT.TestCase):
         instance.set_new_connection_manager(new_manager=conn_manager)
 
         # Prepare mock method
-        with UM.patch.object(target=conn_manager, attribute='get_connection') as mock_method:
+        with UM.patch.object(target=conn_manager, attribute='get_cursor') as mock_method:
             # Operate
             instance.execute_query_no_returns(query=query)
             instance.execute_query_returns_one(query=query)

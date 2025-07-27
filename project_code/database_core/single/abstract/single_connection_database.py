@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -63,21 +63,21 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
     # -----------------------------------------------------------------------------------
     def execute_query_no_returns(self, *params, query: str) -> None:
-        conn = self._perform_connection_manager.get_connection()
+        conn = self._perform_connection_manager.get_cursor()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_one(self, *params, query: str) -> str:
-        conn = self._perform_connection_manager.get_connection()
+        conn = self._perform_connection_manager.get_cursor()
         return ''
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
-        conn = self._perform_connection_manager.get_connection()
+        conn = self._perform_connection_manager.get_cursor()
         return tuple()
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
-        conn = self._perform_connection_manager.get_connection()
+        conn = self._perform_connection_manager.get_cursor()
         return tuple()
 
     # -----------------------------------------------------------------------------------

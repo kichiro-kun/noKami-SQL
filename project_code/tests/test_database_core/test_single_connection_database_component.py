@@ -5,13 +5,17 @@ Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
+__all__: list[str] = [
+    'TestComponentPositive',
+    'TestComponentNegative',
+]
+
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 # ========================================================================================
-import unittest as UT
 from unittest import mock as UM
-from typing import Dict, Tuple, Any
+from typing import Dict, List, Tuple, Any
 
 from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_class
 from database_core.abstract.abstract_database import DataBase
@@ -20,8 +24,10 @@ from dbms_interaction.single.abstract.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
-from dbms_interaction.single.abstract.single_connection_interface \
-    import SingleConnectionInterface
+
+from tests.test_dbms_interaction.test_single_manager_component import SingleConnectionAdapterStub
+from tests.utils.base_test_case_cls import BaseTestCase
+from tests.utils.test_tool import GeneratingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,72 +42,18 @@ class SingleConnectionManagerStub(SingleConnectionManager):
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class SingleConnectionAdapterStub(SingleConnectionInterface):
-    def connect(self, **kwargs) -> bool:
-        return True
-
-    def reconnect(self) -> bool:
-        return True
-
-    def get_cursor(self) -> None:
-        return True
-
-    def commit(self) -> bool:
-        return True
-
-    def close(self) -> bool:
-        return True
-
-    def is_active(self) -> bool:
-        return True
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class TransactionManagerStub(TransactionManager):
     pass
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckAdapterStub(UT.TestCase):
-
-    # -----------------------------------------------------------------------------------
-    def test_check_inherit(self) -> None:
-        instance = SingleConnectionAdapterStub()
-
-        self.assertIsInstance(
-            obj=instance,
-            cls=SingleConnectionInterface
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_expected_contract(self) -> None:
-        # Build
-        instance = SingleConnectionAdapterStub()
-
-        # Extract values
-        method_connect = instance.connect()
-        method_reconnect = instance.reconnect()
-        method_get_cursor = instance.get_cursor()
-        method_commit = instance.commit()
-        method_close = instance.close()
-        method_is_active = instance.is_active()
-
-        # Check
-        self.assertTrue(expr=method_connect)
-        self.assertTrue(expr=method_reconnect)
-        self.assertTrue(expr=method_get_cursor)
-        self.assertTrue(expr=method_commit)
-        self.assertTrue(expr=method_close)
-        self.assertTrue(expr=method_is_active)
-
-
 # _______________________________________________________________________________________
-class TestComponentPositive(UT.TestCase):
+class TestComponentPositive(BaseTestCase[TestedClassStub]):
 
-    @staticmethod
-    def get_stub_instance_of_tested_cls(**kwargs) -> TestedClassStub:
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
         return TestedClassStub(**kwargs)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
     def get_instance_of_single_connection_manager(**kwargs) -> SingleConnectionManagerStub:
         adapter = SingleConnectionAdapterStub()
@@ -109,10 +61,9 @@ class TestComponentPositive(UT.TestCase):
         return SingleConnectionManagerStub(conn_adapter=adapter, **kwargs)
 
     # -----------------------------------------------------------------------------------
-
     def test_instance_inherits_from_DataBase(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
 
         # Check
         self.assertIsInstance(
@@ -128,10 +79,10 @@ class TestComponentPositive(UT.TestCase):
         }
 
         # Operate with specifics placeholder
-        instance1 = self.get_stub_instance_of_tested_cls(**kwargs)
+        instance1 = self.get_instance_of_tested_cls(**kwargs)
 
         # Operate without placeholder
-        instance2 = self.get_stub_instance_of_tested_cls()
+        instance2 = self.get_instance_of_tested_cls()
 
         # Extract placeholders value
         value1: str = instance1.query_param_placeholder
@@ -156,7 +107,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_execute_query_methods_return_expected_types(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
         sql_query = 'I am a SQL Query!'
         query_params: Tuple[Any, ...] = (
             1234, 44.44, 'hello', 'important info'
@@ -194,7 +145,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
         connection_manager = self.get_instance_of_single_connection_manager()
 
         # Operate
@@ -212,7 +163,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_set_new_transaction_manager_assigns_transaction_manager_correctly(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
         transaction_manager = TransactionManagerStub()
 
         # Operate
@@ -230,12 +181,11 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_set_new_connection_config_assigns_configuration_correctly(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
-        connection_config: Dict[str, Any] = {
-            'user': 'root',
-            'password': '0123456789',
-            'strawberry': 'yes',
-        }
+        instance = self.get_instance_of_tested_cls()
+        connection_config: Dict[str, Any] = \
+            GeneratingToolKit.generate_dict_with_random_string_values(
+                keys=('user', 'password', 'database')
+        )
 
         # Operate
         instance.set_new_connection_config(new_config=connection_config)
@@ -252,24 +202,20 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_configuration_fields_are_independent_between_instances(self) -> None:
         # Build
-        instance1 = self.get_stub_instance_of_tested_cls()
-        instance2 = self.get_stub_instance_of_tested_cls()
+        instance1 = self.get_instance_of_tested_cls()
+        instance2 = self.get_instance_of_tested_cls()
         connection_manager1 = self.get_instance_of_single_connection_manager()
         connection_manager2 = self.get_instance_of_single_connection_manager()
         transaction_manager1 = TransactionManagerStub()
         transaction_manager2 = TransactionManagerStub()
-        config1 = {
-            'Banana': 'Yes',
-            'Strawberry': 'No',
-            'Milk': 'Yes',
-            'Orange Juice': 'No',
-        }
-        config2 = {
-            'Banana': 'No',
-            'Strawberry': 'Yes',
-            'Milk': 'Yes',
-            'Orange Juice': 'No',
-        }
+        config1: Dict[str, Any] = \
+            GeneratingToolKit.generate_dict_with_random_string_values(
+                keys=('user', 'password', 'database')
+        )
+        config2: Dict[str, Any] = \
+            GeneratingToolKit.generate_dict_with_random_string_values(
+                keys=('user', 'password', 'database')
+        )
 
         # Operate
         instance1.set_new_connection_config(new_config=config1)
@@ -303,7 +249,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_default_configuration_fields_have_expected_default_values(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
 
         # Extract
         conn_config = instance._config
@@ -327,7 +273,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_deconstruct_database_removes_internal_managers(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         transaction_manager = TransactionManagerStub()
 
@@ -345,7 +291,7 @@ class TestComponentPositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_execute_query_methods_call_get_cursor_from_manager(self) -> None:
         # Build
-        instance = self.get_stub_instance_of_tested_cls()
+        instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         query = 'Pass Query'
 
@@ -367,15 +313,18 @@ class TestComponentPositive(UT.TestCase):
 
 
 # _______________________________________________________________________________________
-class TestComponentNegative(UT.TestCase):
+class TestComponentNegative(BaseTestCase[TestedClassStub]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
+        return TestedClassStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager_raises_ValueError_for_invalid_types(self) -> None:
         # Build
-        invalid_managers: Tuple[Any, ...] = (
-            'real_connection_manager', 3515236, False, 927.01
-        )
-        instance = TestedClassStub()
+        invalid_managers: List[Any] = \
+            GeneratingToolKit.generate_list_of_basic_python_types()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_manager in invalid_managers:
@@ -390,10 +339,9 @@ class TestComponentNegative(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_set_new_transaction_manager_raises_ValueError_for_invalid_types(self) -> None:
         # Build
-        invalid_managers: Tuple[Any, ...] = (
-            'real_transaction_manager', 978732, True, 65.4
-        )
-        instance = TestedClassStub()
+        invalid_managers: List[Any] = \
+            GeneratingToolKit.generate_list_of_basic_python_types()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_manager in invalid_managers:
@@ -412,7 +360,7 @@ class TestComponentNegative(UT.TestCase):
             'real_config', ['key1', 'value1', 'key2', 'value2'],
             ('key1', 'value1', 'key2', 'value2')
         )
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_config in invalid_configs:

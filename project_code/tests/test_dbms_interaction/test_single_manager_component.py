@@ -5,48 +5,59 @@ Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
+__all__: list[str] = [
+    'TestComponentPositive',
+    'TestComponentNegative',
+    'SingleConnectionAdapterStub',
+]
+
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
-from typing import Any, Dict, Tuple
-import unittest as UT
 from unittest import mock as UM
+from typing import Any, Dict, List, Tuple
 
 from dbms_interaction.single.abstract.single_connection_manager \
     import SingleConnectionManager as tested_class
-from dbms_interaction.single.abstract.single_connection_manager import NoSingleConnectionManager
 from dbms_interaction.single.abstract.single_connection_interface import SingleConnectionInterface
+
+from tests.utils.base_test_case_cls import BaseTestCase
+from tests.utils.test_tool import GeneratingToolKit, InspectingToolKit, MethodCall
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class SingleConnectionAdapterStub(SingleConnectionInterface):
     def connect(self, **kwargs) -> bool:
-        return True
+        return False
 
     def reconnect(self, **kwargs) -> bool:
-        return True
+        return False
 
     def get_cursor(self) -> None:
-        return True
+        return False
 
     def commit(self) -> bool:
-        return True
+        return False
 
     def close(self) -> bool:
-        return True
+        return False
 
     def is_active(self) -> bool:
-        return True
+        return False
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckAdapterStub(UT.TestCase):
+class CheckAdapterStub(BaseTestCase[SingleConnectionAdapterStub]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> SingleConnectionAdapterStub:
+        return SingleConnectionAdapterStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_check_inherit(self) -> None:
         # Build
-        instance = SingleConnectionAdapterStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Check
         self.assertIsInstance(
@@ -57,35 +68,53 @@ class CheckAdapterStub(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_expected_contract(self) -> None:
         # Build
-        instance = SingleConnectionAdapterStub()
+        instance = self.get_instance_of_tested_cls()
+        method_names: Tuple[str, ...] = (
+            'connect', 'reconnect', 'get_cursor',
+            'commit', 'close', 'is_active'
+        )
 
-        # Extract values
-        method_connect = instance.connect()
-        method_reconnect = instance.reconnect()
-        method_get_cursor = instance.get_cursor()
-        method_commit = instance.commit()
-        method_close = instance.close()
-        method_is_active = instance.is_active()
+        # Prepare data
+        calls: List[MethodCall] = []
+        for method_name in method_names:
+            calls.append(MethodCall(method_name=method_name))
+
+        # Operate
+        result: bool = InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
+                                                                                             method_calls=calls)
 
         # Check
-        self.assertTrue(expr=method_connect)
-        self.assertTrue(expr=method_reconnect)
-        self.assertTrue(expr=method_get_cursor)
-        self.assertTrue(expr=method_commit)
-        self.assertTrue(expr=method_close)
-        self.assertTrue(expr=method_is_active)
+        self.assertTrue(expr=result)
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(UT.TestCase):
+class TestComponentPositive(BaseTestCase[tested_class]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls._config_keys: Tuple[str, ...] = (
+            'user', 'password', 'database'
+        )
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
+        return tested_class(**kwargs)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @staticmethod
+    def get_instance_of_adapter_stub(**kwargs) -> SingleConnectionAdapterStub:
+        return SingleConnectionAdapterStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_initialize_with_adapter(self) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
+        adapter_instance = self.get_instance_of_adapter_stub()
 
         # Operate & Check
-        instance = tested_class(conn_adapter=adapter_instance)
+        self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
     # -----------------------------------------------------------------------------------
     @UM.patch.object(target=SingleConnectionAdapterStub, attribute='get_cursor', autospec=True)
@@ -94,15 +123,13 @@ class TestComponentPositive(UT.TestCase):
                                               mock_connect_method: UM.MagicMock,
                                               mock_get_cursor_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
-        config: Dict[str, Any] = {
-            'user': 'me',
-            'password': 'you',
-            'database': 'I dont know!'
-        }
-        expected_cursor_value = 'Mr. Cursor De Buti'
+        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
+            keys=self._config_keys
+        )
+        expected_cursor_value = 'Mr. Cursor De Bute'
 
         # Prepare mock
         mock_connect_method.return_value = True
@@ -133,14 +160,12 @@ class TestComponentPositive(UT.TestCase):
     def test_reinitialize_connection_method(self,
                                             mock_reconnect_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
-        config: Dict[str, Any] = {
-            'user': 'me',
-            'password': 'you',
-            'database': 'I dont know!'
-        }
+        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
+            keys=self._config_keys
+        )
 
         # Prepare mock
         mock_reconnect_method.return_value = True
@@ -160,14 +185,12 @@ class TestComponentPositive(UT.TestCase):
     def test_read_connection_status_method(self,
                                            mock_is_active_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
-        config: Dict[str, Any] = {
-            'user': 'me',
-            'password': 'you',
-            'database': 'I dont know!'
-        }
+        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
+            keys=self._config_keys
+        )
 
         # Prepare instance
         instance.initialize_new_connection(conn_config=config)
@@ -186,7 +209,25 @@ class TestComponentPositive(UT.TestCase):
 
 
 # _______________________________________________________________________________________
-class TestComponentNegative(UT.TestCase):
+class TestComponentNegative(BaseTestCase[tested_class]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls._config_keys: Tuple[str, ...] = (
+            'user', 'password', 'database'
+        )
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
+        return tested_class(**kwargs)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @staticmethod
+    def get_instance_of_adapter_stub(**kwargs) -> SingleConnectionAdapterStub:
+        return SingleConnectionAdapterStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_invalid_types_of_adapter_raises_ValueError_when_initialize(self) -> None:
@@ -194,8 +235,8 @@ class TestComponentNegative(UT.TestCase):
         class Adapter:
             pass
 
-        invalid_adapters: Tuple[Any, ...] = (
-            'Adapter', 632, 62.32, Adapter(), True, False
+        invalid_adapters: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types(
+            include_special_values=(Adapter(),)
         )
 
         # Prepare test cycle
@@ -211,69 +252,56 @@ class TestComponentNegative(UT.TestCase):
     def test_failed_initialization_returns_False(self,
                                                  mock_connect_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
-        config: Dict[str, Any] = {
-            'user': 'bear43',
-            'password': 'honey',
-            'database': 'forest'
-        }
+        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
+            keys=self._config_keys
+        )
 
         # Prepare mock
         mock_connect_method.return_value = False
 
         # Operate & Extract
-        op_status = instance.initialize_new_connection(conn_config=config)
+        op_status: bool = instance.initialize_new_connection(conn_config=config)
 
         # Check
-        self.assertIs(
-            expr1=op_status,
-            expr2=False
-        )
+        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=op_status))
 
     # -----------------------------------------------------------------------------------
     @UM.patch.object(target=SingleConnectionAdapterStub, attribute='reconnect', autospec=True)
     def test_failed_reinitialization_returns_False(self,
                                                    mock_reconnect_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
-        config: Dict[str, Any] = {
-            'user': 'bear43',
-            'password': 'honey',
-            'database': 'forest'
-        }
+        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
+            keys=self._config_keys
+        )
 
         # Prepare mock
         mock_reconnect_method.return_value = False
 
         # Operate & Extract
-        op_status = instance.reinitialize_connection(conn_config=config)
+        op_status: bool = instance.reinitialize_connection(conn_config=config)
 
         # Check
-        self.assertIs(
-            expr1=op_status,
-            expr2=False
-        )
+        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=op_status))
 
     # -----------------------------------------------------------------------------------
     @UM.patch.object(target=SingleConnectionAdapterStub, attribute='is_active', autospec=True)
     def test_read_connection_status_method_returns_False(self,
                                                          mock_is_active_method: UM.MagicMock) -> None:
         # Build
-        adapter_instance = SingleConnectionAdapterStub()
-        instance = tested_class(conn_adapter=adapter_instance)
+        adapter_instance = self.get_instance_of_adapter_stub()
+        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
 
         # Prepare mock
         mock_is_active_method.return_value = False
 
         # Operate
-        conn_status = instance.read_connection_status()
+        conn_status: bool = instance.read_connection_status()
 
         # Check
-        self.assertIs(
-            expr1=conn_status,
-            expr2=False
-        )
+        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=conn_status))

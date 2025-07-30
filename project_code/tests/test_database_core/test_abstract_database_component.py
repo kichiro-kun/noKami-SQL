@@ -5,11 +5,15 @@ Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
+__all__: list[str] = [
+    'TestComponentPositive',
+    'TestComponentNegative',
+]
+
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 # ========================================================================================
-import unittest as UT
 from unittest import mock as UM
 from typing import Any, List, Tuple
 
@@ -20,6 +24,9 @@ from _logging.logger_subject.logger_subject_interface import LoggerSubjectInterf
 from _logging.logger_subject.logger_observer_interface import LoggerObserverInterface
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 
+from tests.utils.base_test_case_cls import BaseTestCase
+from tests.utils.test_tool import GeneratingToolKit, InspectingToolKit
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class TestedClassStub(tested_class):
@@ -28,7 +35,11 @@ class TestedClassStub(tested_class):
 
 
 # _______________________________________________________________________________________
-class TestDataBasePositive(UT.TestCase):
+class TestComponentPositive(BaseTestCase[TestedClassStub]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
+        return TestedClassStub(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -46,13 +57,13 @@ class TestDataBasePositive(UT.TestCase):
         super().tearDownClass()
         cls.patcher_factory.stop()
 
-    # -----------------------------------------------------------------------------------
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
     def create_mock_log_entry() -> UM.MagicMock:
         mock_log_entry: UM.MagicMock = UM.MagicMock(spec=LogEntryDTO)
         return mock_log_entry
 
-    # -----------------------------------------------------------------------------------
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
     def create_mock_observer() -> UM.MagicMock:
         mock_observer: UM.MagicMock = UM.MagicMock(spec=LoggerObserverInterface)
@@ -64,7 +75,7 @@ class TestDataBasePositive(UT.TestCase):
         expected_default_placeholder = '?'
 
         # Operate
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Extract
         actual_placeholder: str = instance.query_param_placeholder
@@ -84,7 +95,9 @@ class TestDataBasePositive(UT.TestCase):
         for expected_placeholder in expected_placeholders:
             with self.subTest(pattern=expected_placeholder):
                 # Operate
-                instance = TestedClassStub(query_param_placeholder=expected_placeholder)
+                instance = self.get_instance_of_tested_cls(
+                    query_param_placeholder=expected_placeholder
+                )
 
                 # Extract
                 actual_placeholder: str = instance.query_param_placeholder
@@ -99,7 +112,7 @@ class TestDataBasePositive(UT.TestCase):
     def test_deconstruct_database_and_components_called_on_delete(self) -> None:
         # Build
         expected_method_name = 'deconstruct_database_and_components'
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare mock
         with UM.patch.object(
@@ -114,8 +127,8 @@ class TestDataBasePositive(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_log_entry_factory_is_singleton_shared_across_instances(self) -> None:
         # Operate
-        instance1 = TestedClassStub()
-        instance2 = TestedClassStub()
+        instance1 = self.get_instance_of_tested_cls()
+        instance2 = self.get_instance_of_tested_cls()
 
         # Extract
         factory1: LogEntryFactory = instance1.log_entry_factory
@@ -152,26 +165,25 @@ class TestDataBasePositive(UT.TestCase):
                 )
 
     # -----------------------------------------------------------------------------------
-    def test_register_logger_observer_returns_true_for_valid_observer(self) -> None:
+    def test_register_logger_observer_returns_True_for_valid_observer(self) -> None:
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Operate & Extract
         result: bool = instance.register_logger_observer(new_observer=mock_observer)
 
         # Check
-        self.assertIs(
-            expr1=result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=result)
         )
 
     # -----------------------------------------------------------------------------------
-    def test_notify_logger_observers_returns_true_when_observers_exist(self) -> None:
+    def test_notify_logger_observers_returns_True_when_observers_exist(self) -> None:
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare
         instance.register_logger_observer(new_observer=mock_observer)
@@ -180,16 +192,15 @@ class TestDataBasePositive(UT.TestCase):
         result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertIs(
-            expr1=result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=result)
         )
 
     # -----------------------------------------------------------------------------------
-    def test_remove_logger_observer_returns_true_when_observer_removed(self) -> None:
+    def test_remove_logger_observer_returns_True_when_observer_removed(self) -> None:
         # Build
         mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare
         instance.register_logger_observer(new_observer=mock_observer)
@@ -198,9 +209,8 @@ class TestDataBasePositive(UT.TestCase):
         result: bool = instance.remove_logger_observer(removable_observer=mock_observer)
 
         # Check
-        self.assertIs(
-            expr1=result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=result)
         )
 
     # -----------------------------------------------------------------------------------
@@ -208,7 +218,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer1: UM.MagicMock = self.create_mock_observer()
         mock_observer2: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = TestedClassStub()
+        instance1 = self.get_instance_of_tested_cls()
 
         # Prepare
         instance1.register_logger_observer(new_observer=mock_observer1)
@@ -227,30 +237,27 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer1: UM.MagicMock = self.create_mock_observer()
         mock_observer2: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = TestedClassStub()
-        instance2 = TestedClassStub()
+        instance1 = self.get_instance_of_tested_cls()
+        instance2 = self.get_instance_of_tested_cls()
 
         # Prepare
         register_observer1_result: bool = instance1.register_logger_observer(new_observer=mock_observer1)
         register_observer2_result: bool = instance2.register_logger_observer(new_observer=mock_observer2)
 
         # Pre-Check
-        self.assertIs(
-            expr1=register_observer1_result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=register_observer1_result)
         )
-        self.assertIs(
-            expr1=register_observer2_result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=register_observer2_result)
         )
 
         # Operate
         notify_result1: bool = instance1.notify_logger_observers(log_entry=mock_log_entry)
 
         # Pre-Check
-        self.assertIs(
-            expr1=notify_result1,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=notify_result1)
         )
 
         # Check
@@ -261,9 +268,8 @@ class TestDataBasePositive(UT.TestCase):
         notify_result2: bool = instance2.notify_logger_observers(log_entry=mock_log_entry)
 
         # Pre-Check
-        self.assertIs(
-            expr1=notify_result2,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=notify_result2)
         )
 
         # Check
@@ -275,7 +281,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_observer: UM.MagicMock = self.create_mock_observer()
         prepared_mock_observer: UM.MagicMock = self.create_mock_observer()
         mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare
         instance.register_logger_observer(new_observer=prepared_mock_observer)
@@ -286,14 +292,12 @@ class TestDataBasePositive(UT.TestCase):
         notify_result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
 
         # Pre-Check
-        self.assertIs(
-            expr1=remove_result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=remove_result)
         )
 
-        self.assertIs(
-            expr1=notify_result,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=notify_result)
         )
 
         # Check
@@ -306,7 +310,7 @@ class TestDataBasePositive(UT.TestCase):
         mock_log_entry_1: UM.MagicMock = self.create_mock_log_entry()
         mock_log_entry_2: UM.MagicMock = self.create_mock_log_entry()
         mock_log_entry_3: UM.MagicMock = self.create_mock_log_entry()
-        instance = TestedClassStub()
+        instance = self.get_instance_of_tested_cls()
 
         # Operate & Extract
         register_result: bool = instance.register_logger_observer(
@@ -342,21 +346,23 @@ class TestDataBasePositive(UT.TestCase):
         # Prepare check cycle
         for result in expected_true:
             # Check
-            self.assertIs(
-                expr1=result,
-                expr2=True
+            self.assertTrue(
+                expr=InspectingToolKit.is_boolean_True(obj=result)
             )
 
         for result in expected_false:
             # Check
-            self.assertIs(
-                expr1=result,
-                expr2=False
+            self.assertTrue(
+                expr=InspectingToolKit.is_boolean_False(obj=result)
             )
 
 
 # _______________________________________________________________________________________
-class TestDataBaseNegative(UT.TestCase):
+class TestComponentNegative(BaseTestCase[TestedClassStub]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
+        return TestedClassStub(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -397,10 +403,9 @@ class TestDataBaseNegative(UT.TestCase):
     # -----------------------------------------------------------------------------------
     def test_register_logger_observer_returns_false_for_invalid_observer_types(self) -> None:
         # Build
-        invalid_observers: Tuple[Any, ...] = (
-            'observer', 1234, -1234, -0.12, 0.12, True, False
-        )
-        instance = TestedClassStub()
+        invalid_observers: List[Any] = \
+            GeneratingToolKit.generate_list_of_basic_python_types()
+        instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_observer in invalid_observers:
@@ -411,57 +416,52 @@ class TestDataBaseNegative(UT.TestCase):
                 )
 
                 # Check
-                self.assertIs(
-                    expr1=result,
-                    expr2=False
+                self.assertTrue(
+                    expr=InspectingToolKit.is_boolean_False(obj=result)
                 )
 
     # -----------------------------------------------------------------------------------
     def test_register_logger_observer_returns_false_for_duplicate_observer(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = TestDataBasePositive.create_mock_observer()
-        instance = TestedClassStub()
+        mock_observer: UM.MagicMock = TestComponentPositive.create_mock_observer()
+        instance = self.get_instance_of_tested_cls()
 
         # Operate
         result1: bool = instance.register_logger_observer(new_observer=mock_observer)
         result2: bool = instance.register_logger_observer(new_observer=mock_observer)
 
         # Check
-        self.assertIs(
-            expr1=result1,
-            expr2=True
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=result1)
         )
-        self.assertIs(
-            expr1=result2,
-            expr2=False
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_False(obj=result2)
         )
 
     # -----------------------------------------------------------------------------------
     def test_notify_logger_observers_returns_false_when_no_observers_registered(self) -> None:
        # Build
-        mock_log_entry: UM.MagicMock = TestDataBasePositive.create_mock_log_entry()
-        instance = TestedClassStub()
+        mock_log_entry: UM.MagicMock = TestComponentPositive.create_mock_log_entry()
+        instance = self.get_instance_of_tested_cls()
 
         # Operate & Extract
         result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertIs(
-            expr1=result,
-            expr2=False
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_False(obj=result)
         )
 
     # -----------------------------------------------------------------------------------
     def test_remove_logger_observer_returns_false_when_observer_not_registered(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = TestDataBasePositive.create_mock_observer()
-        instance = TestedClassStub()
+        mock_observer: UM.MagicMock = TestComponentPositive.create_mock_observer()
+        instance = self.get_instance_of_tested_cls()
 
         # Operate & Extract
         result: bool = instance.remove_logger_observer(removable_observer=mock_observer)
 
         # Check
-        self.assertIs(
-            expr1=result,
-            expr2=False
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_False(obj=result)
         )

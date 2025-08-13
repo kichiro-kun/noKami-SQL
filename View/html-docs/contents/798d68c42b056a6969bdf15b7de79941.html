@@ -68,7 +68,7 @@
         <h3>Description</h3>
         <div>
           
-            <span class="label label-info">none</span>
+            <p>Абстракция описывающая менеджера, то есть сущность которая управляет одичным соединением через соответветствующий интерфейс.</p>
           
         </div>
       </section>
@@ -99,7 +99,11 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='99c65076f3f08027b53f3a7cd882de25.html'><span class='node-icon staruml-icon icon-UMLClass'></span>NoSingleConnectionManager</a></li>
+        <li><a href='84a3e28472db66b1a07ad5fe21ea3277.html'><span class='node-icon staruml-icon icon-UMLClass'></span>NoSingleConnectionManager</a></li>
+        
+        <li><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLAdapter</a></li>
+        
+        <li><a href='7e15ed162b39af2e4ca75436100a7488.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLAdapter</a></li>
         
     </ul>
 </section>
@@ -162,9 +166,10 @@
           
           <tr>
             <td>private</td>
-            <td><a href="447636b8d5da7a20f3dc246c40a7d362.html">connection_adapter</a></td>
-            <td><a href='9acd0f938365b0c5be4a67eb320624c0.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a> </td>
-            <td></td>
+            <td><a href="447636b8d5da7a20f3dc246c40a7d362.html">perform_adapter</a></td>
+            <td><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a> </td>
+            <td><p>Адаптер соединения, закреплённый к менеджеру.
+Реализован в стиле паттерна СТРАТЕГИЯ, позволяя динамично менять адаптер при необходимости.</p></td>
           </tr>
           
         </table>
@@ -185,32 +190,39 @@
           
           <tr>
             <td>public</td>
-            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection(connection_config: Dict[str, Any])</a></td>
-            <td></td>
+            <td><a href="a8d5afc46603b63699e6f5534eaf175a.html">set_new_adapter(new_adapter: SingleConnectionInterface)</a></td>
+            <td><p>Закрывает текущее соединение и устанавливает новый адаптер. (соединение не устанавливается, во избежение преждевременной инициализации)</p></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_connection(connection_config: Dict[str, Any])</a></td>
-            <td></td>
+            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection(conn_conf: Dict[str, Any])</a></td>
+            <td><p>Закрывает текущее соединение для инициализации нового.</p></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_active_connection(conn_conf: Dict[str, Any])</a></td>
+            <td><p>Производит переподключение соединения.</p></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_active_connection(): SingleConnectionInterface</a></td>
+            <td><p>Возвращает текущее активное соединение, рассчитанное на использование реализованного интерфейса SingleConnectionInterface.
+Будет использоваться для запросов к БД.</p></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_connection()</a></td>
-            <td></td>
+            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_active_connection()</a></td>
+            <td><p>Приватный метод для уничтожения (закрытия) активного соединения.</p></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">read_connection_status()</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>public</td>
-            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_connection()</a></td>
-            <td></td>
+            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">read_active_connection_status(): bool</a></td>
+            <td><p>Возвращает статус активного соединения. (является ли оно активным, то есть подключённым и рабочим для взаимодействия с БД)</p></td>
           </tr>
           
         </table>
@@ -420,11 +432,15 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='b7c1e25817a8e5d672673fd8f9ac4acb.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoSingleConnectionManager→SingleConnectionManager)</a></li>
-        
         <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
-        <li><a href='5e0ba247365356b8c1ad142313952144.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        
+        <li><a href='d94ce94f9251987ae7291cb1d84421b7.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoSingleConnectionManager→SingleConnectionManager)</a></li>
+        
+        <li><a href='c311d73fd9030dbd73337227a3ec8574.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLAdapter→SingleConnectionManager)</a></li>
+        
+        <li><a href='73a16499d24166f362c6bd365efa6aa0.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLAdapter→SingleConnectionManager)</a></li>
         
     </ul>
 </section>
@@ -441,13 +457,29 @@
         
         <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
-        <li><a href='5e0ba247365356b8c1ad142313952144.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
         
     </ul>
 </section>
 
 
 
+      <!-- Diagrams -->
+      
+      
+      
+<section class="element-list">
+    <h3>Diagrams</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='08b1447aa58891767edce965d0f555b1.html'><span class='node-icon staruml-icon icon-UMLClassDiagram'></span>Main Concept - Class Diagram</a></li>
+        
+    </ul>
+</section>
+
+
+      
+      
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

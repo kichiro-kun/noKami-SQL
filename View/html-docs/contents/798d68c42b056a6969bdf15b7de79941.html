@@ -68,7 +68,7 @@
         <h3>Description</h3>
         <div>
           
-            <p>Абстракция описывающая менеджера, то есть сущность которая управляет одичным соединением через соответветствующий интерфейс.</p>
+            <span class="label label-info">none</span>
           
         </div>
       </section>
@@ -167,9 +167,15 @@
           <tr>
             <td>private</td>
             <td><a href="447636b8d5da7a20f3dc246c40a7d362.html">perform_adapter</a></td>
-            <td><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a> </td>
-            <td><p>Адаптер соединения, закреплённый к менеджеру.
-Реализован в стиле паттерна СТРАТЕГИЯ, позволяя динамично менять адаптер при необходимости.</p></td>
+            <td><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="89fbf9602e1e7ab5cebc108b3857f635.html">config</a></td>
+            <td>Dict[str, Any] </td>
+            <td></td>
           </tr>
           
         </table>
@@ -190,39 +196,50 @@
           
           <tr>
             <td>public</td>
-            <td><a href="a8d5afc46603b63699e6f5534eaf175a.html">set_new_adapter(new_adapter: SingleConnectionInterface)</a></td>
-            <td><p>Закрывает текущее соединение и устанавливает новый адаптер. (соединение не устанавливается, во избежение преждевременной инициализации)</p></td>
+            <td><a href="a4ede5eb9ef5a24e3fd15a16b4804217.html">__init__(adapter: ConnectionInterface, config: Dict[str, Any])</a></td>
+            <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection(conn_conf: Dict[str, Any])</a></td>
-            <td><p>Закрывает текущее соединение для инициализации нового.</p></td>
+            <td><a href="a8d5afc46603b63699e6f5534eaf175a.html">set_new_adapter(new_adapter: ConnectionInterface)</a></td>
+            <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_active_connection(conn_conf: Dict[str, Any])</a></td>
-            <td><p>Производит переподключение соединения.</p></td>
+            <td><a href="9dc80f13f82c7abafc735f7959c3aa27.html">set_new_config(new_config: Dict[str, Any])</a></td>
+            <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_active_connection(): SingleConnectionInterface</a></td>
-            <td><p>Возвращает текущее активное соединение, рассчитанное на использование реализованного интерфейса SingleConnectionInterface.
-Будет использоваться для запросов к БД.</p></td>
+            <td><a href="f4050bfda4c5d81a0d0f1cfe1bd54ed6.html">initialize_new_connection()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="11366623e5e6bf44c7e9b430374f3a3d.html">reinitialize_active_connection()</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="f254aab5e3eb439b15fd0beb4606ed23.html">get_adapter(): ConnectionInterface</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">check_connection_status(): bool</a></td>
+            <td></td>
           </tr>
           
           <tr>
             <td>private</td>
-            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_active_connection()</a></td>
-            <td><p>Приватный метод для уничтожения (закрытия) активного соединения.</p></td>
-          </tr>
-          
-          <tr>
-            <td>public</td>
-            <td><a href="0e045a4e882503b6d4b480de1b4bd143.html">read_active_connection_status(): bool</a></td>
-            <td><p>Возвращает статус активного соединения. (является ли оно активным, то есть подключённым и рабочим для взаимодействия с БД)</p></td>
+            <td><a href="fad9d70763415360ccfa95fa6add87bc.html">deconstruct_manager()</a></td>
+            <td></td>
           </tr>
           
         </table>
@@ -434,7 +451,7 @@
         
         <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
-        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></li>
         
         <li><a href='d94ce94f9251987ae7291cb1d84421b7.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoSingleConnectionManager→SingleConnectionManager)</a></li>
         
@@ -457,7 +474,7 @@
         
         <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
-        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></li>
         
     </ul>
 </section>

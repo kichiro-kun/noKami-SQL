@@ -39,7 +39,7 @@
                 
                     <div><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></div>
                 
-                    <div><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></div>
+                    <div><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></div>
                 
                     <div><a href='a0f24c9b27b436c32b348f2df45f1224.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(MySQLAdapter—MySQLConnection)</a></div>
                 
@@ -159,11 +159,11 @@
                 
                     <div><a href='068befb9abf81a5b392ee491c0c1e618.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>Single</a></div>
                 
+                    <div><a href='066c7bcc31c06cb8024b0d1041be1982.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>active_connection</a></div>
+                
+                    <div><a href='0fcfdee97d76a82b8936b78541cb524e.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>active_connection</a></div>
+                
                     <div><a href='149ef8e5663b07806209505047a795be.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>active_pool</a></div>
-                
-                    <div><a href='066c7bcc31c06cb8024b0d1041be1982.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>adaptee</a></div>
-                
-                    <div><a href='0fcfdee97d76a82b8936b78541cb524e.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>adaptee</a></div>
                 
                     <div><a href='023974cd757881a4e3feaf935f20ca0f.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>baked_connection_interface</a></div>
                 
@@ -173,7 +173,7 @@
                 
                     <div><a href='d7811b87e6a42a79b70944b66cbf288d.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>baked_transaction_manager</a></div>
                 
-                    <div><a href='80156795c421f8c3cdef4f49cff5d259.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>config</a></div>
+                    <div><a href='89fbf9602e1e7ab5cebc108b3857f635.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>config</a></div>
                 
                     <div><a href='901018026c56ec3d03da1bd778321b26.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>config</a></div>
                 
@@ -532,6 +532,8 @@
                 <h3>UMLInterface (6)</h3>
                 <div>
                 
+                    <div><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a></div>
+                
                     <div><a href='2cd777b7e140c10a0798870cf559c0c9.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>FileExplorerInterfaceStrategy</a></div>
                 
                     <div><a href='95d425325a41327abff52e7e9fffd6c2.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerObserverInterface</a></div>
@@ -539,8 +541,6 @@
                     <div><a href='aff43b7763bbddcc7ccfec86b8673471.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>LoggerSubjectInterface</a></div>
                 
                     <div><a href='03d7d6bc986fb99c9c019d3f4fbcba48.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>QueryInterface</a></div>
-                
-                    <div><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a></div>
                 
                     <div><a href='995776de52549a1bf5f769605bf12c49.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>YourBoundaryInterface</a></div>
                 
@@ -561,9 +561,9 @@
                 
                     <div><a href='f438ede6c35d7e33e239addc85cdb8bd.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(NoFileExplorer→FileExplorerInterfaceStrategy)</a></div>
                 
-                    <div><a href='bd7354334922733bc4f731dff8cbb24b.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLAdapter→SingleConnectionInterface)</a></div>
+                    <div><a href='bd7354334922733bc4f731dff8cbb24b.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLAdapter→ConnectionInterface)</a></div>
                 
-                    <div><a href='78d92aab8d657befd371cdd8eba644e5.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLAdapter→SingleConnectionInterface)</a></div>
+                    <div><a href='78d92aab8d657befd371cdd8eba644e5.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLAdapter→ConnectionInterface)</a></div>
                 
                     <div><a href='9c717f4ab1114f337ed325a0a637b674.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(DataBase→LoggerSubjectInterface)</a></div>
                 
@@ -592,10 +592,12 @@
             <section>
                 
                 
-                <h3>UMLOperation (63)</h3>
+                <h3>UMLOperation (65)</h3>
                 <div>
                 
                     <div><a href='ab2ec4ad99447ceb8a0794384b075a06.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>__del__</a></div>
+                
+                    <div><a href='a4ede5eb9ef5a24e3fd15a16b4804217.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>__init__</a></div>
                 
                     <div><a href='a72a5de5e87868cef96fe1940cda9586.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>__init__</a></div>
                 
@@ -610,6 +612,8 @@
                     <div><a href='5d4a77a78b8455fedb45581e02f28dc5.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>bake_transaction_manager</a></div>
                 
                     <div><a href='8a3f7f0b15d51cdd7806b3419459d684.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>begin</a></div>
+                
+                    <div><a href='0e045a4e882503b6d4b480de1b4bd143.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>check_connection_status</a></div>
                 
                     <div><a href='22b00f4f104cd5216380023027f077f2.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>check_path_is_exists</a></div>
                 
@@ -629,11 +633,11 @@
                 
                     <div><a href='d5ca9dd7c4e1a7e8aaf2d98b89ee8168.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>«@staticmethod»create_new_log_entry</a></div>
                 
-                    <div><a href='fad9d70763415360ccfa95fa6add87bc.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>deconstruct_active_connection</a></div>
-                
                     <div><a href='bed2a0167d0d994738a7b6e407c4439d.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>deconstruct_active_pool</a></div>
                 
                     <div><a href='219975f2a3ba6c5c7b8ef8ce91aa4ec6.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>deconstruct_database_and_components</a></div>
+                
+                    <div><a href='fad9d70763415360ccfa95fa6add87bc.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>deconstruct_manager</a></div>
                 
                     <div><a href='0e1bbc802b963cfc582e18eff54e98ca.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>execute_in_active_transaction</a></div>
                 
@@ -647,7 +651,7 @@
                 
                     <div><a href='7e615a66cc9a40dc4c242c0862b3c325.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>flush_log_msg</a></div>
                 
-                    <div><a href='f254aab5e3eb439b15fd0beb4606ed23.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>get_active_connection</a></div>
+                    <div><a href='f254aab5e3eb439b15fd0beb4606ed23.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>get_adapter</a></div>
                 
                     <div><a href='bac28b4500903c3b1f88b9e0942ffd89.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>get_connection_from_active_pool</a></div>
                 
@@ -661,13 +665,13 @@
                 
                     <div><a href='9c74193bbc5da5c801377bbd55358c70.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>initialize_new_pool</a></div>
                 
+                    <div><a href='2946bbe57c02037f171af274086e4f8b.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>is_active</a></div>
+                
                     <div><a href='71db3593ef7ecc1daf7406017b33d04c.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>notify_logger_observers</a></div>
                 
                     <div><a href='f9a2836ce10a2ef36ced74ddc53b63ab.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>overwrite_file</a></div>
                 
                     <div><a href='542d34ada3cc6d29d7985cab4f59b0b9.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>process_log_msg</a></div>
-                
-                    <div><a href='0e045a4e882503b6d4b480de1b4bd143.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>read_active_connection_status</a></div>
                 
                     <div><a href='fa2432a403e5f4cb51f21116c03bd052.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>read_active_pool_status</a></div>
                 
@@ -699,11 +703,11 @@
                 
                     <div><a href='a8d5afc46603b63699e6f5534eaf175a.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_adapter</a></div>
                 
+                    <div><a href='9dc80f13f82c7abafc735f7959c3aa27.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_config</a></div>
+                
                     <div><a href='a360480f6871c6420cc66e22b9563d70.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_config</a></div>
                 
                     <div><a href='87979b8c935925145239abdd2bac407a.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_connection_config</a></div>
-                
-                    <div><a href='83ef10030bcced8a237dcba03454067d.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_connection_config</a></div>
                 
                     <div><a href='20e400ac496da1cdde163ed8004803d0.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>set_new_connection_manager</a></div>
                 
@@ -764,7 +768,7 @@
             <section>
                 
                 
-                <h3>UMLParameter (77)</h3>
+                <h3>UMLParameter (78)</h3>
                 <div>
                 
                     <div><a href='6113bf32cbe03e3fbfd3eec1d6351f8c.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>*params</a></div>
@@ -777,15 +781,13 @@
                 
                     <div><a href='da879046ac1c692d9f616b896aa7c070.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>*params</a></div>
                 
+                    <div><a href='cae26da8c2174428453ea24cc047d805.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>adapter</a></div>
+                
+                    <div><a href='f2dcc9ed3d7d72f4dd4c24829891deb5.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>config</a></div>
+                
+                    <div><a href='6214515d8897cabbbe055106f0431a28.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>config</a></div>
+                
                     <div><a href='3d7546f61bde4e05529aaaf06dfa31c9.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>config</a></div>
-                
-                    <div><a href='f47dbe810a4bf7809771f2cbea5c3a14.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>conn_conf</a></div>
-                
-                    <div><a href='505aeba859eb09286bb89db85c720cf5.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>conn_conf</a></div>
-                
-                    <div><a href='6214515d8897cabbbe055106f0431a28.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>conn_conf</a></div>
-                
-                    <div><a href='0a3b555bc94850197fba525e6653f7e6.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>conn_conf</a></div>
                 
                     <div><a href='ce22ccdd7cf0be7c6fac7fa0e3a5ea28.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>conn_manager</a></div>
                 
@@ -827,9 +829,9 @@
                 
                     <div><a href='3e79545058d8cc27bb8b3d898bc8d784.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_adapter</a></div>
                 
-                    <div><a href='6f5849e7cd0297b7e7e4a2d8bda2eb81.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_config</a></div>
+                    <div><a href='aff66544a3d0e06199c124222e1635f1.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_config</a></div>
                 
-                    <div><a href='50cc0976e4dbac8f9d5066f450f52c76.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_config</a></div>
+                    <div><a href='6f5849e7cd0297b7e7e4a2d8bda2eb81.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_config</a></div>
                 
                     <div><a href='94c2472f9526d4dd39120669f4d30c96.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>new_config</a></div>
                 
@@ -880,6 +882,10 @@
                     <div><a href='c7881c678324ff48bbc3083c974c2dda.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></div>
                 
                     <div><a href='13bbbbd52e4b0765684d4450142c4681.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></div>
+                
+                    <div><a href='0252a773a6aea3c4a446225c4770e05c.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></div>
+                
+                    <div><a href='090c98809472e1f4dabaddf2b92d87a8.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></div>
                 
                     <div><a href='a68f81847e9d11531bd07e9e8bb675d1.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></div>
                 

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>config</title>
+    <title>return_value</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,14 +19,14 @@
 
       <!-- Name Title -->
 
-      <h1>config</h1>
+      <h1>return_value</h1>
 
       <!-- Type and Stereotype -->
 
       <section style="margin-top: .5em;">
         <span class="alert alert-info">
-          <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-          UMLAttribute
+          <span class="node-icon staruml-icon icon-UMLParameter"></span>
+          UMLParameter
         </span>
         
       </section>
@@ -47,16 +47,19 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b755f5bae26ede4343715490514d98ac.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DataBase Core</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='6dbae367b49daa2515bc227d93c7527b.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Connection DataBase Component</a></span>
+          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='055170b23195653bf56e5e31ceb59449.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«metaclass=ABCMeta»SingleConnectionDataBase</a></span>
+          <span class="label label-info"><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='80156795c421f8c3cdef4f49cff5d259.html'><span class='node-icon staruml-icon icon-UMLAttribute'></span>config</a></span>
+          <span class="label label-info"><a href='3ad5653538a8b24bc938248f72442686.html'><span class='node-icon staruml-icon icon-UMLOperation'></span>get_cursor</a></span>
+        
+          <span>::</span>
+          <span class="label label-info"><a href='0252a773a6aea3c4a446225c4770e05c.html'><span class='node-icon staruml-icon icon-UMLParameter'></span>return_value</a></span>
         
       </section>
 
@@ -225,7 +228,7 @@
     
     <tr>
         <td>name</td>
-        <td>config</td>
+        <td>return_value</td>
     </tr>
     
     
@@ -249,7 +252,7 @@
     
     <tr>
         <td>visibility</td>
-        <td>protected</td>
+        <td>public</td>
     </tr>
     
     
@@ -287,7 +290,7 @@
     
     <tr>
         <td>type</td>
-        <td>Dict[str, Any]</td>
+        <td>Cursor</td>
     </tr>
     
     
@@ -340,26 +343,8 @@
     
     
     <tr>
-        <td>isDerived</td>
-        <td><span class='label label-info'>false</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>aggregation</td>
-        <td>none</td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-        <td>isID</td>
-        <td><span class='label label-info'>false</span></td>
+        <td>direction</td>
+        <td>return</td>
     </tr>
     
     
@@ -404,15 +389,6 @@
       
       
       
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='08b1447aa58891767edce965d0f555b1.html'><span class='node-icon staruml-icon icon-UMLClassDiagram'></span>Main Concept - Class Diagram</a></li>
-        
-    </ul>
-</section>
-
 
       
       

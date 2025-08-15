@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>SingleConnectionInterface</title>
+    <title>ConnectionInterface</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>SingleConnectionInterface</h1>
+      <h1>ConnectionInterface</h1>
 
       <!-- Type and Stereotype -->
 
@@ -53,7 +53,7 @@
           <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>SingleConnectionInterface</a></span>
+          <span class="label label-info"><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a></span>
         
       </section>
 
@@ -171,32 +171,38 @@
           
           <tr>
             <td>public</td>
-            <td><a href="5fbca2a9dfc8616b6c085ccd46a201d9.html">connect(conn_conf: Dict[str, Any])</a></td>
-            <td></td>
+            <td><a href="5fbca2a9dfc8616b6c085ccd46a201d9.html">connect(config: Dict[str, Any])</a></td>
+            <td><p>Производит подключение к БД, сохраняя соединение  в соответствующее поле адаптера.</p></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f3d391c2ba9640366ff4fb88b16df549.html">reconnect(conn_conf: Dict[str, Any])</a></td>
-            <td></td>
+            <td><a href="f3d391c2ba9640366ff4fb88b16df549.html">reconnect()</a></td>
+            <td><p>Пытается переподключить активное соединение.</p></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="3ad5653538a8b24bc938248f72442686.html">get_cursor()</a></td>
-            <td></td>
+            <td><a href="3ad5653538a8b24bc938248f72442686.html">get_cursor(): Cursor</a></td>
+            <td><p>Возвращает курсор для взаимодействия клиента с соединением БД.</p></td>
           </tr>
           
           <tr>
             <td>public</td>
             <td><a href="c98f2046fe533b1a0a3f9e86a9d5a5db.html">commit()</a></td>
-            <td></td>
+            <td><p>Сохраняет изменения, сделанные активным соединением.</p></td>
           </tr>
           
           <tr>
             <td>public</td>
             <td><a href="7f4264c333c807e10524362b0de643bc.html">close()</a></td>
-            <td></td>
+            <td><p>Закрывает (отключает) активное соединение.</p></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="2946bbe57c02037f171af274086e4f8b.html">is_active(): bool</a></td>
+            <td><p>Проверяет активность (работоспособность) текущего соединения.</p></td>
           </tr>
           
         </table>
@@ -299,7 +305,7 @@
     
     <tr>
         <td>name</td>
-        <td>SingleConnectionInterface</td>
+        <td>ConnectionInterface</td>
     </tr>
     
     
@@ -408,11 +414,11 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionInterface)</a></li>
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></li>
         
-        <li><a href='bd7354334922733bc4f731dff8cbb24b.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLAdapter→SingleConnectionInterface)</a></li>
+        <li><a href='bd7354334922733bc4f731dff8cbb24b.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(MySQLAdapter→ConnectionInterface)</a></li>
         
-        <li><a href='78d92aab8d657befd371cdd8eba644e5.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLAdapter→SingleConnectionInterface)</a></li>
+        <li><a href='78d92aab8d657befd371cdd8eba644e5.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLAdapter→ConnectionInterface)</a></li>
         
     </ul>
 </section>

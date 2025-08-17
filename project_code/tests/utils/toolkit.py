@@ -19,7 +19,9 @@ __version__ = '0.1.0'
 import random
 import string
 from abc import ABC
-from typing import Callable, Dict, Iterable, Tuple, NamedTuple, Any, List, Type
+from typing import Callable, Dict, Iterable, LiteralString, Tuple, NamedTuple, Any, List, Type
+
+from shared.exceptions import InvalidArgumentTypeError
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,13 +36,13 @@ class InspectingToolKit:
 
     # -----------------------------------------------------------------------------------
     @staticmethod
-    def check_all_methods_raise_ValueError_on_invalid_types(obj: object,
-                                                            method_calls: List[MethodCall]) -> bool:
+    def check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(obj: object,
+                                                                          method_calls: List[MethodCall]) -> bool:
         for call in method_calls:
             method: Callable = getattr(obj, call.method_name)
             try:
                 method(*call.args, **call.kwargs)
-            except ValueError:
+            except InvalidArgumentTypeError:
                 continue
             except Exception:
                 pass
@@ -149,3 +151,14 @@ class GeneratingToolKit:
                 final_list.append(special_value)
 
         return final_list
+
+    # -----------------------------------------------------------------------------------
+    @staticmethod
+    def generate_random_string(length: int = 8) -> str:
+        characters: LiteralString = string.ascii_letters + string.digits
+
+        final_str: str = ''.join(
+            random.choice(seq=characters) for _ in range(length)
+        )
+
+        return final_str

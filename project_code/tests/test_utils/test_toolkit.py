@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
 # ========================================================================================
@@ -20,18 +20,19 @@ import string
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Tuple
 
-from tests.utils.test_tool import InspectingToolKit, GeneratingToolKit, MethodCall
+from shared.exceptions import InvalidArgumentTypeError
+from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit, MethodCall
 
 
 # _______________________________________________________________________________________
 class TestInspectingToolKit(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_check_invalid_types_to_method_raise_ValueError(self) -> None:
+    def test_check_if_all_methods_raise_expected_exception_returns_True(self) -> None:
         class StubClass:
             def method1(self, x: int) -> int:
                 if not isinstance(x, int):
-                    raise ValueError("Invalid type")
+                    raise InvalidArgumentTypeError("Invalid type")
                 return x
 
         # Build
@@ -51,7 +52,7 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
@@ -63,7 +64,7 @@ class TestInspectingToolKit(UT.TestCase):
         class StubClass:
             def method1(self, x) -> int:
                 if x == 0:
-                    raise TypeError()
+                    raise InvalidArgumentTypeError()
                 if not isinstance(x, int):
                     raise ValueError()
                 return x
@@ -79,13 +80,13 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Prepare data
         calls: List[MethodCall] = [
-            MethodCall(method_name='method1', args=('0',)),
-            MethodCall(method_name='method1', args=(0,))
+            MethodCall(method_name='method1', args=(0,)),
+            MethodCall(method_name='method1', args=('0',))
         ]
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
@@ -93,11 +94,11 @@ class TestInspectingToolKit(UT.TestCase):
         self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_check_if_not_all_methods_raise_ValueError_returns_False(self) -> None:
+    def test_check_if_not_all_methods_raise_expected_exception_returns_False(self) -> None:
         class StubClass:
             def method1(self, x: int) -> int:
                 if not isinstance(x, int):
-                    raise ValueError("Invalid type")
+                    raise InvalidArgumentTypeError("Invalid type")
                 return x
 
         # Build
@@ -117,7 +118,7 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
@@ -297,7 +298,8 @@ class TestGeneratingToolKit(UT.TestCase):
             include_special_values=special_values
         )
 
-        # Check basic types
+        # Check
+        # Basic types
         self.assertTrue(
             expr=any(isinstance(x, int) for x in result)
         )
@@ -326,9 +328,55 @@ class TestGeneratingToolKit(UT.TestCase):
             expr=any(x is None for x in result)
         )
 
-        # Check special values
+        # Check
+        # Special values
         for value in special_values:
             self.assertIn(
                 member=value,
                 container=result
             )
+
+    # -----------------------------------------------------------------------------------
+    def test_generate_random_sting(self) -> None:
+        from random import randint
+
+        # Build
+        expected_default_size = 8
+        custom_size: int = randint(
+            a=expected_default_size + 1,
+            b=expected_default_size + 99
+        )
+
+        # Operate
+        str1_default_size: str = GeneratingToolKit.generate_random_string()
+        str2_default_size: str = GeneratingToolKit.generate_random_string()
+        str1_custom_size: str = GeneratingToolKit.generate_random_string(length=custom_size)
+        str2_custom_size: str = GeneratingToolKit.generate_random_string(length=custom_size)
+
+        # Check
+        # Length of the strings should be the expected lengths
+        self.assertTrue(
+            expr=(
+                len(str1_default_size) == expected_default_size
+                and
+                len(str2_default_size) == expected_default_size
+            )
+        )
+        self.assertTrue(
+            expr=(
+                len(str1_custom_size) == custom_size
+                and
+                len(str2_custom_size) == custom_size
+            )
+        )
+
+        # Check
+        # Strings should not match
+        self.assertNotEqual(
+            first=str1_default_size,
+            second=str2_default_size
+        )
+        self.assertNotEqual(
+            first=str1_custom_size,
+            second=str2_custom_size
+        )

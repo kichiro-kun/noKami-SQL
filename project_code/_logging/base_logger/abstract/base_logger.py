@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
@@ -19,6 +19,8 @@ from typing import Dict
 from _logging.logger_config.abstract.logger_config_dto import LoggerConfigDTO, NoLoggerConfig
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 from os_interaction.file_explorer.abstract.file_explorer_interface import FileExplorerInterfaceStrategy, NoFileExplorer
+
+from shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________
@@ -99,13 +101,13 @@ class BaseLogger(metaclass=ABCMeta):
             new_config (LoggerConfigDTO): Новый объект конфигурации логгера.
 
         Raises:
-            ValueError: Если `new_config` не является экземпляром `LoggerConfigDTO`.
+            InvalidArgumentTypeError: Если `new_config` не является экземпляром `LoggerConfigDTO`.
         """
-        if not isinstance(new_config, LoggerConfigDTO):
-            raise ValueError(
-                f"Error! Argument: *new_config* - should be a *{LoggerConfigDTO.__name__}*!\n"
-                f"Given: {new_config} - is Type of {type(new_config)}!"
-            )
+        ToolKit.ensure_instance(
+            obj=new_config,
+            expected_type=LoggerConfigDTO,
+            arg_name='new_config'
+        )
 
         self.__logger_config: LoggerConfigDTO = new_config
 
@@ -118,14 +120,13 @@ class BaseLogger(metaclass=ABCMeta):
             new_file_explorer (FileExplorerInterfaceStrategy): Новый объект стратегии работы с файлами.
 
         Raises:
-            ValueError: Если `new_file_explorer` не является экземпляром `FileExplorerInterfaceStrategy`.
+            InvalidArgumentTypeError: Если `new_file_explorer` не является экземпляром `FileExplorerInterfaceStrategy`.
         """
-        if not isinstance(new_file_explorer, FileExplorerInterfaceStrategy):
-            raise ValueError(
-                "Error! Argument: *new_config* - should be a "
-                f"*{FileExplorerInterfaceStrategy.__name__}*!\n"
-                f"Given: *{new_file_explorer}* - is Type of *{type(new_file_explorer)}*!"
-            )
+        ToolKit.ensure_instance(
+            obj=new_file_explorer,
+            expected_type=FileExplorerInterfaceStrategy,
+            arg_name='new_file_explorer'
+        )
 
         self.__perform_file_explorer: FileExplorerInterfaceStrategy = new_file_explorer
 
@@ -143,14 +144,13 @@ class BaseLogger(metaclass=ABCMeta):
             bool: True если запись лога прошла успешно, False в противном случае.
 
         Raises:
-            ValueError: Если `log_entry` не является экземпляром `LogEntryDTO`.
+            InvalidArgumentTypeError: Если `log_entry` не является экземпляром `LogEntryDTO`.
         """
-        if not isinstance(log_entry, LogEntryDTO):
-            raise ValueError(
-                "Error! Argument: *new_config* - should be a "
-                f"*{LogEntryDTO.__name__}*!\n"
-                f"Given: *{log_entry}* - is Type of *{type(log_entry)}*!"
-            )
+        ToolKit.ensure_instance(
+            obj=log_entry,
+            expected_type=LogEntryDTO,
+            arg_name='log_entry'
+        )
 
         log_entry_data: Dict[str, str] = self._read_log_entry(log_entry=log_entry)
         result: bool = self._flush_log_msg(data=log_entry_data)

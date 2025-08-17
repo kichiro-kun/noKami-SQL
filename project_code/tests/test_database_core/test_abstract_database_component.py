@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -25,7 +25,7 @@ from _logging.logger_subject.logger_observer_interface import LoggerObserverInte
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.test_tool import GeneratingToolKit, InspectingToolKit
+from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from typing import Dict, List, Tuple
@@ -21,7 +21,7 @@ from os_interaction.file_explorer.abstract.file_explorer_interface \
     import FileExplorerInterfaceStrategy as tested_interface
 
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.test_tool import InspectingToolKit, MethodCall
+from tests.utils.toolkit import InspectingToolKit, MethodCall
 
 
 # _______________________________________________________________________________________

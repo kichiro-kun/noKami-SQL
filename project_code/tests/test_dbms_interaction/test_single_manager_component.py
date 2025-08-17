@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -23,7 +23,7 @@ from dbms_interaction.single.abstract.single_connection_manager \
 from dbms_interaction.single.abstract.single_connection_interface import SingleConnectionInterface
 
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.test_tool import GeneratingToolKit, InspectingToolKit, MethodCall
+from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

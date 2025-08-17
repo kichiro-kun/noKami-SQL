@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -24,7 +24,7 @@ from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 from os_interaction.file_explorer.abstract.file_explorer_interface import FileExplorerInterfaceStrategy
 
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.test_tool import GeneratingToolKit, InspectingToolKit, MethodCall
+from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,6 +264,7 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
 # _______________________________________________________________________________________
 class TestComponentNegative(BaseTestCase[TestedClassStub]):
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
@@ -276,7 +277,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         return TestedClassStub(**kwargs)
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_logger_config_raises_ValueError_for_invalid_types(self) -> None:
+    def test_set_new_logger_config_raise_exception_for_invalid_types(self) -> None:
         # Build
         tested_method_name = 'set_new_config'
         invalid_types: List[str] = self.__invalid_types
@@ -289,7 +290,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
             obj=instance, method_calls=calls
         )
 
@@ -297,7 +298,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_file_explorer_raises_ValueError_for_invalid_types(self) -> None:
+    def test_set_new_file_explorer_raise_exception_for_invalid_types(self) -> None:
         # Build
         tested_method_name = 'set_new_perform_file_explorer'
         invalid_types: List[str] = self.__invalid_types
@@ -310,7 +311,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
             obj=instance, method_calls=calls
         )
 
@@ -318,7 +319,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_process_log_msg_raises_ValueError_for_invalid_log_entry(self) -> None:
+    def test_process_log_msg_raise_exception_for_invalid_log_entry(self) -> None:
         # Build
         tested_method_name = 'process_log_msg'
         invalid_types: List[str] = self.__invalid_types
@@ -331,7 +332,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_ValueError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
             obj=instance, method_calls=calls
         )
 

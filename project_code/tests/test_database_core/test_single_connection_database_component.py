@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -27,7 +27,7 @@ from query_core.transaction_manager.abstract.transaction_manager \
 
 from tests.test_dbms_interaction.test_single_manager_component import SingleConnectionAdapterStub
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.test_tool import GeneratingToolKit
+from tests.utils.toolkit import GeneratingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

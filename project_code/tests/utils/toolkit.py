@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
 # ========================================================================================
@@ -36,13 +36,14 @@ class InspectingToolKit:
 
     # -----------------------------------------------------------------------------------
     @staticmethod
-    def check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(obj: object,
-                                                                          method_calls: List[MethodCall]) -> bool:
+    def check_all_methods_raise_expected_exception_on_invalid_types(obj: object,
+                                                                    method_calls: List[MethodCall],
+                                                                    exception_type: Type[Exception] = InvalidArgumentTypeError) -> bool:
         for call in method_calls:
             method: Callable = getattr(obj, call.method_name)
             try:
                 method(*call.args, **call.kwargs)
-            except InvalidArgumentTypeError:
+            except exception_type:
                 continue
             except Exception:
                 pass
@@ -100,12 +101,7 @@ class GeneratingToolKit:
                                                 length=8) -> Dict[str, str]:
         final_dict: Dict[str, str] = dict()
         for key in keys:
-            random_str_value: str = ''.join(
-                random.choices(
-                    population=(string.ascii_letters + string.digits),
-                    k=length
-                )
-            )
+            random_str_value: str = GeneratingToolKit.generate_random_string(length=length)
             final_dict[key] = random_str_value
 
         return final_dict
@@ -120,12 +116,7 @@ class GeneratingToolKit:
         str_len: int = random.randint(a=3, b=8)
 
         # Generate str value
-        str_val: str = ''.join(
-            random.choices(
-                population=(string.ascii_letters + string.digits),
-                k=str_len
-            )
-        )
+        str_val: str = GeneratingToolKit.generate_random_string(length=str_len)
 
         # Generate iterable values
         list_val: list = list()

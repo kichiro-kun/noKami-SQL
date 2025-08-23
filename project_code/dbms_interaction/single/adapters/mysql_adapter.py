@@ -6,39 +6,36 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'ConnectionInterface'
+    'MySQLAdapter'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.1.0'
+
 
 # =======================================================================================
-from abc import abstractmethod, ABC
 from typing import Any, Dict
+
+from dbms_interaction.single.abstract.single_connection_interface\
+    import ConnectionInterface
 
 
 # _______________________________________________________________________________________
-class ConnectionInterface(ABC):
-    @abstractmethod
+class MySQLAdapter(ConnectionInterface):
     def connect(self, config: Dict[str, Any]) -> bool:
-        ...
+        return False
 
-    @abstractmethod
     def reconnect(self) -> bool:
-        ...
+        return False
 
-    @abstractmethod
-    def get_cursor(self) -> None:
-        ...
+    def get_cursor(self) -> Any:
+        return False
 
-    @abstractmethod
     def commit(self) -> bool:
-        ...
+        return False
 
-    @abstractmethod
     def close(self) -> bool:
-        ...
+        return False
 
-    @abstractmethod
     def is_active(self) -> bool:
-        ...
+        return False

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -25,7 +25,7 @@ from dbms_interaction.single.abstract.single_connection_manager \
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
-from tests.test_dbms_interaction.test_single_manager_component import SingleConnectionAdapterStub
+from tests.test_dbms_interaction.test_single_manager_component import AdapterStub
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
 
@@ -56,9 +56,10 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
     def get_instance_of_single_connection_manager(**kwargs) -> SingleConnectionManagerStub:
-        adapter = SingleConnectionAdapterStub()
+        adapter = AdapterStub()
+        config = {'user': 'Banana45', 'password': 18941}
 
-        return SingleConnectionManagerStub(conn_adapter=adapter, **kwargs)
+        return SingleConnectionManagerStub(adapter=adapter, config=config, **kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_instance_inherits_from_DataBase(self) -> None:

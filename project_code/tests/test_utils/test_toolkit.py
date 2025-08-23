@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 
 # ========================================================================================
@@ -28,7 +28,7 @@ from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit, MethodCall
 class TestInspectingToolKit(UT.TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_check_if_all_methods_raise_expected_exception_returns_True(self) -> None:
+    def test_check_if_all_methods_raise_default_exception_returns_True(self) -> None:
         class StubClass:
             def method1(self, x: int) -> int:
                 if not isinstance(x, int):
@@ -38,7 +38,7 @@ class TestInspectingToolKit(UT.TestCase):
         # Build
         obj = StubClass()
 
-        # PreCheck
+        # Pre-Check
         self.assertEqual(
             first=5,
             second=obj.method1(x=5)
@@ -52,7 +52,7 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
@@ -72,7 +72,7 @@ class TestInspectingToolKit(UT.TestCase):
         # Build
         obj = StubClass()
 
-        # PreCheck
+        # Pre-Check
         self.assertEqual(
             first=5,
             second=obj.method1(x=5)
@@ -86,7 +86,7 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
@@ -94,7 +94,7 @@ class TestInspectingToolKit(UT.TestCase):
         self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_check_if_not_all_methods_raise_expected_exception_returns_False(self) -> None:
+    def test_check_if_not_all_methods_raise_default_exception_returns_False(self) -> None:
         class StubClass:
             def method1(self, x: int) -> int:
                 if not isinstance(x, int):
@@ -104,7 +104,7 @@ class TestInspectingToolKit(UT.TestCase):
         # Build
         obj = StubClass()
 
-        # PreCheck
+        # Pre-Check
         self.assertEqual(
             first=5,
             second=obj.method1(x=5)
@@ -118,12 +118,47 @@ class TestInspectingToolKit(UT.TestCase):
 
         # Operate
         result: bool = \
-            InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
                 obj=obj, method_calls=calls
             )
 
         # Check
         self.assertFalse(expr=result)
+
+    # -----------------------------------------------------------------------------------
+    def test_check_all_methods_raise_custom_exception(self) -> None:
+        # Pre-Build
+        custom_exception = ValueError
+
+        class StubClass:
+            def method1(self, x: int) -> int:
+                if not isinstance(x, int):
+                    raise custom_exception("Invalid type")
+                return x
+
+        # Build
+        obj = StubClass()
+
+        # Pre-Check
+        self.assertEqual(
+            first=5,
+            second=obj.method1(x=5)
+        )
+
+        # Prepare data
+        calls: List[MethodCall] = [
+            MethodCall(method_name='method1', args=('9',)),
+            MethodCall(method_name='method1', args=([9],))
+        ]
+
+        # Operate
+        result: bool = \
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
+                obj=obj, method_calls=calls, exception_type=custom_exception
+            )
+
+        # Check
+        self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
     def test_check_null_object_methods_returns_empty_data(self) -> None:

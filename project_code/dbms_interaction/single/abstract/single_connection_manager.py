@@ -6,44 +6,65 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # =======================================================================================
 from typing import Any, Dict
+
 from dbms_interaction.single.abstract.single_connection_interface \
-    import SingleConnectionInterface
+    import ConnectionInterface
+
+from shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________
 class SingleConnectionManager:
-    def __init__(self, conn_adapter: SingleConnectionInterface) -> None:
-        if not isinstance(conn_adapter, SingleConnectionInterface):
-            raise ValueError(
-                f"Error! Argument: *conn_adapter* - should be a *{SingleConnectionInterface.__name__}*!\n"
-                f"Given: *{conn_adapter}* - is Type of *{type(conn_adapter)}*!"
-            )
+    def __init__(self, adapter: ConnectionInterface, config: Dict[str, Any]) -> None:
+        ToolKit.ensure_instance(
+            obj=adapter,
+            expected_type=ConnectionInterface,
+            arg_name='adapter'
+        )
 
-        self.__connection_adapter: SingleConnectionInterface = conn_adapter
+        self.__perform_adapter: ConnectionInterface = adapter
+        self.__config: Dict[str, Any] = config
+
+    # -----------------------------------------------------------------------------------
+    def set_new_adapter(self, new_adapter: ConnectionInterface) -> None:
+        ToolKit.ensure_instance(
+            obj=new_adapter,
+            expected_type=ConnectionInterface,
+            arg_name='new_adapter'
+        )
+
+        self.__perform_adapter = new_adapter
+
+    # -----------------------------------------------------------------------------------
+    def set_new_config(self, new_config: Dict[str, Any]) -> None:
+        self.__config = new_config
 
     # -----------------------------------------------------------------------------------
     def get_cursor(self) -> None:
-        adapter: SingleConnectionInterface = self.__connection_adapter
+        adapter: ConnectionInterface = self.__perform_adapter
 
         cur = adapter.get_cursor()
 
         return cur
 
     # -----------------------------------------------------------------------------------
-    def initialize_new_connection(self, conn_config: Dict[str, Any]) -> bool:
-        adapter: SingleConnectionInterface = self.__connection_adapter
+    def get_adapter(self) -> ConnectionInterface:
+        return self.__perform_adapter
 
-        op_status: bool = adapter.connect(**conn_config)
+    # -----------------------------------------------------------------------------------
+    def initialize_new_connection(self) -> None:
+        adapter: ConnectionInterface = self.__perform_adapter
+        actual_config: Dict[str, Any] = self.__config
 
-        return op_status
+        adapter.connect(config=actual_config)
 
     # -----------------------------------------------------------------------------------
     def reinitialize_connection(self, conn_config: Dict[str, Any]) -> bool:
-        adapter: SingleConnectionInterface = self.__connection_adapter
+        adapter: ConnectionInterface = self.__perform_adapter
 
         op_status: bool = adapter.reconnect(**conn_config)
 
@@ -51,7 +72,7 @@ class SingleConnectionManager:
 
     # -----------------------------------------------------------------------------------
     def read_connection_status(self) -> bool:
-        adapter: SingleConnectionInterface = self.__connection_adapter
+        adapter: ConnectionInterface = self.__perform_adapter
 
         status: bool = adapter.is_active()
 

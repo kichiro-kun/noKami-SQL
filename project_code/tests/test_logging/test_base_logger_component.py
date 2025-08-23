@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -290,7 +290,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
             obj=instance, method_calls=calls
         )
 
@@ -311,7 +311,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
             obj=instance, method_calls=calls
         )
 
@@ -319,7 +319,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_process_log_msg_raise_exception_for_invalid_log_entry(self) -> None:
+    def test_process_log_msg_raise_exception_for_invalid_types(self) -> None:
         # Build
         tested_method_name = 'process_log_msg'
         invalid_types: List[str] = self.__invalid_types
@@ -332,7 +332,7 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_InvalidArgumentTypeError_on_invalid_types(
+        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
             obj=instance, method_calls=calls
         )
 

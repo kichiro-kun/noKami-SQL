@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # =======================================================================================
 from abc import abstractmethod, ABC
@@ -41,4 +41,8 @@ class ConnectionInterface(ABC):
 
     @abstractmethod
     def is_active(self) -> bool:
+        ...
+
+    @abstractmethod
+    def ping(self) -> bool:
         ...

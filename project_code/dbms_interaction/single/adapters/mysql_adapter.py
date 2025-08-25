@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
 # =======================================================================================
@@ -38,4 +38,7 @@ class MySQLAdapter(ConnectionInterface):
         return False
 
     def is_active(self) -> bool:
+        return False
+
+    def ping(self) -> bool:
         return False

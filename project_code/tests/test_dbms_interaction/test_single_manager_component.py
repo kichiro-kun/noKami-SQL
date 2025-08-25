@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # ========================================================================================
 import unittest
@@ -46,6 +46,9 @@ class AdapterStub(ConnectionInterface):
         return False
 
     def is_active(self) -> bool:
+        return False
+
+    def ping(self) -> bool:
         return False
 
 
@@ -83,7 +86,8 @@ class CheckAdapterStub(BaseTestCase[AdapterStub]):
             'get_cursor': {},
             'commit': {},
             'close': {},
-            'is_active': {}
+            'is_active': {},
+            'ping': {}
         }  # Param name & kwargs
 
         # Prepare data
@@ -100,8 +104,8 @@ class CheckAdapterStub(BaseTestCase[AdapterStub]):
         self.assertTrue(expr=result)
 
 
-# _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[tested_class]):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class BaseTestComponent(BaseTestCase[tested_class]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -111,7 +115,7 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         cls._config_keys: Tuple[str, ...] = (
             'user', 'password', 'database'
         )
-        cls.__invalid_types: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
+        cls._invalid_types: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
@@ -136,29 +140,16 @@ class TestComponentPositive(BaseTestCase[tested_class]):
 
         return config
 
+
+# _______________________________________________________________________________________
+class TestComponentPositive(BaseTestComponent):
+
     # -----------------------------------------------------------------------------------
     def test_constructor_behavior(self) -> None:
         # Operate & Check
         self.get_instance_of_tested_cls(
             adapter=self._adapter, config=self._config
         )
-
-    # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        invalid_types: List[Any] = self.__invalid_types
-        expected_exception = InvalidArgumentTypeError
-
-        # Prepare check cycle
-        for invalid_type in invalid_types:
-            with self.subTest(pattern=invalid_type):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
-                    self.get_instance_of_tested_cls(
-                        adapter=invalid_type,
-                        config=self._config
-                    )
 
     # -----------------------------------------------------------------------------------
     def test_set_new_adapter_behavior(self) -> None:
@@ -171,7 +162,7 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         )
 
         # Operate
-        instance.set_new_adapter(new_adapter=second_adapter)
+        op_result = instance.set_new_adapter(new_adapter=second_adapter)
 
         # Extract
         actual_adapter = instance.get_adapter()
@@ -186,23 +177,10 @@ class TestComponentPositive(BaseTestCase[tested_class]):
             expr2=first_adapter
         )
 
-    # -----------------------------------------------------------------------------------
-    def test_set_new_adapter_behavior_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        invalid_types: List[Any] = self.__invalid_types
-        expected_exception = InvalidArgumentTypeError
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=self._adapter, config=self._config
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
-
-        # Prepare check cycle
-        for invalid_type in invalid_types:
-            with self.subTest(pattern=invalid_type):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
-                    instance.set_new_adapter(new_adapter=invalid_type)
 
     # -----------------------------------------------------------------------------------
     def test_set_new_config_behavior(self) -> None:
@@ -216,7 +194,7 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         )
 
         # Operate
-        instance.set_new_config(new_config=second_config)
+        op_result = instance.set_new_config(new_config=second_config)
 
         # Prepare Mock
         with UM.patch.object(target=adapter, attribute='connect') as mock_method_connect:
@@ -225,6 +203,11 @@ class TestComponentPositive(BaseTestCase[tested_class]):
 
             # Check
             mock_method_connect.assert_called_once_with(config=second_config)
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
+        )
 
     # -----------------------------------------------------------------------------------
     def test_get_adapter_behavior(self) -> None:
@@ -254,232 +237,120 @@ class TestComponentPositive(BaseTestCase[tested_class]):
             adapter=adapter, config=expected_config
         )
 
-        # Prepare Mock
+        op_result = None
+
+        # Prepare mock ctx
         with UM.patch.object(target=adapter, attribute='connect') as mock_method_connect:
             # Operate
-            instance.initialize_new_connection()
+            op_result = instance.initialize_new_connection()
 
             # Check
             mock_method_connect.assert_called_once_with(config=expected_config)
 
-
-# _______________________________________________________________________________________
-@unittest.skip(reason='for now')
-class TestComponentPositive1(BaseTestCase[tested_class]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls._config_keys: Tuple[str, ...] = (
-            'user', 'password', 'database'
-        )
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def get_instance_of_adapter_stub(**kwargs) -> AdapterStub:
-        return AdapterStub(**kwargs)
-
-    # -----------------------------------------------------------------------------------
-    def test_initialize_with_adapter(self) -> None:
-        # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-
-        # Operate & Check
-        self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
-
-    # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='get_cursor', autospec=True)
-    @UM.patch.object(target=AdapterStub, attribute='connect', autospec=True)
-    def test_general_contract_works_correctly(self,
-                                              mock_connect_method: UM.MagicMock,
-                                              mock_get_cursor_method: UM.MagicMock) -> None:
-        # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
-
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
-        )
-        expected_cursor_value = 'Mr. Cursor De Bute'
-
-        # Prepare mock
-        mock_connect_method.return_value = True
-        mock_get_cursor_method.return_value = expected_cursor_value
-
-        # Prepare instance
-        op_status = instance.initialize_new_connection(conn_config=config)
-
-        # PreCheck
-        mock_connect_method.assert_called_once_with(adapter_instance, **config)
-
-        # Operate
-        actual_cursor_value = instance.get_cursor()
-
-        # Check
-        mock_get_cursor_method.assert_called_once()
-        self.assertIs(
-            expr1=actual_cursor_value,
-            expr2=expected_cursor_value
-        )
-        self.assertIs(
-            expr1=op_status,
-            expr2=True
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
 
     # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='reconnect', autospec=True)
-    def test_reinitialize_connection_method(self,
-                                            mock_reconnect_method: UM.MagicMock) -> None:
+    def test_reinitialize_connection_behavior_when_connection_is_exists(self) -> None:
         # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
+        adapter = self._adapter
 
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=self._config
         )
 
-        # Prepare mock
-        mock_reconnect_method.return_value = True
+        op_result = None
 
-        # Operate
-        op_status = instance.reinitialize_connection(conn_config=config)
+        # Prepare mock ctx
+        with UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active, \
+                UM.patch.object(target=adapter, attribute='reconnect') as mock_method_reconnect, \
+                UM.patch.object(target=instance, attribute='initialize_new_connection') as mock_new_conn:
+            # Prepare Mock
+            mock_method_is_active.return_value = True
+            mock_method_reconnect.return_value = True
 
-        # Check
-        mock_reconnect_method.assert_called_once_with(adapter_instance, **config)
-        self.assertIs(
-            expr1=op_status,
-            expr2=True
+            # Operate
+            op_result = instance.reinitialize_connection()
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_reconnect.assert_called_once()
+            mock_new_conn.assert_not_called()
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
 
     # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='is_active', autospec=True)
-    def test_read_connection_status_method(self,
-                                           mock_is_active_method: UM.MagicMock) -> None:
+    def test_reinitialize_connection_behavior_when_connection_is_not_exists(self) -> None:
         # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
+        adapter = self._adapter
 
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=self._config
         )
 
-        # Prepare instance
-        instance.initialize_new_connection(conn_config=config)
+        op_result = None
 
-        # Prepare mock
-        mock_is_active_method.return_value = True
+        # Prepare mock ctx
+        with UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active, \
+                UM.patch.object(target=adapter, attribute='reconnect') as mock_method_reconnect, \
+                UM.patch.object(target=instance, attribute='initialize_new_connection') as mock_conn:
+            # Prepare Mock
+            mock_method_is_active.return_value = False
+            mock_method_reconnect.return_value = True
 
-        # Operate
-        conn_status = instance.read_connection_status()
+            # Operate
+            op_result = instance.reinitialize_connection()
 
-        # Check
-        self.assertIs(
-            expr1=conn_status,
-            expr2=True
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_reconnect.assert_not_called()
+            mock_conn.assert_called_once()
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
 
 
 # _______________________________________________________________________________________
-@unittest.skip(reason='for now')
-class TestComponentNegative(BaseTestCase[tested_class]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls._config_keys: Tuple[str, ...] = (
-            'user', 'password', 'database'
-        )
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def get_instance_of_adapter_stub(**kwargs) -> AdapterStub:
-        return AdapterStub(**kwargs)
+class TestComponentNegative(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
-    def test_invalid_types_of_adapter_raises_ValueError_when_initialize(self) -> None:
+    def test_constructor_behavior_raise_exception_for_invalid_types(self) -> None:
         # Build
-        class Adapter:
-            pass
+        invalid_types: List[Any] = self._invalid_types
+        expected_exception = InvalidArgumentTypeError
 
-        invalid_adapters: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types(
-            include_special_values=(Adapter(),)
-        )
-
-        # Prepare test cycle
-        for invalid_adapter in invalid_adapters:
-            with self.subTest(pattern=invalid_adapter):
+        # Prepare check cycle
+        for invalid_type in invalid_types:
+            with self.subTest(pattern=invalid_type):
                 # Check
-                with self.assertRaises(expected_exception=ValueError):
+                with self.assertRaises(expected_exception=expected_exception):
                     # Operate
-                    tested_class(adapter=invalid_adapter)
+                    self.get_instance_of_tested_cls(
+                        adapter=invalid_type,
+                        config=self._config
+                    )
 
     # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='connect', autospec=True)
-    def test_failed_initialization_returns_False(self,
-                                                 mock_connect_method: UM.MagicMock) -> None:
+    def test_set_new_adapter_behavior_raise_exception_for_invalid_types(self) -> None:
         # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
+        invalid_types: List[Any] = self._invalid_types
+        expected_exception = InvalidArgumentTypeError
 
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
+        instance = self.get_instance_of_tested_cls(
+            adapter=self._adapter, config=self._config
         )
 
-        # Prepare mock
-        mock_connect_method.return_value = False
-
-        # Operate & Extract
-        op_status: bool = instance.initialize_new_connection(conn_config=config)
-
-        # Check
-        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=op_status))
-
-    # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='reconnect', autospec=True)
-    def test_failed_reinitialization_returns_False(self,
-                                                   mock_reconnect_method: UM.MagicMock) -> None:
-        # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
-
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
-        )
-
-        # Prepare mock
-        mock_reconnect_method.return_value = False
-
-        # Operate & Extract
-        op_status: bool = instance.reinitialize_connection(conn_config=config)
-
-        # Check
-        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=op_status))
-
-    # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=AdapterStub, attribute='is_active', autospec=True)
-    def test_read_connection_status_method_returns_False(self,
-                                                         mock_is_active_method: UM.MagicMock) -> None:
-        # Build
-        adapter_instance = self.get_instance_of_adapter_stub()
-        instance = self.get_instance_of_tested_cls(conn_adapter=adapter_instance)
-
-        # Prepare mock
-        mock_is_active_method.return_value = False
-
-        # Operate
-        conn_status: bool = instance.read_connection_status()
-
-        # Check
-        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=conn_status))
+        # Prepare check cycle
+        for invalid_type in invalid_types:
+            with self.subTest(pattern=invalid_type):
+                # Check
+                with self.assertRaises(expected_exception=expected_exception):
+                    # Operate
+                    instance.set_new_adapter(new_adapter=invalid_type)

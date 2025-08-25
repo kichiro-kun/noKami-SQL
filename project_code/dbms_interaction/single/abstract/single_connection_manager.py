@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # =======================================================================================
 from typing import Any, Dict
@@ -30,7 +30,7 @@ class SingleConnectionManager:
         self.__config: Dict[str, Any] = config
 
     # -----------------------------------------------------------------------------------
-    def set_new_adapter(self, new_adapter: ConnectionInterface) -> None:
+    def set_new_adapter(self, new_adapter: ConnectionInterface) -> bool:
         ToolKit.ensure_instance(
             obj=new_adapter,
             expected_type=ConnectionInterface,
@@ -39,11 +39,16 @@ class SingleConnectionManager:
 
         self.__perform_adapter = new_adapter
 
-    # -----------------------------------------------------------------------------------
-    def set_new_config(self, new_config: Dict[str, Any]) -> None:
-        self.__config = new_config
+        return True
 
     # -----------------------------------------------------------------------------------
+    def set_new_config(self, new_config: Dict[str, Any]) -> bool:
+        self.__config = new_config
+
+        return True
+
+    # -----------------------------------------------------------------------------------
+    # For old code
     def get_cursor(self) -> None:
         adapter: ConnectionInterface = self.__perform_adapter
 
@@ -56,21 +61,29 @@ class SingleConnectionManager:
         return self.__perform_adapter
 
     # -----------------------------------------------------------------------------------
-    def initialize_new_connection(self) -> None:
+    def initialize_new_connection(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
         actual_config: Dict[str, Any] = self.__config
 
         adapter.connect(config=actual_config)
 
+        return True
+
     # -----------------------------------------------------------------------------------
-    def reinitialize_connection(self, conn_config: Dict[str, Any]) -> bool:
+    def reinitialize_connection(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
 
-        op_status: bool = adapter.reconnect(**conn_config)
+        conn_is_active: bool = adapter.is_active()
 
-        return op_status
+        if conn_is_active:
+            adapter.reconnect()
+        else:
+            self.initialize_new_connection()
+
+        return True
 
     # -----------------------------------------------------------------------------------
+    # For old code
     def read_connection_status(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
 

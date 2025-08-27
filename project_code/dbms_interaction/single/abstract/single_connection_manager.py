@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # =======================================================================================
 from typing import Any, Dict
@@ -37,13 +37,33 @@ class SingleConnectionManager:
             arg_name='new_adapter'
         )
 
+        current_adapter: ConnectionInterface = self.__perform_adapter
+
+        has_active_conn: bool = current_adapter.is_active()
+        if has_active_conn:
+            current_adapter.close()
+
         self.__perform_adapter = new_adapter
+
+        # Если у старого адаптера было активное соединение,...
+        # то создаётся новое соединение для нового адаптера.
+        if has_active_conn:
+            self.initialize_new_connection()
 
         return True
 
     # -----------------------------------------------------------------------------------
     def set_new_config(self, new_config: Dict[str, Any]) -> bool:
-        self.__config = new_config
+        current_config: Dict[str, Any] = self.__config
+        adapter: ConnectionInterface = self.__perform_adapter
+
+        if new_config == current_config:
+            return False
+        else:
+            self.__config = new_config
+
+        if adapter.is_active():
+            self.initialize_new_connection()
 
         return True
 
@@ -58,12 +78,21 @@ class SingleConnectionManager:
 
     # -----------------------------------------------------------------------------------
     def get_adapter(self) -> ConnectionInterface:
-        return self.__perform_adapter
+        adapter: ConnectionInterface = self.__perform_adapter
+
+        conn_is_works: bool = adapter.ping()
+        if conn_is_works is False:
+            self.reinitialize_connection()
+
+        return adapter
 
     # -----------------------------------------------------------------------------------
     def initialize_new_connection(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
         actual_config: Dict[str, Any] = self.__config
+
+        if adapter.is_active():
+            adapter.close()
 
         adapter.connect(config=actual_config)
 
@@ -73,9 +102,7 @@ class SingleConnectionManager:
     def reinitialize_connection(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
 
-        conn_is_active: bool = adapter.is_active()
-
-        if conn_is_active:
+        if adapter.is_active():
             adapter.reconnect()
         else:
             self.initialize_new_connection()
@@ -91,6 +118,27 @@ class SingleConnectionManager:
 
         return status
 
+    # -----------------------------------------------------------------------------------
+    def check_connection_status(self) -> bool:
+        adapter: ConnectionInterface = self.__perform_adapter
+
+        conn_status: bool = False
+        if adapter.is_active():
+            if adapter.ping():
+                conn_status = True
+
+        return conn_status
+
+    # -----------------------------------------------------------------------------------
+    # Перенести функционал в деконструктор адаптера
+    def __del__(self) -> None:
+        try:
+            adapter: ConnectionInterface = self.__perform_adapter
+            if adapter.is_active():
+                adapter.close()
+        except AttributeError:
+            pass
+
 
 # _______________________________________________________________________________________
 class NoSingleConnectionManager(SingleConnectionManager):
@@ -98,4 +146,7 @@ class NoSingleConnectionManager(SingleConnectionManager):
         pass
 
     def get_cursor(self) -> None:
+        pass
+
+    def __del__(self) -> None:
         pass

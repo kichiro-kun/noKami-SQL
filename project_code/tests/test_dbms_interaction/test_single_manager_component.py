@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -200,12 +200,11 @@ class TestComponentPositive(BaseTestComponent):
                              attribute='is_active') as mock_method_is_active, \
             UM.patch.object(target=first_adapter,
                             attribute='close') as mock_method_close, \
-            UM.patch.object(target=second_adapter,
-                            attribute='connect') as mock_method_connect:
+            UM.patch.object(target=instance,
+                            attribute='initialize_new_connection') as mock_method_initialize_new_conn:
             # Prepare mock
             mock_method_is_active.return_value = True
             mock_method_close.return_value = True
-            mock_method_connect.return_value = True
 
             # Operate
             op_result = instance.set_new_adapter(new_adapter=second_adapter)
@@ -213,7 +212,7 @@ class TestComponentPositive(BaseTestComponent):
             # Check
             mock_method_is_active.assert_called()
             mock_method_close.assert_called()
-            mock_method_connect.assert_called_once()
+            mock_method_initialize_new_conn.assert_called_once()
 
         # Post-Check
         self.assertTrue(
@@ -237,8 +236,8 @@ class TestComponentPositive(BaseTestComponent):
                              attribute='is_active') as mock_method_is_active, \
             UM.patch.object(target=first_adapter,
                             attribute='close') as mock_method_close, \
-            UM.patch.object(target=instance,
-                            attribute='initialize_new_connection') as mock_method_initialize_new_conn:
+            UM.patch.object(target=second_adapter,
+                            attribute='connect') as mock_method_connect:
             # Prepare mock
             mock_method_is_active.return_value = False
 
@@ -248,7 +247,7 @@ class TestComponentPositive(BaseTestComponent):
             # Check
             mock_method_is_active.assert_called_once()
             mock_method_close.assert_not_called()
-            mock_method_initialize_new_conn.assert_not_called()
+            mock_method_connect.assert_not_called()
 
         # Post-Check
         self.assertTrue(

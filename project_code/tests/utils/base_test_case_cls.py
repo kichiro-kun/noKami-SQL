@@ -3,10 +3,10 @@ from unittest import TestCase
 from abc import ABC, abstractmethod
 
 
-T = TypeVar('T')
+TestedClass = TypeVar('TestedClass')
 
 
-class BaseTestCase(TestCase, ABC, Generic[T]):
+class BaseTestCase(TestCase, ABC, Generic[TestedClass]):
     @abstractmethod
-    def get_instance_of_tested_cls(self, **kwargs) -> T:
+    def get_instance_of_tested_cls(self, **kwargs) -> TestedClass:
         ...

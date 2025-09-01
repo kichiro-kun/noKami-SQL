@@ -5,8 +5,12 @@ Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
+__all__: list[str] = [
+    'SingleConnectionManager'
+]
+
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 # =======================================================================================
 from typing import Any, Dict
@@ -68,15 +72,6 @@ class SingleConnectionManager:
         return True
 
     # -----------------------------------------------------------------------------------
-    # For old code
-    def get_cursor(self) -> None:
-        adapter: ConnectionInterface = self.__perform_adapter
-
-        cur = adapter.get_cursor()
-
-        return cur
-
-    # -----------------------------------------------------------------------------------
     def get_adapter(self) -> ConnectionInterface:
         adapter: ConnectionInterface = self.__perform_adapter
 
@@ -110,15 +105,6 @@ class SingleConnectionManager:
         return True
 
     # -----------------------------------------------------------------------------------
-    # For old code
-    def read_connection_status(self) -> bool:
-        adapter: ConnectionInterface = self.__perform_adapter
-
-        status: bool = adapter.is_active()
-
-        return status
-
-    # -----------------------------------------------------------------------------------
     def check_connection_status(self) -> bool:
         adapter: ConnectionInterface = self.__perform_adapter
 
@@ -143,9 +129,6 @@ class SingleConnectionManager:
 # _______________________________________________________________________________________
 class NoSingleConnectionManager(SingleConnectionManager):
     def __init__(self) -> None:
-        pass
-
-    def get_cursor(self) -> None:
         pass
 
     def __del__(self) -> None:

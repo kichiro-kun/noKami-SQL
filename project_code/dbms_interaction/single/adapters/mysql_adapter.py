@@ -10,35 +10,75 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 
 # =======================================================================================
 from typing import Any, Dict
+
+from mysql.connector import MySQLConnection
+from mysql.connector.cursor import MySQLCursor
 
 from dbms_interaction.single.abstract.single_connection_interface\
     import ConnectionInterface
 
 
 # _______________________________________________________________________________________
-class MySQLAdapter(ConnectionInterface):
+class MySQLAdapter(ConnectionInterface[MySQLCursor]):
+    def __init__(self, connector: MySQLConnection) -> None:
+        self.__adaptee: MySQLConnection = connector
+
     def connect(self, config: Dict[str, Any]) -> bool:
-        return False
+        connector: MySQLConnection = self.__adaptee
+
+        connector.connect(**config)
+
+        return True
 
     def reconnect(self) -> bool:
-        return False
+        connector: MySQLConnection = self.__adaptee
 
-    def get_cursor(self) -> Any:
-        return False
+        connector_is_connected: bool = self.is_active()
+        if connector_is_connected is False:
+            return False
+
+        connector.reconnect()
+
+        return True
+
+    def get_cursor(self) -> MySQLCursor:
+        connector: MySQLConnection = self.__adaptee
+
+        connector_is_connected: bool = self.is_active()
+
+        return connector.cursor()
 
     def commit(self) -> bool:
         return False
 
     def close(self) -> bool:
-        return False
+        connector: MySQLConnection = self.__adaptee
+
+        connector_is_connected: bool = self.is_active()
+        if connector_is_connected is False:
+            return False
+
+        connector.close()
+
+        return True
 
     def is_active(self) -> bool:
-        return False
+        # Метод is_connected считается устаревшим с 9.3.0
+        connector: MySQLConnection = self.__adaptee
+
+        return connector.is_connected()
 
     def ping(self) -> bool:
-        return False
+        connector: MySQLConnection = self.__adaptee
+
+        try:
+            connector.ping(reconnect=True)
+        except Exception:
+            return False
+
+        return True

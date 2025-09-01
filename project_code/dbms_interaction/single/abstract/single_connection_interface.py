@@ -10,15 +10,18 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # =======================================================================================
 from abc import abstractmethod, ABC
-from typing import Any, Dict
+from typing import Any, Dict, TypeVar, Generic
+
+
+CursorType = TypeVar('CursorType')
 
 
 # _______________________________________________________________________________________
-class ConnectionInterface(ABC):
+class ConnectionInterface(ABC, Generic[CursorType]):
     @abstractmethod
     def connect(self, config: Dict[str, Any]) -> bool:
         ...
@@ -28,7 +31,7 @@ class ConnectionInterface(ABC):
         ...
 
     @abstractmethod
-    def get_cursor(self) -> None:
+    def get_cursor(self) -> CursorType:
         ...
 
     @abstractmethod

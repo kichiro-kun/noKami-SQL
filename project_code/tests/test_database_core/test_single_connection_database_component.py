@@ -21,7 +21,7 @@ import unittest
 from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_class
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
-from dbms_interaction.single.abstract.single_connection_manager \
+from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager

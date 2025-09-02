@@ -50,7 +50,7 @@ class SingleConnectionManager:
         self.__perform_adapter = new_adapter
 
         # Если у старого адаптера было активное соединение,...
-        # то создаётся новое соединение для нового адаптера.
+        # ...то создаётся новое соединение для нового адаптера.
         if has_active_conn:
             self.initialize_new_connection()
 
@@ -116,7 +116,6 @@ class SingleConnectionManager:
         return conn_status
 
     # -----------------------------------------------------------------------------------
-    # Перенести функционал в деконструктор адаптера
     def __del__(self) -> None:
         try:
             adapter: ConnectionInterface = self.__perform_adapter
@@ -130,6 +129,24 @@ class SingleConnectionManager:
 class NoSingleConnectionManager(SingleConnectionManager):
     def __init__(self) -> None:
         pass
+
+    def set_new_adapter(self, new_adapter: ConnectionInterface) -> bool:
+        return False
+
+    def set_new_config(self, new_config: Dict[str, Any]) -> bool:
+        return False
+
+    def get_adapter(self) -> ConnectionInterface:
+        return None
+
+    def initialize_new_connection(self) -> bool:
+        return False
+
+    def reinitialize_connection(self) -> bool:
+        return False
+
+    def check_connection_status(self) -> bool:
+        return False
 
     def __del__(self) -> None:
         pass

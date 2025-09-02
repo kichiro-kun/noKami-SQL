@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 
 # =======================================================================================
@@ -22,12 +22,17 @@ from mysql.connector.cursor import MySQLCursor
 from dbms_interaction.single.abstract.single_connection_interface\
     import ConnectionInterface
 
+from shared.exceptions.common import OperationFailedConnectionIsNotActive
+
 
 # _______________________________________________________________________________________
 class MySQLAdapter(ConnectionInterface[MySQLCursor]):
+
+    # -----------------------------------------------------------------------------------
     def __init__(self, connector: MySQLConnection) -> None:
         self.__adaptee: MySQLConnection = connector
 
+    # -----------------------------------------------------------------------------------
     def connect(self, config: Dict[str, Any]) -> bool:
         connector: MySQLConnection = self.__adaptee
 
@@ -35,27 +40,41 @@ class MySQLAdapter(ConnectionInterface[MySQLCursor]):
 
         return True
 
+    # -----------------------------------------------------------------------------------
     def reconnect(self) -> bool:
         connector: MySQLConnection = self.__adaptee
 
-        connector_is_connected: bool = self.is_active()
-        if connector_is_connected is False:
+        connection_is_exists: bool = self.is_active()
+        if connection_is_exists is False:
             return False
 
         connector.reconnect()
 
         return True
 
+    # -----------------------------------------------------------------------------------
     def get_cursor(self) -> MySQLCursor:
         connector: MySQLConnection = self.__adaptee
 
         connector_is_connected: bool = self.is_active()
+        if connector_is_connected is False:
+            raise OperationFailedConnectionIsNotActive("Failure! Connector is not connected!")
 
         return connector.cursor()
 
+    # -----------------------------------------------------------------------------------
     def commit(self) -> bool:
-        return False
+        connector: MySQLConnection = self.__adaptee
 
+        connector_is_connected: bool = self.is_active()
+        if connector_is_connected is False:
+            return False
+
+        connector.commit()
+
+        return True
+
+    # -----------------------------------------------------------------------------------
     def close(self) -> bool:
         connector: MySQLConnection = self.__adaptee
 
@@ -67,12 +86,14 @@ class MySQLAdapter(ConnectionInterface[MySQLCursor]):
 
         return True
 
+    # -----------------------------------------------------------------------------------
     def is_active(self) -> bool:
         # Метод is_connected считается устаревшим с 9.3.0
         connector: MySQLConnection = self.__adaptee
 
         return connector.is_connected()
 
+    # -----------------------------------------------------------------------------------
     def ping(self) -> bool:
         connector: MySQLConnection = self.__adaptee
 

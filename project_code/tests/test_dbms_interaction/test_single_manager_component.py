@@ -12,14 +12,14 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.1'
+__version__ = '0.7.0'
 
 # ========================================================================================
 from unittest import mock as UM
 from typing import Any, Dict, List, Tuple
 
-from dbms_interaction.single.abstract.single_connection_manager \
-    import SingleConnectionManager as tested_class
+from dbms_interaction.single.single_connection_manager \
+    import SingleConnectionManager as tested_cls
 from dbms_interaction.single.abstract.single_connection_interface import ConnectionInterface
 from shared.exceptions.common import InvalidArgumentTypeError
 
@@ -104,7 +104,7 @@ class CheckAdapterStub(BaseTestCase[AdapterStub]):
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class BaseTestComponent(BaseTestCase[tested_class]):
+class BaseTestComponent(BaseTestCase[tested_cls]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -124,8 +124,8 @@ class BaseTestComponent(BaseTestCase[tested_class]):
         self._config: Dict[str, Any] = self.get_new_connection_config()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+        return tested_cls(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_instance_of_adapter_stub(self, **kwargs) -> AdapterStub:
@@ -142,6 +142,41 @@ class BaseTestComponent(BaseTestCase[tested_class]):
 
 # _______________________________________________________________________________________
 class TestComponentPositive(BaseTestComponent):
+
+    # -----------------------------------------------------------------------------------
+    def test_null_object_realization(self) -> None:
+        from dbms_interaction.single.single_connection_manager import NoSingleConnectionManager
+
+        # Build
+        method_calls: Dict[str, Dict[str, Any]] = {
+            'set_new_adapter': {
+                'new_adapter': None
+            },
+            'set_new_config': {
+                'new_config': None
+            },
+            'get_adapter': {},
+            'initialize_new_connection': {},
+            'reinitialize_connection': {},
+            'check_connection_status': {},
+        }  # Param name & kwargs
+
+        # Prepare data
+        calls: List[MethodCall] = [
+            MethodCall(method_name=name, kwargs=kwargs)
+            for name, kwargs in method_calls.items()
+        ]
+
+        # Operate
+        instance = NoSingleConnectionManager()
+
+        # Check
+        self.assertTrue(
+            expr=InspectingToolKit.check_all_methods_return_empty_data_for_null_object(
+                obj=instance,
+                method_calls=calls
+            )
+        )
 
     # -----------------------------------------------------------------------------------
     def test_constructor_behavior(self) -> None:
@@ -220,41 +255,6 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_adapter_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        first_adapter = self._adapter
-        second_adapter = self.get_instance_of_adapter_stub()
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=first_adapter, config=self._config
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=first_adapter,
-                             attribute='is_active') as mock_method_is_active, \
-            UM.patch.object(target=first_adapter,
-                            attribute='close') as mock_method_close, \
-            UM.patch.object(target=second_adapter,
-                            attribute='connect') as mock_method_connect:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            op_result = instance.set_new_adapter(new_adapter=second_adapter)
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_close.assert_not_called()
-            mock_method_connect.assert_not_called()
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
     def test_set_new_config_behavior_update_config(self) -> None:
         # Build
         first_config = self._config
@@ -313,69 +313,6 @@ class TestComponentPositive(BaseTestComponent):
         self.assertTrue(
             expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_config_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        first_config = self._config
-        second_config = self.get_new_connection_config()
-        adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=adapter, config=first_config
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=adapter,
-                             attribute='is_active') as mock_method_is_active, \
-            UM.patch.object(target=instance,
-                            attribute='initialize_new_connection') as mock_method_initialize_new_conn:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            op_result = instance.set_new_config(new_config=second_config)
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_initialize_new_conn.assert_not_called()
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_get_adapter_behavior_when_connection_is_not_work(self) -> None:
-        # Build
-        expected_adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=expected_adapter, config=self._config
-        )
-
-        # Prepare check context
-        with UM.patch.object(target=instance,
-                             attribute='reinitialize_connection') as mock_method_reinitialize_conn, \
-                UM.patch.object(target=expected_adapter,
-                                attribute='ping') as mock_method_ping:
-            # Prepare mock
-            mock_method_ping.return_value = False
-
-            # Operate & Extract
-            actual_adapter = instance.get_adapter()
-
-            # Check
-            mock_method_ping.assert_called_once()
-            mock_method_reinitialize_conn.assert_called_once()
-
-            # Post-Check
-            self.assertIs(
-                expr1=actual_adapter,
-                expr2=expected_adapter
-            )
 
     # -----------------------------------------------------------------------------------
     def test_get_adapter_behavior_when_connection_is_work(self) -> None:
@@ -440,39 +377,6 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_initialize_new_connection_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        expected_config = self._config
-        adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=adapter, config=expected_config
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=adapter, attribute='connect') as mock_method_connect, \
-                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active, \
-                UM.patch.object(target=adapter, attribute='close') as mock_method_close:
-            # Prepare mock
-            mock_method_is_active.return_value = True
-            mock_method_close.return_value = True
-
-            # Operate
-            op_result = instance.initialize_new_connection()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_close.assert_called_once()
-            mock_method_connect.assert_called_once_with(config=expected_config)
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
     def test_reinitialize_connection_behavior_when_connection_is_exists(self) -> None:
         # Build
         adapter = self._adapter
@@ -508,41 +412,6 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_reinitialize_connection_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=adapter, config=self._config
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=adapter,
-                             attribute='is_active') as mock_method_is_active, \
-                UM.patch.object(target=adapter,
-                                attribute='reconnect') as mock_method_reconnect, \
-                UM.patch.object(target=instance,
-                                attribute='initialize_new_connection') as mock_method_initialize_new_conn:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-            mock_method_reconnect.return_value = True
-
-            # Operate
-            op_result = instance.reinitialize_connection()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_reconnect.assert_not_called()
-            mock_method_initialize_new_conn.assert_called_once()
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
     def test_check_connection_status_behavior_when_connection_is_exists_and_works(self) -> None:
         # Build
         adapter = self._adapter
@@ -571,6 +440,189 @@ class TestComponentPositive(BaseTestComponent):
         self.assertTrue(
             expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
+
+    # -----------------------------------------------------------------------------------
+    def test_deconstruction_behavior_when_connection_is_exists(self) -> None:
+        # Build
+        adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=self._config
+        )
+
+        # Prepare check context
+        with UM.patch.object(target=adapter, attribute='close') as mock_method_close, \
+                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active:
+            # Prepare mock
+            mock_method_is_active.return_value = True
+
+            # Operate
+            del instance
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_close.assert_called_once()
+
+
+# _______________________________________________________________________________________
+class TestComponentNegative(BaseTestComponent):
+
+    # -----------------------------------------------------------------------------------
+    def test_constructor_behavior_raise_exception_for_invalid_types(self) -> None:
+        # Build
+        invalid_types: List[Any] = self._invalid_types
+        expected_exception = InvalidArgumentTypeError
+
+        # Prepare check cycle
+        for invalid_type in invalid_types:
+            with self.subTest(pattern=invalid_type):
+                # Check
+                with self.assertRaises(expected_exception=expected_exception):
+                    # Operate
+                    self.get_instance_of_tested_cls(
+                        adapter=invalid_type,
+                        config=self._config
+                    )
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_adapter_behavior_raise_exception_for_invalid_types(self) -> None:
+        # Build
+        invalid_types: List[Any] = self._invalid_types
+        expected_exception = InvalidArgumentTypeError
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=self._adapter, config=self._config
+        )
+
+        # Prepare check cycle
+        for invalid_type in invalid_types:
+            with self.subTest(pattern=invalid_type):
+                # Check
+                with self.assertRaises(expected_exception=expected_exception):
+                    # Operate
+                    instance.set_new_adapter(new_adapter=invalid_type)
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_adapter_behavior_when_connection_is_not_exists(self) -> None:
+        # Build
+        first_adapter = self._adapter
+        second_adapter = self.get_instance_of_adapter_stub()
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=first_adapter, config=self._config
+        )
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=first_adapter,
+                             attribute='is_active') as mock_method_is_active, \
+            UM.patch.object(target=first_adapter,
+                            attribute='close') as mock_method_close, \
+            UM.patch.object(target=second_adapter,
+                            attribute='connect') as mock_method_connect:
+            # Prepare mock
+            mock_method_is_active.return_value = False
+
+            # Operate
+            op_result = instance.set_new_adapter(new_adapter=second_adapter)
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_close.assert_not_called()
+            mock_method_connect.assert_not_called()
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_config_behavior_when_connection_is_not_exists(self) -> None:
+        # Build
+        first_config = self._config
+        second_config = self.get_new_connection_config()
+        adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=first_config
+        )
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=adapter,
+                             attribute='is_active') as mock_method_is_active, \
+            UM.patch.object(target=instance,
+                            attribute='initialize_new_connection') as mock_method_initialize_new_conn:
+            # Prepare mock
+            mock_method_is_active.return_value = False
+
+            # Operate
+            op_result = instance.set_new_config(new_config=second_config)
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_initialize_new_conn.assert_not_called()
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_config_behavior_when_new_config_equal_old_config_and_connection_is_exists(self) -> None:
+        # Build
+        config = self._config
+        adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=config
+        )
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=instance,
+                             attribute='initialize_new_connection') as mock_method_initialize_new_conn, \
+            UM.patch.object(target=adapter,
+                            attribute='is_active') as mock_method_is_active:
+            # Prepare mock
+            mock_method_is_active.return_value = True
+
+            # Operate
+            op_result = instance.set_new_config(new_config=config)
+
+            # Check
+            mock_method_is_active.assert_not_called()
+            mock_method_initialize_new_conn.assert_not_called()
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_False(obj=op_result)
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_deconstruction_behavior_when_connection_is_not_exists(self) -> None:
+        # Build
+        adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=self._config
+        )
+
+        # Prepare check context
+        with UM.patch.object(target=adapter, attribute='close') as mock_method_close, \
+                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active:
+            # Prepare mock
+            mock_method_is_active.return_value = False
+
+            # Operate
+            del instance
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_close.assert_not_called()
 
     # -----------------------------------------------------------------------------------
     def test_check_connection_status_behavior_when_connection_is_not_exists(self) -> None:
@@ -632,118 +684,99 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    # Перенести функционал в деконструктор адаптера
-    def test_deconstruction_behavior_when_connection_is_exists(self) -> None:
+    def test_reinitialize_connection_behavior_when_connection_is_not_exists(self) -> None:
         # Build
         adapter = self._adapter
 
         instance = self.get_instance_of_tested_cls(
             adapter=adapter, config=self._config
-        )
-
-        # Prepare check context
-        with UM.patch.object(target=adapter, attribute='close') as mock_method_close, \
-                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = True
-
-            # Operate
-            del instance
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_close.assert_called_once()
-
-    # -----------------------------------------------------------------------------------
-    # Перенести функционал в деконструктор адаптера
-    def test_deconstruction_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=adapter, config=self._config
-        )
-
-        # Prepare check context
-        with UM.patch.object(target=adapter, attribute='close') as mock_method_close, \
-                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            del instance
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_close.assert_not_called()
-
-
-# _______________________________________________________________________________________
-class TestComponentNegative(BaseTestComponent):
-
-    # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        invalid_types: List[Any] = self._invalid_types
-        expected_exception = InvalidArgumentTypeError
-
-        # Prepare check cycle
-        for invalid_type in invalid_types:
-            with self.subTest(pattern=invalid_type):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
-                    self.get_instance_of_tested_cls(
-                        adapter=invalid_type,
-                        config=self._config
-                    )
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_adapter_behavior_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        invalid_types: List[Any] = self._invalid_types
-        expected_exception = InvalidArgumentTypeError
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=self._adapter, config=self._config
-        )
-
-        # Prepare check cycle
-        for invalid_type in invalid_types:
-            with self.subTest(pattern=invalid_type):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
-                    instance.set_new_adapter(new_adapter=invalid_type)
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_config_behavior_when_new_config_equal_old_config_and_connection_is_exists(self) -> None:
-        # Build
-        config = self._config
-        adapter = self._adapter
-
-        instance = self.get_instance_of_tested_cls(
-            adapter=adapter, config=config
         )
 
         op_result = None
 
         # Prepare check context
-        with UM.patch.object(target=instance,
-                             attribute='initialize_new_connection') as mock_method_initialize_new_conn, \
-            UM.patch.object(target=adapter,
-                            attribute='is_active') as mock_method_is_active:
+        with UM.patch.object(target=adapter,
+                             attribute='is_active') as mock_method_is_active, \
+                UM.patch.object(target=adapter,
+                                attribute='reconnect') as mock_method_reconnect, \
+                UM.patch.object(target=instance,
+                                attribute='initialize_new_connection') as mock_method_initialize_new_conn:
             # Prepare mock
-            mock_method_is_active.return_value = True
+            mock_method_is_active.return_value = False
+            mock_method_reconnect.return_value = True
 
             # Operate
-            op_result = instance.set_new_config(new_config=config)
+            op_result = instance.reinitialize_connection()
 
             # Check
-            mock_method_is_active.assert_not_called()
-            mock_method_initialize_new_conn.assert_not_called()
+            mock_method_is_active.assert_called_once()
+            mock_method_reconnect.assert_not_called()
+            mock_method_initialize_new_conn.assert_called_once()
 
         # Post-Check
         self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=op_result)
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
         )
+
+    # -----------------------------------------------------------------------------------
+    def test_initialize_new_connection_behavior_when_connection_is_not_exists(self) -> None:
+        # Build
+        expected_config = self._config
+        adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=adapter, config=expected_config
+        )
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=adapter, attribute='connect') as mock_method_connect, \
+                UM.patch.object(target=adapter, attribute='is_active') as mock_method_is_active, \
+                UM.patch.object(target=adapter, attribute='close') as mock_method_close:
+            # Prepare mock
+            mock_method_is_active.return_value = True
+            mock_method_close.return_value = True
+
+            # Operate
+            op_result = instance.initialize_new_connection()
+
+            # Check
+            mock_method_is_active.assert_called_once()
+            mock_method_close.assert_called_once()
+            mock_method_connect.assert_called_once_with(config=expected_config)
+
+        # Post-Check
+        self.assertTrue(
+            expr=InspectingToolKit.is_boolean_True(obj=op_result)
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_get_adapter_behavior_when_connection_is_not_work(self) -> None:
+        # Build
+        expected_adapter = self._adapter
+
+        instance = self.get_instance_of_tested_cls(
+            adapter=expected_adapter, config=self._config
+        )
+
+        # Prepare check context
+        with UM.patch.object(target=instance,
+                             attribute='reinitialize_connection') as mock_method_reinitialize_conn, \
+                UM.patch.object(target=expected_adapter,
+                                attribute='ping') as mock_method_ping:
+            # Prepare mock
+            mock_method_ping.return_value = False
+
+            # Operate & Extract
+            actual_adapter = instance.get_adapter()
+
+            # Check
+            mock_method_ping.assert_called_once()
+            mock_method_reinitialize_conn.assert_called_once()
+
+            # Post-Check
+            self.assertIs(
+                expr1=actual_adapter,
+                expr2=expected_adapter
+            )

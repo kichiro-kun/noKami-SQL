@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -14,7 +14,7 @@ from typing import Any, Tuple, Dict
 
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
-from dbms_interaction.single.abstract.single_connection_manager \
+from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager

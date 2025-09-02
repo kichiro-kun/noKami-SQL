@@ -11,14 +11,14 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.3'
+__version__ = '0.7.0'
 
 # ========================================================================================
 from unittest import mock as UM
 from typing import Dict, List, Tuple, Any
-import unittest
 
-from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_class
+import database_core.single.abstract.single_connection_database as tested_module
+from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_cls
 from database_core.abstract.abstract_database import DataBase
 from query_core.query_interface.query_interface import QueryInterface
 from dbms_interaction.single.single_connection_manager \
@@ -26,42 +26,60 @@ from dbms_interaction.single.single_connection_manager \
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
-from tests.test_dbms_interaction.test_single_manager_component import AdapterStub
+from shared.exceptions.common import InvalidArgumentTypeError
+
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class TestedClassStub(tested_class):
-    def __del__(self) -> None:
-        pass
+class BaseTestComponent(BaseTestCase[tested_cls]):
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class SingleConnectionManagerStub(SingleConnectionManager):
-    pass
+        cls._config_keys: Tuple[str, ...] = (
+            'user', 'database', 'password'
+        )
 
+        cls._transaction_manager_patcher = UM.patch.object(
+            target=tested_module, attribute='TransactionManager', new=UM.MagicMock
+        )
+        cls._single_connection_manager_patcher = UM.patch.object(
+            target=tested_module, attribute='SingleConnectionManager', new=UM.MagicMock
+        )
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class TransactionManagerStub(TransactionManager):
-    pass
+        cls.mock_transaction_manager: UM.MagicMock = cls._transaction_manager_patcher.start()
+        cls.mock_single_connection_manager: UM.MagicMock = cls._single_connection_manager_patcher.start()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().tearDownClass()
+
+        cls._transaction_manager_patcher.stop()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+        return tested_cls(**kwargs)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_single_connection_manager(self, **kwargs) -> SingleConnectionManager:
+        instance: SingleConnectionManager = self.mock_single_connection_manager(**kwargs)
+
+        return instance
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_transaction_manager(self, **kwargs) -> TransactionManager:
+        instance: TransactionManager = self.mock_transaction_manager(**kwargs)
+
+        return instance
 
 
 # _______________________________________________________________________________________
-@unittest.skip(reason='While Single Manager is developing')
-class TestComponentPositive(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def get_instance_of_single_connection_manager(**kwargs) -> SingleConnectionManagerStub:
-        adapter = AdapterStub()
-        config = {'user': 'Banana45', 'password': 18941}
-
-        return SingleConnectionManagerStub(adapter=adapter, config=config, **kwargs)
+class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     def test_instance_inherits_from_DataBase(self) -> None:
@@ -77,12 +95,12 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
     # -----------------------------------------------------------------------------------
     def test_initialization_with_and_without_query_param_placeholder(self) -> None:
         # Build
-        kwargs: Dict[str, Any] = {
-            'query_param_placeholder': '&',
-        }
+        custom_placeholder = '&'
 
         # Operate with specifics placeholder
-        instance1 = self.get_instance_of_tested_cls(**kwargs)
+        instance1 = self.get_instance_of_tested_cls(
+            query_param_placeholder=custom_placeholder
+        )
 
         # Operate without placeholder
         instance2 = self.get_instance_of_tested_cls()
@@ -94,7 +112,7 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
         # Check specific placeholder
         self.assertEqual(
             first=value1,
-            second=kwargs['query_param_placeholder']
+            second=custom_placeholder
         )
 
         # Check without specific placeholder
@@ -104,14 +122,14 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
         )
         self.assertNotEqual(
             first=value2,
-            second=kwargs['query_param_placeholder']
+            second=custom_placeholder
         )
 
     # -----------------------------------------------------------------------------------
     def test_execute_query_methods_return_expected_types(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
-        sql_query = 'I am a SQL Query!'
+        sql_query = GeneratingToolKit.generate_random_string()
         query_params: Tuple[Any, ...] = (
             1234, 44.44, 'hello', 'important info'
         )
@@ -146,6 +164,24 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
         )
 
     # -----------------------------------------------------------------------------------
+    def test_set_new_transaction_manager_assigns_transaction_manager_correctly(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        transaction_manager = self.get_instance_of_transaction_manager()
+
+        # Operate
+        instance.set_new_transaction_manager(new_manager=transaction_manager)
+
+        # Extract
+        value = instance._transaction_manager
+
+        # Check
+        self.assertIs(
+            expr1=value,
+            expr2=transaction_manager
+        )
+
+    # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
@@ -164,30 +200,12 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_transaction_manager_assigns_transaction_manager_correctly(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        transaction_manager = TransactionManagerStub()
-
-        # Operate
-        instance.set_new_transaction_manager(new_manager=transaction_manager)
-
-        # Extract
-        value = instance._transaction_manager
-
-        # Check
-        self.assertIs(
-            expr1=value,
-            expr2=transaction_manager
-        )
-
-    # -----------------------------------------------------------------------------------
     def test_set_new_connection_config_assigns_configuration_correctly(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         connection_config: Dict[str, Any] = \
             GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=('user', 'password', 'database')
+                keys=self._config_keys
         )
 
         # Operate
@@ -209,15 +227,15 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
         instance2 = self.get_instance_of_tested_cls()
         connection_manager1 = self.get_instance_of_single_connection_manager()
         connection_manager2 = self.get_instance_of_single_connection_manager()
-        transaction_manager1 = TransactionManagerStub()
-        transaction_manager2 = TransactionManagerStub()
+        transaction_manager1 = self.get_instance_of_transaction_manager()
+        transaction_manager2 = self.get_instance_of_transaction_manager()
         config1: Dict[str, Any] = \
             GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=('user', 'password', 'database')
+                keys=self._config_keys
         )
         config2: Dict[str, Any] = \
             GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=('user', 'password', 'database')
+                keys=self._config_keys
         )
 
         # Operate
@@ -273,93 +291,48 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
             cls=NoTransactionManager
         )
 
-    # -----------------------------------------------------------------------------------
-    def test_deconstruct_database_removes_internal_managers(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        transaction_manager = TransactionManagerStub()
-
-        # Prepare Instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-        instance.set_new_transaction_manager(new_manager=transaction_manager)
-
-        # Operate
-        instance.deconstruct_database_and_components()
-
-        # Check
-        self.assertFalse(expr=hasattr(instance, '_transaction_manager'))
-        self.assertFalse(expr=hasattr(instance, '_perform_connection_manager'))
-
-    # -----------------------------------------------------------------------------------
-    def test_execute_query_methods_call_get_cursor_from_manager(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        query = 'Pass Query'
-
-        # Prepare
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock method
-        with UM.patch.object(target=conn_manager, attribute='get_cursor') as mock_method:
-            # Operate
-            instance.execute_query_no_returns(query=query)
-            instance.execute_query_returns_one(query=query)
-            instance.execute_query_returns_many(query=query, returns_count=2)
-            instance.execute_query_returns_all(query=query)
-
-            # Check
-            self.assertTrue(
-                expr=(mock_method.call_count == 4)
-            )
-
 
 # _______________________________________________________________________________________
-@unittest.skip(reason='While Single Manager is developing')
-class TestComponentNegative(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
+class TestComponentNegative(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_manager_raises_ValueError_for_invalid_types(self) -> None:
+    def test_set_new_connection_manager_raise_expected_exception_for_invalid_types(self) -> None:
         # Build
-        invalid_managers: List[Any] = \
-            GeneratingToolKit.generate_list_of_basic_python_types()
+        expected_exception = InvalidArgumentTypeError
+        invalid_managers: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
         instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_manager in invalid_managers:
             with self.subTest(pattern=invalid_manager):
                 # Check
-                with self.assertRaises(expected_exception=ValueError):
+                with self.assertRaises(expected_exception=expected_exception):
                     # Operate
                     instance.set_new_connection_manager(
                         new_manager=invalid_manager
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_transaction_manager_raises_ValueError_for_invalid_types(self) -> None:
+    def test_set_new_transaction_manager_raise_expected_exception_for_invalid_types(self) -> None:
         # Build
-        invalid_managers: List[Any] = \
-            GeneratingToolKit.generate_list_of_basic_python_types()
+        expected_exception = InvalidArgumentTypeError
+        invalid_managers: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
         instance = self.get_instance_of_tested_cls()
 
         # Prepare test cycle
         for invalid_manager in invalid_managers:
             with self.subTest(pattern=invalid_manager):
                 # Check
-                with self.assertRaises(expected_exception=ValueError):
+                with self.assertRaises(expected_exception=expected_exception):
                     # Operate
                     instance.set_new_transaction_manager(
                         new_manager=invalid_manager
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_config_raises_ValueError_for_invalid_types(self) -> None:
+    def test_set_new_config_raise_expected_exception_for_invalid_types(self) -> None:
         # Build
+        expected_exception = InvalidArgumentTypeError
         invalid_configs: Tuple[Any, ...] = (
             'real_config', ['key1', 'value1', 'key2', 'value2'],
             ('key1', 'value1', 'key2', 'value2')
@@ -370,15 +343,16 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         for invalid_config in invalid_configs:
             with self.subTest(pattern=invalid_config):
                 # Check
-                with self.assertRaises(expected_exception=ValueError):
+                with self.assertRaises(expected_exception=expected_exception):
                     # Operate
                     instance.set_new_connection_config(
                         new_config=invalid_config
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_invalid_types_of_param_placeholder_raises_ValueError_when_initialize(self) -> None:
+    def test_invalid_types_of_param_placeholder_raise_expected_exception_when_initialize(self) -> None:
         # Build
+        expected_exception = InvalidArgumentTypeError
         invalid_placeholders: Tuple[Any, ...] = (
             5, False, True, 01.01, ['*'], set('&'), ('$',)
         )
@@ -387,6 +361,6 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         for invalid_placeholder in invalid_placeholders:
             with self.subTest(pattern=invalid_placeholder):
                 # Check
-                with self.assertRaises(expected_exception=ValueError):
+                with self.assertRaises(expected_exception=expected_exception):
                     # Operate
-                    TestedClassStub(query_param_placeholder=invalid_placeholder)
+                    self.get_instance_of_tested_cls(query_param_placeholder=invalid_placeholder)

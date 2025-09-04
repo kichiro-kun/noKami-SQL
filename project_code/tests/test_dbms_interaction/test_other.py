@@ -6,61 +6,27 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestSingleConnectionInterface',
     'TestMySQLAdapterPositive',
-    'TestMySQLAdapterNegative'
+    'TestMySQLAdapterNegative',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # ========================================================================================
-from abc import ABC
-from unittest import TestCase, mock as UM
-from typing import Tuple, Type, Dict, Any
+from unittest import mock as UM
+from typing import Tuple, Dict, Any
 
 from dbms_interaction.single.adapters import mysql_adapter as tested_module
-from dbms_interaction.single.adapters.mysql_adapter import MySQLAdapter as tested_cls
-from dbms_interaction.single.abstract.single_connection_interface import ConnectionInterface
+from dbms_interaction.single.adapters.mysql_adapter import MySQLAdapter as connection_adapter
+from dbms_interaction.single.abstract.connection_interface import ConnectionInterface
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit
 
 
-# _______________________________________________________________________________________
-class TestSingleConnectionInterface(TestCase):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls.__abc_method_names: Tuple[str, ...] = (
-            'connect',
-            'reconnect',
-            'get_cursor',
-            'commit',
-            'close',
-            'is_active',
-            'ping',
-        )
-
-        cls.__tested_interface: Type[ABC] = ConnectionInterface
-
-    # -----------------------------------------------------------------------------------
-    def test_abstract_interface_defined_contract(self) -> None:
-        # Operate & Extract
-        result: bool = InspectingToolKit.check_has_abstract_methods_defined(
-            _cls=self.__tested_interface,
-            abs_method_names=self.__abc_method_names
-        )
-
-        # Check
-        self.assertTrue(expr=result)
-
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class BaseTestComponent(BaseTestCase[tested_cls]):
+class BaseConnectionTestCase(BaseTestCase[connection_adapter]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -89,8 +55,8 @@ class BaseTestComponent(BaseTestCase[tested_cls]):
         self._connector: UM.MagicMock = self.get_new_mock_connector()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
-        return tested_cls(**kwargs)
+    def get_instance_of_tested_cls(self, **kwargs) -> connection_adapter:
+        return connection_adapter(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_new_connection_config(self) -> Dict[str, Any]:
@@ -108,7 +74,7 @@ class BaseTestComponent(BaseTestCase[tested_cls]):
 
 
 # _______________________________________________________________________________________
-class TestMySQLAdapterPositive(BaseTestComponent):
+class TestMySQLAdapterPositive(BaseConnectionTestCase):
 
     # -----------------------------------------------------------------------------------
     def test_check_expected_inherit(self) -> None:
@@ -336,7 +302,7 @@ class TestMySQLAdapterPositive(BaseTestComponent):
 
 
 # _______________________________________________________________________________________
-class TestMySQLAdapterNegative(BaseTestComponent):
+class TestMySQLAdapterNegative(BaseConnectionTestCase):
 
     # -----------------------------------------------------------------------------------
     def test_commit_behavior_when_connection_is_not_exists(self) -> None:

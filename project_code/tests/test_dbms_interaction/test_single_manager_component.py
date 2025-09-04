@@ -8,11 +8,10 @@ Apache license, version 2.0 (Apache-2.0 license)
 __all__: list[str] = [
     'TestComponentPositive',
     'TestComponentNegative',
-    'AdapterStub',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -20,35 +19,14 @@ from typing import Any, Dict, List, Tuple
 
 from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager as tested_cls
-from dbms_interaction.single.abstract.single_connection_interface import ConnectionInterface
+from dbms_interaction.single.abstract.connection_interface import ConnectionInterface
+
+from tests.test_dbms_interaction.common import *
+
 from shared.exceptions.common import InvalidArgumentTypeError
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class AdapterStub(ConnectionInterface):
-    def connect(self, config: Dict[str, Any]) -> bool:
-        return False
-
-    def reconnect(self) -> bool:
-        return False
-
-    def get_cursor(self) -> Any:
-        return None
-
-    def commit(self) -> bool:
-        return False
-
-    def close(self) -> bool:
-        return False
-
-    def is_active(self) -> bool:
-        return False
-
-    def ping(self) -> bool:
-        return False
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,8 +74,9 @@ class CheckAdapterStub(BaseTestCase[AdapterStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
-                                                                                             method_calls=calls)
+        result: bool = \
+            InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
+                                                                                  method_calls=calls)
 
         # Check
         self.assertTrue(expr=result)

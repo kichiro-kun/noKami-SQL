@@ -6,19 +6,21 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 # =======================================================================================
 from abc import ABCMeta
 from typing import Any, Tuple, Dict
 
 from database_core.abstract.abstract_database import DataBase
+from dbms_interaction.single.abstract.connection_interface import ConnectionInterface
 from query_core.query_interface.query_interface import QueryInterface
 from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
+from shared.types.dbms_interaction import CursorInterfaceType
 from shared.utils.toolkit import ToolKit
 
 
@@ -72,20 +74,52 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         self._transaction_manager: TransactionManager = new_manager
 
     # -----------------------------------------------------------------------------------
+    # Проработать контракт передаваемых аргументов
     def execute_query_no_returns(self, *params, query: str) -> None:
-        return
+        conn_manager: SingleConnectionManager = self._perform_connection_manager
+        adapter: ConnectionInterface = conn_manager.get_adapter()
+        cur: CursorInterfaceType = adapter.get_cursor()
+        cur.execute()
+        cur.close()
 
     # -----------------------------------------------------------------------------------
+    # Проработать контракт передаваемых аргументов
+    # Проработать возврат значения при запросе результата
     def execute_query_returns_one(self, *params, query: str) -> str:
-        return ''
+        conn_manager: SingleConnectionManager = self._perform_connection_manager
+        adapter: ConnectionInterface = conn_manager.get_adapter()
+        cur: CursorInterfaceType = adapter.get_cursor()
+        cur.execute()
+        result = cur.fetchone()
+        cur.close()
+
+        return result
 
     # -----------------------------------------------------------------------------------
+    # Проработать контракт передаваемых аргументов
+    # Проработать возврат значения при запросе результата
     def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
-        return tuple()
+        conn_manager: SingleConnectionManager = self._perform_connection_manager
+        adapter: ConnectionInterface = conn_manager.get_adapter()
+        cur: CursorInterfaceType = adapter.get_cursor()
+        cur.execute()
+        result = cur.fetchall()
+        cur.close()
+
+        return result
 
     # -----------------------------------------------------------------------------------
+    # Проработать контракт передаваемых аргументов
+    # Проработать возврат значения при запросе результата
     def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
-        return tuple()
+        conn_manager: SingleConnectionManager = self._perform_connection_manager
+        adapter: ConnectionInterface = conn_manager.get_adapter()
+        cur: CursorInterfaceType = adapter.get_cursor()
+        cur.execute()
+        result = cur.fetchmany()
+        cur.close()
+
+        return result
 
     # -----------------------------------------------------------------------------------
     def deconstruct_database_and_components(self) -> None:

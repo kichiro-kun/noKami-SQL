@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 
 # =======================================================================================
@@ -19,7 +19,7 @@ from typing import Any, Dict
 from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursor
 
-from dbms_interaction.single.abstract.single_connection_interface\
+from dbms_interaction.single.abstract.connection_interface\
     import ConnectionInterface
 
 from shared.exceptions.common import OperationFailedConnectionIsNotActive

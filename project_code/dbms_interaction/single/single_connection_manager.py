@@ -10,12 +10,12 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 # =======================================================================================
 from typing import Any, Dict
 
-from dbms_interaction.single.abstract.single_connection_interface \
+from dbms_interaction.single.abstract.connection_interface \
     import ConnectionInterface
 
 from shared.utils.toolkit import ToolKit

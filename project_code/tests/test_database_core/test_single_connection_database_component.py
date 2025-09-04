@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -20,13 +20,13 @@ from typing import Dict, List, Tuple, Any
 import database_core.single.abstract.single_connection_database as tested_module
 from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_cls
 from database_core.abstract.abstract_database import DataBase
-from query_core.query_interface.query_interface import QueryInterface
 from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
 from shared.exceptions.common import InvalidArgumentTypeError
+from shared.types.dbms_interaction import CursorInterfaceType
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
@@ -60,6 +60,7 @@ class BaseTestComponent(BaseTestCase[tested_cls]):
         super().tearDownClass()
 
         cls._transaction_manager_patcher.stop()
+        cls._single_connection_manager_patcher.stop()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
@@ -123,44 +124,6 @@ class TestComponentPositive(BaseTestComponent):
         self.assertNotEqual(
             first=value2,
             second=custom_placeholder
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_execute_query_methods_return_expected_types(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        sql_query = GeneratingToolKit.generate_random_string()
-        query_params: Tuple[Any, ...] = (
-            1234, 44.44, 'hello', 'important info'
-        )
-
-        # PreCheck
-        self.assertIsInstance(
-            obj=instance,
-            cls=QueryInterface
-        )
-
-        # Operate & Extract
-        value1: None = instance.execute_query_no_returns(query=sql_query, *query_params)
-        value2: str = instance.execute_query_returns_one(query=sql_query, *query_params)
-        value3: tuple = instance.execute_query_returns_many(query=sql_query, returns_count=5, *query_params)
-        value4: tuple = instance.execute_query_returns_all(query=sql_query, *query_params)
-
-        # Check
-        self.assertIsNone(
-            obj=value1
-        )
-        self.assertIsInstance(
-            obj=value2,
-            cls=str
-        )
-        self.assertIsInstance(
-            obj=value3,
-            cls=tuple
-        )
-        self.assertIsInstance(
-            obj=value4,
-            cls=tuple
         )
 
     # -----------------------------------------------------------------------------------
@@ -290,6 +253,194 @@ class TestComponentPositive(BaseTestComponent):
             obj=transaction_manager,
             cls=NoTransactionManager
         )
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_no_returns_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor: CursorInterfaceType = UM.MagicMock()
+
+        query: str = GeneratingToolKit.generate_random_string()
+        query_params: Tuple[Any, ...] = (
+            1234, 44.44, 'hello', 'important info'
+        )
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock
+        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_adapter.get_cursor.return_value = cursor
+
+        # Operate
+        op_result = instance.execute_query_no_returns(*query_params, query=query)
+
+        # Check
+        conn_manager.get_adapter.assert_called_once()  # type:ignore
+        conn_adapter.get_cursor.assert_called_once()
+        cursor.execute.assert_called_once()
+        cursor.close.assert_called_once()
+
+        # Post-Check
+        self.assertIsNone(obj=op_result)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_one_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor: CursorInterfaceType = UM.MagicMock()
+        expected_result: str = GeneratingToolKit.generate_random_string()
+
+        query: str = GeneratingToolKit.generate_random_string()
+        query_params: Tuple[Any, ...] = (
+            1234, 44.44, 'hello', 'important info'
+        )
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock
+        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_adapter.get_cursor.return_value = cursor
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=cursor, attribute='fetchone') as mock_fetchone:
+            # Prepare mock
+            mock_fetchone.return_value = expected_result
+
+            # Operate
+            op_result = instance.execute_query_returns_one(*query_params, query=query)
+
+            # Check
+            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_adapter.get_cursor.assert_called_once()
+            cursor.execute.assert_called_once()
+            cursor.fetchone.assert_called_once()
+            cursor.close.assert_called_once()
+
+        # Post-Check
+        self.assertEqual(
+            first=op_result,
+            second=expected_result
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_all_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor: CursorInterfaceType = UM.MagicMock()
+
+        query: str = GeneratingToolKit.generate_random_string()
+        query_params: Tuple[Any, ...] = (
+            1234, 44.44, 'hello', 'important info'
+        )
+
+        # Prepare expected data
+        expected_result: Tuple[str, ...] = tuple(
+            GeneratingToolKit.generate_random_string()
+            for i in range(5)
+        )
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock
+        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_adapter.get_cursor.return_value = cursor
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=cursor, attribute='fetchall') as mock_fetchall:
+            # Prepare mock
+            mock_fetchall.return_value = expected_result
+
+            # Operate
+            op_result = instance.execute_query_returns_all(*query_params, query=query)
+
+            # Check
+            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_adapter.get_cursor.assert_called_once()
+            cursor.execute.assert_called_once()
+            cursor.fetchall.assert_called_once()
+            cursor.close.assert_called_once()
+
+        # Post-Check
+        self.assertTupleEqual(
+            tuple1=op_result,
+            tuple2=expected_result
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_many_behavior(self) -> None:
+        from random import randint
+
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor: CursorInterfaceType = UM.MagicMock()
+
+        # Prepare expected data
+        returns_count: int = randint(a=3, b=5)
+        generate_count: int = randint(a=6, b=10)
+
+        generated_data: Tuple[str, ...] = tuple(
+            GeneratingToolKit.generate_random_string()
+            for i in range(generate_count)
+        )
+
+        query: str = GeneratingToolKit.generate_random_string()
+        query_params: Tuple[Any, ...] = (
+            1234, 44.44, 'hello', 'important info'
+        )
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock
+        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_adapter.get_cursor.return_value = cursor
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=cursor, attribute='fetchmany') as mock_fetchmany:
+            # Prepare mock
+            mock_fetchmany.return_value = generated_data[:returns_count]
+
+            # Operate
+            op_result = \
+                instance.execute_query_returns_many(*query_params,
+                                                    query=query,
+                                                    returns_count=returns_count)
+
+            # Check
+            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_adapter.get_cursor.assert_called_once()
+            cursor.execute.assert_called_once()
+            cursor.fetchmany.assert_called_once()
+            cursor.close.assert_called_once()
+
+        # Prepare post-check cycle
+        count: int = 0
+        for member in op_result:
+            # Post-Check
+            self.assertIn(
+                member=member,
+                container=generated_data
+            )
+            count += 1
+        else:
+            self.assertTrue(expr=(count == returns_count))
 
 
 # _______________________________________________________________________________________

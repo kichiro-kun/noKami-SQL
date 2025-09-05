@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 
 # =======================================================================================
@@ -58,7 +58,7 @@ class MySQLAdapter(ConnectionInterface[MySQLCursor]):
 
         connector_is_connected: bool = self.is_active()
         if connector_is_connected is False:
-            raise OperationFailedConnectionIsNotActive("Failure! Connector is not connected!")
+            raise OperationFailedConnectionIsNotActive()
 
         return connector.cursor()
 

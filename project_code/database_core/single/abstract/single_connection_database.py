@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -20,7 +20,9 @@ from dbms_interaction.single.single_connection_manager \
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
 
+from shared.exceptions.common import OperationFailedConnectionIsNotActive
 from shared.types.dbms_interaction import CursorInterfaceType
+
 from shared.utils.toolkit import ToolKit
 
 
@@ -77,21 +79,31 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
     # Проработать контракт передаваемых аргументов
     def execute_query_no_returns(self, *params, query: str) -> None:
         conn_manager: SingleConnectionManager = self._perform_connection_manager
-        adapter: ConnectionInterface = conn_manager.get_adapter()
-        cur: CursorInterfaceType = adapter.get_cursor()
-        cur.execute()
-        cur.close()
+
+        conn_is_active: bool = conn_manager.check_connection_status()
+        if conn_is_active:
+            adapter: ConnectionInterface = conn_manager.get_adapter()
+            cur: CursorInterfaceType = adapter.get_cursor()
+            cur.execute()
+            cur.close()
+        else:
+            raise OperationFailedConnectionIsNotActive()
 
     # -----------------------------------------------------------------------------------
     # Проработать контракт передаваемых аргументов
     # Проработать возврат значения при запросе результата
     def execute_query_returns_one(self, *params, query: str) -> str:
         conn_manager: SingleConnectionManager = self._perform_connection_manager
-        adapter: ConnectionInterface = conn_manager.get_adapter()
-        cur: CursorInterfaceType = adapter.get_cursor()
-        cur.execute()
-        result = cur.fetchone()
-        cur.close()
+
+        conn_is_active: bool = conn_manager.check_connection_status()
+        if conn_is_active:
+            adapter: ConnectionInterface = conn_manager.get_adapter()
+            cur: CursorInterfaceType = adapter.get_cursor()
+            cur.execute()
+            result = cur.fetchone()
+            cur.close()
+        else:
+            raise OperationFailedConnectionIsNotActive()
 
         return result
 
@@ -100,24 +112,34 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
     # Проработать возврат значения при запросе результата
     def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
         conn_manager: SingleConnectionManager = self._perform_connection_manager
-        adapter: ConnectionInterface = conn_manager.get_adapter()
-        cur: CursorInterfaceType = adapter.get_cursor()
-        cur.execute()
-        result = cur.fetchall()
-        cur.close()
+
+        conn_is_active: bool = conn_manager.check_connection_status()
+        if conn_is_active:
+            adapter: ConnectionInterface = conn_manager.get_adapter()
+            cur: CursorInterfaceType = adapter.get_cursor()
+            cur.execute()
+            result = cur.fetchall()
+            cur.close()
+        else:
+            raise OperationFailedConnectionIsNotActive()
 
         return result
 
     # -----------------------------------------------------------------------------------
     # Проработать контракт передаваемых аргументов
     # Проработать возврат значения при запросе результата
-    def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
+    def execute_query_returns_many(self, *params, query: str, returns_count: int = 0) -> Tuple[str, ...]:
         conn_manager: SingleConnectionManager = self._perform_connection_manager
-        adapter: ConnectionInterface = conn_manager.get_adapter()
-        cur: CursorInterfaceType = adapter.get_cursor()
-        cur.execute()
-        result = cur.fetchmany()
-        cur.close()
+
+        conn_is_active: bool = conn_manager.check_connection_status()
+        if conn_is_active:
+            adapter: ConnectionInterface = conn_manager.get_adapter()
+            cur: CursorInterfaceType = adapter.get_cursor()
+            cur.execute()
+            result = cur.fetchmany()
+            cur.close()
+        else:
+            raise OperationFailedConnectionIsNotActive()
 
         return result
 

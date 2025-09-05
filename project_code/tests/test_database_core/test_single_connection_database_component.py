@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.8.0'
+__version__ = '0.9.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -24,8 +24,9 @@ from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
 from query_core.transaction_manager.abstract.transaction_manager \
     import TransactionManager, NoTransactionManager
+from query_core.query_interface.query_interface import QueryInterface
 
-from shared.exceptions.common import InvalidArgumentTypeError
+from shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
 from shared.types.dbms_interaction import CursorInterfaceType
 
 from tests.utils.base_test_case_cls import BaseTestCase
@@ -257,7 +258,7 @@ class TestComponentPositive(BaseTestComponent):
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     # Учесть интерфейс методов официального коннектора-курсора
-    def test_execute_query_no_returns_behavior(self) -> None:
+    def test_execute_query_no_returns_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
@@ -265,9 +266,6 @@ class TestComponentPositive(BaseTestComponent):
         cursor: CursorInterfaceType = UM.MagicMock()
 
         query: str = GeneratingToolKit.generate_random_string()
-        query_params: Tuple[Any, ...] = (
-            1234, 44.44, 'hello', 'important info'
-        )
 
         # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
@@ -277,7 +275,7 @@ class TestComponentPositive(BaseTestComponent):
         conn_adapter.get_cursor.return_value = cursor
 
         # Operate
-        op_result = instance.execute_query_no_returns(*query_params, query=query)
+        op_result = instance.execute_query_no_returns(query=query)
 
         # Check
         conn_manager.get_adapter.assert_called_once()  # type:ignore
@@ -291,7 +289,7 @@ class TestComponentPositive(BaseTestComponent):
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     # Учесть интерфейс методов официального коннектора-курсора
-    def test_execute_query_returns_one_behavior(self) -> None:
+    def test_execute_query_returns_one_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
@@ -300,9 +298,6 @@ class TestComponentPositive(BaseTestComponent):
         expected_result: str = GeneratingToolKit.generate_random_string()
 
         query: str = GeneratingToolKit.generate_random_string()
-        query_params: Tuple[Any, ...] = (
-            1234, 44.44, 'hello', 'important info'
-        )
 
         # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
@@ -319,7 +314,7 @@ class TestComponentPositive(BaseTestComponent):
             mock_fetchone.return_value = expected_result
 
             # Operate
-            op_result = instance.execute_query_returns_one(*query_params, query=query)
+            op_result = instance.execute_query_returns_one(query=query)
 
             # Check
             conn_manager.get_adapter.assert_called_once()  # type:ignore
@@ -337,7 +332,7 @@ class TestComponentPositive(BaseTestComponent):
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     # Учесть интерфейс методов официального коннектора-курсора
-    def test_execute_query_returns_all_behavior(self) -> None:
+    def test_execute_query_returns_all_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
@@ -345,9 +340,6 @@ class TestComponentPositive(BaseTestComponent):
         cursor: CursorInterfaceType = UM.MagicMock()
 
         query: str = GeneratingToolKit.generate_random_string()
-        query_params: Tuple[Any, ...] = (
-            1234, 44.44, 'hello', 'important info'
-        )
 
         # Prepare expected data
         expected_result: Tuple[str, ...] = tuple(
@@ -370,7 +362,7 @@ class TestComponentPositive(BaseTestComponent):
             mock_fetchall.return_value = expected_result
 
             # Operate
-            op_result = instance.execute_query_returns_all(*query_params, query=query)
+            op_result = instance.execute_query_returns_all(query=query)
 
             # Check
             conn_manager.get_adapter.assert_called_once()  # type:ignore
@@ -388,7 +380,7 @@ class TestComponentPositive(BaseTestComponent):
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     # Учесть интерфейс методов официального коннектора-курсора
-    def test_execute_query_returns_many_behavior(self) -> None:
+    def test_execute_query_returns_many_behavior_when_connection_is_active(self) -> None:
         from random import randint
 
         # Build
@@ -407,9 +399,6 @@ class TestComponentPositive(BaseTestComponent):
         )
 
         query: str = GeneratingToolKit.generate_random_string()
-        query_params: Tuple[Any, ...] = (
-            1234, 44.44, 'hello', 'important info'
-        )
 
         # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
@@ -427,8 +416,7 @@ class TestComponentPositive(BaseTestComponent):
 
             # Operate
             op_result = \
-                instance.execute_query_returns_many(*query_params,
-                                                    query=query,
+                instance.execute_query_returns_many(query=query,
                                                     returns_count=returns_count)
 
             # Check
@@ -523,3 +511,43 @@ class TestComponentNegative(BaseTestComponent):
                 with self.assertRaises(expected_exception=expected_exception):
                     # Operate
                     self.get_instance_of_tested_cls(query_param_placeholder=invalid_placeholder)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_methods_behavior_when_connection_is_not_active(self) -> None:
+        # Build
+        expected_exception = OperationFailedConnectionIsNotActive
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        query: str = GeneratingToolKit.generate_random_string()
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare additional data
+        execute_query_methods: List[str] = [
+            method_name for method_name in QueryInterface.__abstractmethods__
+            if 'execute_query' in method_name
+        ]
+        execute_methods_count: int = len(execute_query_methods)
+
+        # Prepare check context
+        with UM.patch.object(target=conn_manager,
+                             attribute='check_connection_status') as mock_method_check_connection_status:
+            # Prepare mock
+            mock_method_check_connection_status.return_value = False
+
+            # Prepare test cycle
+            for method_name in execute_query_methods:
+                with self.subTest(pattern=method_name):
+                    # Prepare post_check
+                    with self.assertRaises(expected_exception=expected_exception):
+                        execute_query_method = getattr(instance, method_name)
+
+                        # Operate
+                        execute_query_method(query=query)
+
+            # Check
+            self.assertTrue(
+                expr=(mock_method_check_connection_status.call_count == execute_methods_count)
+            )
+            conn_manager.get_adapter.assert_not_called()  # type:ignore

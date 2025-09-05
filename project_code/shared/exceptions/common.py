@@ -9,4 +9,5 @@ class InvalidArgumentTypeError(Exception):
 
 
 class OperationFailedConnectionIsNotActive(Exception):
-    pass
+    def __init__(self, message: str = 'Failure! Connection is not active!') -> None:
+        super().__init__(message)

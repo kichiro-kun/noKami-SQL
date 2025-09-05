@@ -107,6 +107,7 @@ class GeneratingToolKit:
         return final_dict
 
     # -----------------------------------------------------------------------------------
+    # Сделать возможность исключения определённого типа (предположительно нескольких элементов)
     @staticmethod
     def generate_list_of_basic_python_types(include_special_values: Iterable[Any] = ()) -> List[Any]:
         # Generate simple values

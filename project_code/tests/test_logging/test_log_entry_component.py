@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -19,20 +19,20 @@ from typing import Any, Dict, Tuple
 from datetime import datetime
 
 import _logging.log_entry.log_entry_factory as tested_module
-from _logging.log_entry.log_entry_factory import LogEntryFactory as tested_class
+from _logging.log_entry.log_entry_factory import LogEntryFactory as tested_cls
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
 from shared.exceptions._logging import UnsupportedLogLevelError
 
 from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import InspectingToolKit
+from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[tested_class]):
+class TestComponentPositive(BaseTestCase[tested_cls]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+        return tested_cls(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
@@ -41,8 +41,8 @@ class TestComponentPositive(BaseTestCase[tested_class]):
 
         cls.base_kwargs_for_create_method: Dict[str, str] = {
             'level': 'Info',
-            'msg_text': 'Hello! Can you see test data?',
-            'context': 'Test',
+            'msg_text': GeneratingToolKit.generate_random_string(),
+            'context': GeneratingToolKit.generate_random_string(),
         }
 
     # -----------------------------------------------------------------------------------
@@ -146,38 +146,39 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         )
 
     # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=tested_module, attribute='datetime', autospec=True)
-    def test_create_new_log_entry_sets_current_time_using_datetime(self,
-                                                                   mock_datetime: UM.MagicMock) -> None:
+    def test_create_new_log_entry_sets_current_time_using_datetime(self) -> None:
         # Build
         factory = self.get_instance_of_tested_cls()
-        expected_value = 'Today'
+        expected_value = GeneratingToolKit.generate_random_string()
 
-        # Prepare mock
-        mock_datetime.now.return_value = expected_value
+        # Prepare check context
+        with UM.patch.object(target=tested_module, attribute='datetime',
+                             autospec=True) as mock_datetime:
+            # Prepare mock
+            mock_datetime.now.return_value = expected_value
 
-        # Operate
-        instance = factory.create_new_log_entry(**self.base_kwargs_for_create_method)
+            # Operate
+            instance = factory.create_new_log_entry(**self.base_kwargs_for_create_method)
 
-        # Extract
-        actual_value = instance.created_at
+            # Extract
+            actual_value = instance.created_at
 
-        # Pre-Check
-        mock_datetime.now.assert_called_once()
+            # Pre-Check
+            mock_datetime.now.assert_called_once()
 
-        # Check
-        self.assertEqual(
-            first=actual_value,
-            second=expected_value
-        )
+            # Check
+            self.assertEqual(
+                first=actual_value,
+                second=expected_value
+            )
 
 
 # _______________________________________________________________________________________
-class TestComponentNegative(BaseTestCase[tested_class]):
+class TestComponentNegative(BaseTestCase[tested_cls]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+        return tested_cls(**kwargs)
 
     # -----------------------------------------------------------------------------------
     def test_create_new_log_entry_with_unsupported_level_raises_exception(self) -> None:

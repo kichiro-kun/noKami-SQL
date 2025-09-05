@@ -61,8 +61,9 @@ class CheckStubClass(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
-                                                                                             method_calls=calls)
+        result: bool = \
+            InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
+                                                                                  method_calls=calls)
 
         # Check
         self.assertTrue(expr=result)
@@ -290,9 +291,9 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
-            obj=instance, method_calls=calls
-        )
+        result: bool = \
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
+                                                                                          method_calls=calls)
 
         # Check
         self.assertTrue(expr=result)
@@ -311,9 +312,9 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
-            obj=instance, method_calls=calls
-        )
+        result: bool = \
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
+                                                                                          method_calls=calls)
 
         # Check
         self.assertTrue(expr=result)
@@ -332,9 +333,9 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(
-            obj=instance, method_calls=calls
-        )
+        result: bool = \
+            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
+                                                                                          method_calls=calls)
 
         # Check
         self.assertTrue(expr=result)

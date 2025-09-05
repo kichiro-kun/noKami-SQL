@@ -130,6 +130,7 @@ class TestMySQLAdapterPositive(BaseConnectionTestCase):
             connector=connector
         )
 
+        # Prepare check context
         with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
             # Prepare mock
             mock_method_is_active.return_value = True
@@ -161,6 +162,7 @@ class TestMySQLAdapterPositive(BaseConnectionTestCase):
             connector=connector
         )
 
+        # Prepare check context
         with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
             # Prepare mock
             mock_method_is_active.return_value = True
@@ -367,6 +369,7 @@ class TestMySQLAdapterNegative(BaseConnectionTestCase):
             connector=connector
         )
 
+        # Prepare check context
         with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
             # Prepare mock
             mock_method_is_active.return_value = False
@@ -392,6 +395,7 @@ class TestMySQLAdapterNegative(BaseConnectionTestCase):
             connector=connector
         )
 
+        # Prepare check context
         with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
             # Prepare mock
             mock_method_is_active.return_value = False

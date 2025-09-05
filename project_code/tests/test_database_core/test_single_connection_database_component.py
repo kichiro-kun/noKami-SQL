@@ -255,6 +255,8 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
+    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
+    # Учесть интерфейс методов официального коннектора-курсора
     def test_execute_query_no_returns_behavior(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
@@ -287,6 +289,8 @@ class TestComponentPositive(BaseTestComponent):
         self.assertIsNone(obj=op_result)
 
     # -----------------------------------------------------------------------------------
+    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
+    # Учесть интерфейс методов официального коннектора-курсора
     def test_execute_query_returns_one_behavior(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
@@ -331,6 +335,8 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
+    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
+    # Учесть интерфейс методов официального коннектора-курсора
     def test_execute_query_returns_all_behavior(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
@@ -380,6 +386,8 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
+    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
+    # Учесть интерфейс методов официального коннектора-курсора
     def test_execute_query_returns_many_behavior(self) -> None:
         from random import randint
 

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -22,7 +22,7 @@ from database_core.single.abstract.single_connection_database import SingleConne
 from database_core.abstract.abstract_database import DataBase
 from dbms_interaction.single.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
-from query_core.transaction_manager.abstract.transaction_manager \
+from query_core.transaction_manager.transaction_manager \
     import TransactionManager, NoTransactionManager
 from query_core.query_interface.query_interface import QueryInterface
 

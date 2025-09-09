@@ -101,10 +101,6 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='1c3971e87146c3f0fa636d50e19b6d0e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLTransactionManager</a></li>
-        
-        <li><a href='e7256561bede9d70f0825e3bc93545e0.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLTransactionManager</a></li>
-        
         <li><a href='4fe19bcf656849dfd4d4615fbeefa65e.html'><span class='node-icon staruml-icon icon-UMLClass'></span>NoTransactionManager</a></li>
         
     </ul>
@@ -169,7 +165,7 @@
           <tr>
             <td>private</td>
             <td><a href="979d9aaff28fb53074e6e5d70659c37a.html">state</a></td>
-            <td><a href='24ea51e411f11488470e7e5a11f327d5.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionState</a> </td>
+            <td><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a> </td>
             <td></td>
           </tr>
           
@@ -182,13 +178,13 @@
           
           <tr>
             <td>private</td>
-            <td><a href="748ac5e7c8bddfeaa4df00da3666f19e.html">current_connection</a></td>
-            <td><span class='label label-info'>none</span> </td>
+            <td><a href="748ac5e7c8bddfeaa4df00da3666f19e.html">active_connection</a></td>
+            <td><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a> </td>
             <td></td>
           </tr>
           
           <tr>
-            <td>private</td>
+            <td>public</td>
             <td><a href="c7fa1a275bee5e1f86badd80c468aad0.html">query_param_placeholder</a></td>
             <td>str </td>
             <td></td>
@@ -212,31 +208,13 @@
           
           <tr>
             <td>public</td>
-            <td><a href="8a3f7f0b15d51cdd7806b3419459d684.html">begin(connection, query_param_placeholder: str)</a></td>
+            <td><a href="e7bfde4d8d3dd0494b7a99a31a60762f.html">apply_isolation_level(new_level: IsolationLevel)</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="0e1bbc802b963cfc582e18eff54e98ca.html">execute_in_active_transaction(query: str, *params)</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>public</td>
-            <td><a href="361c40deeadc4e85e4a842c93606e042.html">commit()</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="7d0c26bf8fce17a90c292a1991e7ff60.html">rollback()</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>private</td>
-            <td><a href="e7bfde4d8d3dd0494b7a99a31a60762f.html">apply_isolation_level(isolation_level: IsolationLevel)</a></td>
+            <td><a href="a10f92c5f1f66aa7a04d0d9ad8978749.html">set_state(new_state: TransactionStateInterface)</a></td>
             <td></td>
           </tr>
           
@@ -383,7 +361,7 @@
     
     <tr>
         <td>isAbstract</td>
-        <td><span class='label label-info'>true</span></td>
+        <td><span class='label label-info'>false</span></td>
     </tr>
     
     
@@ -436,8 +414,6 @@
     <h3>Dependencies</h3>
     <ul class="nav nav-list">
         
-        <li><a href='24ea51e411f11488470e7e5a11f327d5.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«Enum»TransactionState</a></li>
-        
         <li><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«Enum»IsolationLevel</a></li>
         
     </ul>
@@ -458,12 +434,6 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='a7f4986983c6a18d0c9752e1c0424c67.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLTransactionManager→TransactionManager)</a></li>
-        
-        <li><a href='03be88d7f852686d7a07e336d3edc86e.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLTransactionManager→TransactionManager)</a></li>
-        
-        <li><a href='b70d24de82728936c43aa9c94e3ae499.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→TransactionState)</a></li>
-        
         <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
         
         <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
@@ -471,6 +441,8 @@
         <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
         
         <li><a href='d5dc4259bbff537c3de961c8f8c7638e.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoTransactionManager→TransactionManager)</a></li>
+        
+        <li><a href='9e6bec9ef5e189d6edcd623e2b859d86.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
         
     </ul>
 </section>
@@ -484,8 +456,6 @@
 <section class="element-list">
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
-        
-        <li><a href='b70d24de82728936c43aa9c94e3ae499.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→TransactionState)</a></li>
         
         <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
         

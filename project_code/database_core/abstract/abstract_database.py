@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
@@ -73,6 +73,10 @@ class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
 
         self.query_param_placeholder: str = query_param_placeholder
         self.__logger_observers_list: List[LoggerObserverInterface] = []
+
+    # -----------------------------------------------------------------------------------
+    def change_query_param_placeholder(self, new_placeholder: str = '?') -> None:
+        self.query_param_placeholder = new_placeholder
 
     # -----------------------------------------------------------------------------------
     def register_logger_observer(self, new_observer: LoggerObserverInterface) -> bool:

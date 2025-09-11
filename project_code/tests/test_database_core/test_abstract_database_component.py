@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.1'
+__version__ = '0.5.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -107,6 +107,48 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
                     first=actual_placeholder,
                     second=expected_placeholder
                 )
+
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_behavior_when_pass_arg(self) -> None:
+        # Build
+        new_expected_placeholder = GeneratingToolKit.generate_random_string()
+        instance = self.get_instance_of_tested_cls()
+
+        # PreCheck
+        self.assertNotEqual(
+            first=instance.query_param_placeholder,
+            second=new_expected_placeholder
+        )
+
+        # Operate
+        instance.change_query_param_placeholder(new_placeholder=new_expected_placeholder)
+
+        # Extract
+        actual_placeholder = instance.query_param_placeholder
+
+        # Check
+        self.assertEqual(
+            first=actual_placeholder,
+            second=new_expected_placeholder
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_behavior_when_not_pass_arg(self) -> None:
+        # Build
+        expected_default_placeholder = '?'
+        instance = self.get_instance_of_tested_cls()
+
+        # Operate
+        instance.change_query_param_placeholder()
+
+        # Extract
+        actual_placeholder = instance.query_param_placeholder
+
+        # Check
+        self.assertEqual(
+            first=actual_placeholder,
+            second=expected_default_placeholder
+        )
 
     # -----------------------------------------------------------------------------------
     def test_deconstruct_database_and_components_called_on_delete(self) -> None:

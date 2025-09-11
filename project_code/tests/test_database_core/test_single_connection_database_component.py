@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.9.1'
+__version__ = '0.9.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -132,18 +132,47 @@ class TestComponentPositive(BaseTestComponent):
         # Build
         instance = self.get_instance_of_tested_cls()
         transaction_manager = self.get_instance_of_transaction_manager()
+        connection_manager = self.get_instance_of_single_connection_manager()
+        expected_query_param_placeholder: str = GeneratingToolKit.generate_random_string()
 
-        # Operate
-        instance.set_new_transaction_manager(new_manager=transaction_manager)
-
-        # Extract
-        value = instance._transaction_manager
-
-        # Check
-        self.assertIs(
-            expr1=value,
-            expr2=transaction_manager
+        # Prepare instance
+        instance.change_query_param_placeholder(
+            new_placeholder=expected_query_param_placeholder
         )
+        instance.set_new_connection_manager(new_manager=connection_manager)
+
+        # Prepare test context
+        with UM.patch.object(target=transaction_manager,
+                             attribute='set_new_active_connection') as mock_method_set_new_connection:
+            # Build
+            mock_active_connection = UM.MagicMock()
+
+            # Prepare mock
+            connection_manager.get_adapter.return_value = mock_active_connection  # type:ignore
+
+            # Operate
+            instance.set_new_transaction_manager(
+                new_manager=transaction_manager
+            )
+
+            # Pre-check
+            mock_method_set_new_connection.assert_called_once_with(
+                new_connection=mock_active_connection
+            )
+
+            # Extract
+            value = instance._transaction_manager
+            actual_manager_placeholder = transaction_manager.query_param_placeholder
+
+            # Check
+            self.assertIs(
+                expr1=value,
+                expr2=transaction_manager
+            )
+            self.assertEqual(
+                first=actual_manager_placeholder,
+                second=expected_query_param_placeholder
+            )
 
     # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:

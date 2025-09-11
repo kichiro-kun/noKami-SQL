@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.8.1'
+__version__ = '0.8.2'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -72,6 +72,12 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
             expected_type=TransactionManager,
             arg_name='new_manager'
         )
+
+        active_connection: ConnectionInterface = self._perform_connection_manager.get_adapter()
+
+        # Prepare new TransactionManager
+        new_manager.query_param_placeholder = self.query_param_placeholder
+        new_manager.set_new_active_connection(new_connection=active_connection)
 
         self._transaction_manager: TransactionManager = new_manager
 

@@ -11,26 +11,57 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.0.0'
+__version__ = '0.1.0'
 
 # ========================================================================================
 from unittest import TestCase, mock as UM
 from typing import Tuple, Type, Dict, Any, List
 from abc import ABC
 
+import query_core.transaction_manager.transaction_manager as tested_module
 from query_core.transaction_manager.transaction_manager \
     import NoTransactionManager, IsolationLevel, TransactionManager as tested_cls
 from query_core.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
 from query_core.transaction_manager.transaction_states import *
 
+from dbms_interaction.single.abstract.connection_interface \
+    import ConnectionInterface
+
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import *
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckIsolationLevelEnumeration:
-    pass
+class CheckIsolationLevelEnumeration(TestCase):
+
+    # -----------------------------------------------------------------------------------
+    def test_check_attributes(self) -> None:
+        # Build
+        expected_data: Dict[str, int] = {
+            'READ_UNCOMMITTED': 1,
+            'READ_COMMITTED': 2,
+            'REPEATABLE_READ': 3,
+            'SERIALIZABLE': 4
+        }
+        tested_cls = IsolationLevel
+
+        # Prepare test cycle
+        for attr_name, attr_value in expected_data.items():
+            # Prepare check context
+            with self.subTest(pattern=attr_name):
+                # Extract
+                attr = getattr(tested_cls, attr_name)
+
+                # Check
+                self.assertEqual(
+                    first=attr.name,
+                    second=attr_name
+                )
+                self.assertEqual(
+                    first=attr.value,
+                    second=attr_value
+                )
 
 
 # _______________________________________________________________________________________
@@ -50,6 +81,7 @@ class TestState(TestCase):
     def test_state_interface_is_realized(self) -> None:
         # Build
         expected_state_interface = TransactionStateInterface
+        mock_transaction_manager = UM.MagicMock(spec=tested_cls)
         states: list = [
             self.__initialized_state,
             self.__active_state,
@@ -62,7 +94,7 @@ class TestState(TestCase):
             # Prepare check context
             with self.subTest(pattern=state.__name__):
                 # Operate
-                state_obj = state()
+                state_obj = state(transaction_manager=mock_transaction_manager)
 
                 # Check
                 self.assertIsInstance(
@@ -104,61 +136,145 @@ class TestStateInterface(TestCase):
 class TestComponentPositive(BaseTestCase[tested_cls]):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls._transaction_state_initialized_patcher = UM.patch.object(
+            target=tested_module, attribute='TransactionManagerStateInitialized'
+        )
+        cls._transaction_state_active_patcher = UM.patch.object(
+            target=tested_module, attribute='TransactionManagerStateActive', autospec=True
+        )
+        cls._transaction_state_committed_patcher = UM.patch.object(
+            target=tested_module, attribute='TransactionManagerStateCommitted', autospec=True
+        )
+        cls._transaction_state_rolledback_patcher = UM.patch.object(
+            target=tested_module, attribute='TransactionManagerStateRolledBack', autospec=True
+        )
+
+        cls.mock_state_initialized: UM.MagicMock = \
+            cls._transaction_state_initialized_patcher.start()
+        cls.mock_state_active: UM.MagicMock = \
+            cls._transaction_state_active_patcher.start()
+        cls.mock_state_committed: UM.MagicMock = \
+            cls._transaction_state_committed_patcher.start()
+        cls.mock_state_rolledback: UM.MagicMock = \
+            cls._transaction_state_rolledback_patcher.start()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().tearDownClass()
+
+        cls._transaction_state_initialized_patcher.stop()
+        cls._transaction_state_active_patcher.stop()
+        cls._transaction_state_committed_patcher.stop()
+        cls._transaction_state_rolledback_patcher.stop()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
         return tested_cls(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_mock_instance_of_transaction_manager_state(self, **kwargs) -> TransactionStateInterface:
+    def get_mock_instance_of_transaction_manager_state(self) -> TransactionStateInterface:
         return UM.MagicMock(spec=TransactionStateInterface)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_mock_instance_of_connection(self) -> ConnectionInterface:
+        return UM.MagicMock(spec=ConnectionInterface)
+
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_without_args(self) -> None:
+    def test_constructor_behavior(self) -> None:
+        # Operate
+        instance = self.get_instance_of_tested_cls()
+
+        # Check
+        self.mock_state_initialized.assert_called_with(transaction_manager=instance)
+        self.mock_state_active.assert_called_with(transaction_manager=instance)
+        self.mock_state_committed.assert_called_with(transaction_manager=instance)
+        self.mock_state_rolledback.assert_called_with(transaction_manager=instance)
+
+    # -----------------------------------------------------------------------------------
+    def test_constructor_behavior_default_state_is_initialized(self) -> None:
         # Build
-        expected_placeholder = '?'
+        expected_state_obj = UM.MagicMock()
+        expected_state = self.mock_state_initialized
+
+        # Prepare mock
+        expected_state.return_value = expected_state_obj
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls()
+
+        # Operate
+        instance.begin()
+
+        # Check
+        expected_state_obj.begin.assert_called_once()
+
+    # -----------------------------------------------------------------------------------
+    def test_use_state_interface(self) -> None:
+        # Build
+        expected_state_interface = TransactionStateInterface
 
         # Operate
         instance = self.get_instance_of_tested_cls()
 
-        # Extract
-        actual_placeholder = instance.query_param_placeholder
-
         # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=expected_placeholder
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_with_args(self) -> None:
-        # Build
-        expected_placeholder = GeneratingToolKit.generate_random_string()
-
-        # Operate
-        instance = self.get_instance_of_tested_cls(
-            query_placeholder=expected_placeholder
-        )
-
-        # Extract
-        actual_placeholder = instance.query_param_placeholder
-
-        # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=expected_placeholder
+        self.assertIsInstance(
+            obj=instance,
+            cls=expected_state_interface
         )
 
     # -----------------------------------------------------------------------------------
     def test_set_state_behavior(self) -> None:
         # Build
-        mock_state = self.get_mock_instance_of_transaction_manager_state()
+        default_state = self.mock_state_initialized
+
+        expected_default_state_obj = UM.MagicMock()
+        new_state_obj = self.get_mock_instance_of_transaction_manager_state()
+
+        # Prepare mock
+        default_state.return_value = expected_default_state_obj
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls()
+
+        # Pre-Operate
+        instance.begin()
+
+        # Pre-Check
+        expected_default_state_obj.begin.assert_called_once()
+        new_state_obj.begin.assert_not_called()  # type:ignore
+
+        # Operate
+        instance.set_state(new_state=new_state_obj)
+
+        # Check
+        instance.begin()
+        new_state_obj.begin.assert_called_once()  # type:ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_behavior(self) -> None:
+        # Build
+        mock_isolation_level = UM.MagicMock(spec=IsolationLevel)
+        instance = self.get_instance_of_tested_cls()
+
+        # Prepare mock
+        mock_isolation_level.TEST = 1
+
+        # Operate
+        instance.apply_isolation_level(new_level=mock_isolation_level.TEST)
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_active_connection(self) -> None:
+        # Build
+        mock_connection = self.get_mock_instance_of_connection()
         instance = self.get_instance_of_tested_cls()
 
         # Operate
-        instance.set_state(new_state=mock_state)
-
-    # -----------------------------------------------------------------------------------
-    def test_apply_isolation_level(self) -> None:
-        pass
+        instance.set_new_active_connection(new_connection=mock_connection)
 
     # -----------------------------------------------------------------------------------
     def test_null_object_realization(self) -> None:
@@ -188,3 +304,11 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
                 method_calls=calls
             )
         )
+
+
+# _______________________________________________________________________________________
+class TestComponentNegative(BaseTestCase[tested_cls]):
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+        return tested_cls(**kwargs)

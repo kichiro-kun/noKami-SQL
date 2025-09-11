@@ -1,8 +1,16 @@
 from query_core.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from query_core.transaction_manager.transaction_manager \
+        import TransactionManager
 
 
 class TransactionManagerStateRolledBack(TransactionStateInterface):
+    def __init__(self, transaction_manager: 'TransactionManager') -> None:
+        pass
+
     def begin(self) -> None:
         return
 

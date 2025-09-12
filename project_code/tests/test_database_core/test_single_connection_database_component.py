@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.9.2'
+__version__ = '0.10.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -141,38 +141,40 @@ class TestComponentPositive(BaseTestComponent):
         )
         instance.set_new_connection_manager(new_manager=connection_manager)
 
-        # Prepare test context
-        with UM.patch.object(target=transaction_manager,
-                             attribute='set_new_active_connection') as mock_method_set_new_connection:
-            # Build
-            mock_active_connection = UM.MagicMock()
+        # Build
+        expected_active_connection = UM.MagicMock()
 
-            # Prepare mock
-            connection_manager.get_adapter.return_value = mock_active_connection  # type:ignore
+        # Prepare mock
+        connection_manager.get_adapter.return_value = expected_active_connection  # type:ignore
 
-            # Operate
-            instance.set_new_transaction_manager(
-                new_manager=transaction_manager
-            )
+        # Pre-Check
+        self.assertNotEqual(
+            first=transaction_manager.active_connection,
+            second=expected_active_connection
+        )
 
-            # Pre-check
-            mock_method_set_new_connection.assert_called_once_with(
-                new_connection=mock_active_connection
-            )
+        # Operate
+        instance.set_new_transaction_manager(
+            new_manager=transaction_manager
+        )
 
-            # Extract
-            value = instance._transaction_manager
-            actual_manager_placeholder = transaction_manager.query_param_placeholder
+        # Extract
+        value = instance._transaction_manager
+        actual_manager_placeholder = transaction_manager.query_param_placeholder
 
-            # Check
-            self.assertIs(
-                expr1=value,
-                expr2=transaction_manager
-            )
-            self.assertEqual(
-                first=actual_manager_placeholder,
-                second=expected_query_param_placeholder
-            )
+        # Check
+        self.assertIs(
+            expr1=value,
+            expr2=transaction_manager
+        )
+        self.assertEqual(
+            first=actual_manager_placeholder,
+            second=expected_query_param_placeholder
+        )
+        self.assertEqual(
+            first=transaction_manager.active_connection,
+            second=expected_active_connection
+        )
 
     # -----------------------------------------------------------------------------------
     def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:
@@ -282,6 +284,37 @@ class TestComponentPositive(BaseTestComponent):
         self.assertIsInstance(
             obj=transaction_manager,
             cls=NoTransactionManager
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        transaction_manager = self.get_instance_of_transaction_manager()
+        new_placeholder: str = GeneratingToolKit.generate_random_string()
+
+        # Prepare instance
+        instance.set_new_transaction_manager(new_manager=transaction_manager)
+
+        # Pre-Check
+        self.assertNotEqual(
+            first=transaction_manager.query_param_placeholder,
+            second=new_placeholder
+        )
+
+        # Operate
+        instance.change_query_param_placeholder(new_placeholder=new_placeholder)
+
+        # Check
+        self.assertEqual(
+            first=transaction_manager.query_param_placeholder,
+            second=new_placeholder
+        )
+
+        # Post-Check
+        self.assertEqual(
+            first=instance.query_param_placeholder,
+            second=new_placeholder
         )
 
     # -----------------------------------------------------------------------------------

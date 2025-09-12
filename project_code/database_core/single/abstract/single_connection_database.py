@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.8.2'
+__version__ = '0.9.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -77,9 +77,16 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
         # Prepare new TransactionManager
         new_manager.query_param_placeholder = self.query_param_placeholder
-        new_manager.set_new_active_connection(new_connection=active_connection)
+        new_manager.active_connection = active_connection
 
         self._transaction_manager: TransactionManager = new_manager
+
+    # -----------------------------------------------------------------------------------
+    def change_query_param_placeholder(self, new_placeholder: str = '?') -> None:
+        DataBase.change_query_param_placeholder(self=self, new_placeholder=new_placeholder)
+        transaction_manager: TransactionManager = self._transaction_manager
+
+        transaction_manager.query_param_placeholder = new_placeholder
 
     # -----------------------------------------------------------------------------------
     # Проработать контракт передаваемых аргументов

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # ========================================================================================
 from unittest import TestCase, mock as UM
@@ -27,6 +27,7 @@ from query_core.transaction_manager.transaction_states import *
 
 from dbms_interaction.single.abstract.connection_interface \
     import ConnectionInterface
+from shared.exceptions.common import InvalidArgumentTypeError
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import *
@@ -196,6 +197,41 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
         self.mock_state_rolledback.assert_called_with(transaction_manager=instance)
 
     # -----------------------------------------------------------------------------------
+    def test_use_state_interface(self) -> None:
+        # Build
+        expected_state_interface = TransactionStateInterface
+
+        # Operate
+        instance = self.get_instance_of_tested_cls()
+
+        # Check
+        self.assertIsInstance(
+            obj=instance,
+            cls=expected_state_interface
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_state_interface_delegation_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        expected_state = self.get_mock_instance_of_transaction_manager_state()
+
+        # Prepare instance
+        instance.set_state(new_state=expected_state)
+
+        # Operate
+        instance.begin()
+        instance.execute_in_active_transaction()
+        instance.commit()
+        instance.rollback()
+
+        # Check
+        expected_state.begin.assert_called_once()  # type: ignore
+        expected_state.execute_in_active_transaction.assert_called_once()  # type: ignore
+        expected_state.commit.assert_called_once()  # type: ignore
+        expected_state.rollback.assert_called_once()  # type: ignore
+
+    # -----------------------------------------------------------------------------------
     def test_constructor_behavior_default_state_is_initialized(self) -> None:
         # Build
         expected_state_obj = UM.MagicMock()
@@ -212,20 +248,6 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
 
         # Check
         expected_state_obj.begin.assert_called_once()
-
-    # -----------------------------------------------------------------------------------
-    def test_use_state_interface(self) -> None:
-        # Build
-        expected_state_interface = TransactionStateInterface
-
-        # Operate
-        instance = self.get_instance_of_tested_cls()
-
-        # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=expected_state_interface
-        )
 
     # -----------------------------------------------------------------------------------
     def test_set_state_behavior(self) -> None:
@@ -268,15 +290,6 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
         instance.apply_isolation_level(new_level=mock_isolation_level.TEST)
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_active_connection(self) -> None:
-        # Build
-        mock_connection = self.get_mock_instance_of_connection()
-        instance = self.get_instance_of_tested_cls()
-
-        # Operate
-        instance.set_new_active_connection(new_connection=mock_connection)
-
-    # -----------------------------------------------------------------------------------
     def test_null_object_realization(self) -> None:
         # Build
         method_calls: Dict[str, Dict[str, Any]] = {
@@ -312,3 +325,23 @@ class TestComponentNegative(BaseTestCase[tested_cls]):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
         return tested_cls(**kwargs)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def test_set_state_behavior_when_pass_invalid_types(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        invalid_types = GeneratingToolKit.generate_list_of_basic_python_types()
+        expected_exception = InvalidArgumentTypeError
+
+        class IncorrectType:
+            pass
+
+        # Prepare test data
+        invalid_types.append(IncorrectType())
+
+        # Prepare test cycle
+        for invalid_type in invalid_types:
+            # Prepare check context
+            with self.assertRaises(expected_exception=expected_exception):
+                # Operate & Check
+                instance.set_state(new_state=invalid_type)

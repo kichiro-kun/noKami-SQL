@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # =======================================================================================
 from enum import Enum
@@ -18,6 +18,7 @@ from query_core.transaction_manager.transaction_states import *
 from dbms_interaction.single.abstract.connection_interface import ConnectionInterface
 
 from shared.utils.toolkit import ToolKit
+from shared.exceptions.common import InvalidArgumentTypeError
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,20 +33,30 @@ class IsolationLevel(Enum):
 class TransactionManager(TransactionStateInterface):
 
     active_connection: ConnectionInterface
+    isolation_level: IsolationLevel
     query_param_placeholder: str
 
     # -----------------------------------------------------------------------------------
     def __init__(self) -> None:
-        self.__initialized_state = TransactionManagerStateInitialized(transaction_manager=self)
-        TransactionManagerStateActive(transaction_manager=self)
-        TransactionManagerStateCommitted(transaction_manager=self)
-        TransactionManagerStateRolledBack(transaction_manager=self)
+        self.initialized_state = TransactionManagerStateInitialized(transaction_manager=self)
+        self.active_state = TransactionManagerStateActive(transaction_manager=self)
+        self.committed_state = TransactionManagerStateCommitted(transaction_manager=self)
+        self.rolledback_state = TransactionManagerStateRolledBack(transaction_manager=self)
 
-        self.__state: TransactionStateInterface = self.__initialized_state
+        self.__state: TransactionStateInterface = self.initialized_state
 
     # -----------------------------------------------------------------------------------
     def apply_isolation_level(self, new_level: IsolationLevel) -> None:
-        pass
+        ToolKit.ensure_instance(
+            obj=new_level,
+            expected_type=IsolationLevel,
+            arg_name='new_level'
+        )
+
+        if new_level.name not in IsolationLevel._member_names_:
+            raise InvalidArgumentTypeError()
+
+        self.isolation_level = new_level
 
     # -----------------------------------------------------------------------------------
     def set_state(self, new_state: TransactionStateInterface) -> None:
@@ -81,4 +92,19 @@ class TransactionManager(TransactionStateInterface):
 # _______________________________________________________________________________________
 class NoTransactionManager(TransactionManager):
     def set_state(self, new_state: TransactionStateInterface) -> None:
+        return
+
+    def apply_isolation_level(self, new_level: IsolationLevel) -> None:
+        return
+
+    def begin(self) -> None:
+        return
+
+    def execute_in_active_transaction(self) -> None:
+        return
+
+    def commit(self) -> None:
+        return
+
+    def rollback(self) -> None:
         return

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -19,6 +19,7 @@ from typing import Any, List, Tuple
 
 import database_core.abstract.abstract_database as tested_module
 from database_core.abstract.abstract_database import DataBase as tested_class
+from shared.exceptions.common import InvalidArgumentTypeError
 from _logging.log_entry.log_entry_factory import LogEntryFactory
 from _logging.logger_subject.logger_subject_interface import LoggerSubjectInterface
 from _logging.logger_subject.logger_observer_interface import LoggerObserverInterface
@@ -71,20 +72,20 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
 
     # -----------------------------------------------------------------------------------
     def test_default_query_param_placeholder_is_expected(self) -> None:
-        # Build
-        expected_default_placeholder = '?'
+        # Prepare test context
+        with UM.patch.object(target=tested_module,
+                             attribute='DEFAULT_QUERY_PLACEHOLDER') as mock_default_placeholder:
+            # 2Operate
+            instance = self.get_instance_of_tested_cls()
 
-        # Operate
-        instance = self.get_instance_of_tested_cls()
+            # Extract
+            actual_placeholder: str = instance.query_param_placeholder
 
-        # Extract
-        actual_placeholder: str = instance.query_param_placeholder
-
-        # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=expected_default_placeholder
-        )
+            # Check
+            self.assertEqual(
+                first=actual_placeholder,
+                second=mock_default_placeholder
+            )
 
     # -----------------------------------------------------------------------------------
     def test_custom_query_param_placeholder_is_set_correctly(self) -> None:
@@ -135,20 +136,22 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
     # -----------------------------------------------------------------------------------
     def test_change_query_param_placeholder_behavior_when_not_pass_arg(self) -> None:
         # Build
-        expected_default_placeholder = '?'
         instance = self.get_instance_of_tested_cls()
 
-        # Operate
-        instance.change_query_param_placeholder()
+        # Prepare test context
+        with UM.patch.object(target=tested_module,
+                             attribute='DEFAULT_QUERY_PLACEHOLDER') as mock_default_placeholder:
+            # Operate
+            instance.change_query_param_placeholder()
 
-        # Extract
-        actual_placeholder = instance.query_param_placeholder
+            # Extract
+            actual_placeholder = instance.query_param_placeholder
 
-        # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=expected_default_placeholder
-        )
+            # Check
+            self.assertEqual(
+                first=actual_placeholder,
+                second=mock_default_placeholder
+            )
 
     # -----------------------------------------------------------------------------------
     def test_deconstruct_database_and_components_called_on_delete(self) -> None:
@@ -431,10 +434,29 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
 
         # Prepare test cycle
         for invalid_placeholder in invalid_placeholders:
+            # SubTest
             with self.subTest(pattern=invalid_placeholder):
-                # Operate & Check
-                with self.assertRaises(expected_exception=ValueError):
+                # Prepare check context
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate
                     TestedClassStub(query_param_placeholder=invalid_placeholder)
+
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_behavior_when_arg_is_invalid_type(self) -> None:
+        # Build
+        invalid_placeholders: Tuple[Any, ...] = (
+            10, -10, 0.1, -0.1, True, False, ['?', '*']
+        )
+        instance = self.get_instance_of_tested_cls()
+
+        # Prepare test cycle
+        for invalid_placeholder in invalid_placeholders:
+            # SubTest
+            with self.subTest(pattern=invalid_placeholder):
+                # Prepare check context
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate
+                    instance.change_query_param_placeholder(new_placeholder=invalid_placeholder)
 
     # -----------------------------------------------------------------------------------
     def test_cannot_instantiate_abstract_database_directly_raises_TypeError(self) -> None:

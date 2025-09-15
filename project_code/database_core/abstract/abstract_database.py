@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.4'
+__version__ = '0.2.0'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
@@ -20,6 +20,9 @@ from _logging.log_entry.log_entry_factory import LogEntryFactory
 from _logging.logger_subject.logger_subject_interface import LoggerSubjectInterface
 from _logging.logger_subject.logger_observer_interface import LoggerObserverInterface
 from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
+
+from shared.constants.configuration import DEFAULT_QUERY_PLACEHOLDER
+from shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________
@@ -54,29 +57,42 @@ class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
     log_entry_factory = LogEntryFactory()
 
     # -----------------------------------------------------------------------------------
-    def __init__(self, query_param_placeholder: str = '?') -> None:
+    def __init__(self, query_param_placeholder: str = '') -> None:
         """
         Инициализация базы данных.
 
         Args:
             query_param_placeholder (str): Строка, обозначающая плейсхолдер параметров в SQL-запросах.
-                                           По умолчанию `?`.
+                                           По умолчанию `''`.
 
         Raises:
-            ValueError: Если `query_param_placeholder` не строка.
+            InvalidArgumentTypeError: Если `query_param_placeholder` не строка.
         """
-        if not isinstance(query_param_placeholder, str):
-            raise ValueError(
-                "Error! Argument: *query_param_placeholder* - should be a string!\n"
-                f"Given: *{query_param_placeholder}* - is Type of *{type(query_param_placeholder)}*!"
-            )
+        ToolKit.ensure_instance(
+            obj=query_param_placeholder,
+            expected_type=str,
+            arg_name='query_param_placeholder'
+        )
 
-        self.query_param_placeholder: str = query_param_placeholder
+        if query_param_placeholder == '':
+            self.query_param_placeholder = DEFAULT_QUERY_PLACEHOLDER
+        else:
+            self.query_param_placeholder: str = query_param_placeholder
+
         self.__logger_observers_list: List[LoggerObserverInterface] = []
 
     # -----------------------------------------------------------------------------------
-    def change_query_param_placeholder(self, new_placeholder: str = '?') -> None:
-        self.query_param_placeholder = new_placeholder
+    def change_query_param_placeholder(self, new_placeholder: str = '') -> None:
+        ToolKit.ensure_instance(
+            obj=new_placeholder,
+            expected_type=str,
+            arg_name='new_placeholder'
+        )
+
+        if new_placeholder == '':
+            self.query_param_placeholder = DEFAULT_QUERY_PLACEHOLDER
+        else:
+            self.query_param_placeholder = new_placeholder
 
     # -----------------------------------------------------------------------------------
     def register_logger_observer(self, new_observer: LoggerObserverInterface) -> bool:

@@ -1,5 +1,19 @@
+# -*- coding: utf-8 -*-
+
+"""
+Copyright 2025 kichiro-kun (Kei)
+Apache license, version 2.0 (Apache-2.0 license)
+"""
+
+__author__ = 'kichiro-kun (Kei)'
+__version__ = '0.1.0'
+
+# =======================================================================================
 from query_core.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
+from query_core.transaction_manager.transaction_states.transaction_manager_state_active \
+    import TransactionManagerStateActive
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -7,15 +21,22 @@ if TYPE_CHECKING:
         import TransactionManager
 
 
+# _______________________________________________________________________________________
 class TransactionManagerStateInitialized(TransactionStateInterface):
     def __init__(self, transaction_manager: 'TransactionManager') -> None:
-        pass
+        self.root: 'TransactionManager' = transaction_manager
 
     def begin(self) -> None:
         return
 
     def execute_in_active_transaction(self) -> None:
-        return
+        next_state: TransactionManagerStateActive = self.root.active_state
+
+        # Set next state
+        self.root.set_state(new_state=next_state)
+
+        # Delegate operation to next state
+        self.root.execute_in_active_transaction()
 
     def commit(self) -> None:
         return

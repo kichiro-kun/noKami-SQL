@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # ========================================================================================
 from unittest import TestCase, mock as UM
@@ -186,11 +186,85 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
         return UM.MagicMock(spec=ConnectionInterface)
 
     # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_behavior(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        new_level = IsolationLevel.READ_COMMITTED
+
+        # Operate
+        instance.apply_isolation_level(new_level=new_level)
+
+        # Extract
+        actual_level = instance.isolation_level
+
+        # Check
+        self.assertIs(
+            expr1=actual_level,
+            expr2=new_level
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_behavior_when_level_is_not_defined(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        expected_exception = InvalidArgumentTypeError
+        mock_level = UM.MagicMock(spec=IsolationLevel.READ_COMMITTED)
+
+        # Prepare mock
+        mock_level.name = GeneratingToolKit.generate_random_string()
+
+        # Prepare check context
+        with self.assertRaises(expected_exception=expected_exception):
+            # Operate
+            instance.apply_isolation_level(new_level=mock_level)
+
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_behavior_when_arg_is_invalid_type(self) -> None:
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        expected_exception = InvalidArgumentTypeError
+        invalid_types = GeneratingToolKit.generate_list_of_basic_python_types()
+
+        # Prepare test cycle
+        for invalid_type in invalid_types:
+            # Prepare check context
+            with self.assertRaises(expected_exception=expected_exception):
+                # Operate
+                instance.apply_isolation_level(new_level=invalid_type)
+
+    # -----------------------------------------------------------------------------------
     def test_constructor_behavior(self) -> None:
+        # Prepare mock
+        expected_initialized_state, expected_active_state, \
+            expected_committed_state, expected_rolledback_state = tuple(UM.MagicMock() for _ in range(4))
+
+        self.mock_state_initialized.return_value = expected_initialized_state
+        self.mock_state_active.return_value = expected_active_state
+        self.mock_state_committed.return_value = expected_committed_state
+        self.mock_state_rolledback.return_value = expected_rolledback_state
+
         # Operate
         instance = self.get_instance_of_tested_cls()
 
         # Check
+        self.assertEqual(
+            first=instance.initialized_state,
+            second=expected_initialized_state
+        )
+        self.assertEqual(
+            first=instance.active_state,
+            second=expected_active_state
+        )
+        self.assertEqual(
+            first=instance.committed_state,
+            second=expected_committed_state
+        )
+        self.assertEqual(
+            first=instance.rolledback_state,
+            second=expected_rolledback_state
+        )
+
+        # Post-Check
         self.mock_state_initialized.assert_called_with(transaction_manager=instance)
         self.mock_state_active.assert_called_with(transaction_manager=instance)
         self.mock_state_committed.assert_called_with(transaction_manager=instance)
@@ -276,18 +350,6 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
         # Check
         instance.begin()
         new_state_obj.begin.assert_called_once()  # type:ignore
-
-    # -----------------------------------------------------------------------------------
-    def test_apply_isolation_level_behavior(self) -> None:
-        # Build
-        mock_isolation_level = UM.MagicMock(spec=IsolationLevel)
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare mock
-        mock_isolation_level.TEST = 1
-
-        # Operate
-        instance.apply_isolation_level(new_level=mock_isolation_level.TEST)
 
     # -----------------------------------------------------------------------------------
     def test_null_object_realization(self) -> None:

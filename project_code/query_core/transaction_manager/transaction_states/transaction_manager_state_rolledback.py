@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from query_core.transaction_manager.abstract.transaction_state_interface \
@@ -18,6 +18,8 @@ if TYPE_CHECKING:
         import TransactionManager
     from query_core.transaction_manager.transaction_states.transaction_manager_state_initialized \
         import TransactionManagerStateInitialized
+    from dbms_interaction.single.abstract.connection_interface \
+        import ConnectionInterface
 
 
 # _______________________________________________________________________________________
@@ -38,7 +40,7 @@ class TransactionManagerStateRolledBack(TransactionStateInterface):
         self.root.begin()
 
     # -----------------------------------------------------------------------------------
-    def execute_in_active_transaction(self) -> None:
+    def execute_in_active_transaction(self, *params, query: str) -> None:
         return
 
     # -----------------------------------------------------------------------------------
@@ -47,4 +49,6 @@ class TransactionManagerStateRolledBack(TransactionStateInterface):
 
     # -----------------------------------------------------------------------------------
     def rollback(self) -> None:
-        return
+        conn: 'ConnectionInterface' = self.root.active_connection
+
+        conn.rollback()

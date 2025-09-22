@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 
 # =======================================================================================
@@ -103,3 +103,8 @@ class MySQLAdapter(ConnectionInterface[MySQLCursor]):
             return False
 
         return True
+
+    # -----------------------------------------------------------------------------------
+    def rollback(self) -> bool:
+        # Реализовать метод rollback для отката
+        pass

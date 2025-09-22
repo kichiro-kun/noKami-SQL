@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # =======================================================================================
 from typing import Dict, Any
@@ -39,4 +39,7 @@ class AdapterStub(ConnectionInterface):
         return False
 
     def ping(self) -> bool:
+        return False
+
+    def rollback(self) -> bool:
         return False

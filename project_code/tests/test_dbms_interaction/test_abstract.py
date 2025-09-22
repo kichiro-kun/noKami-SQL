@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.0.0'
+__version__ = '0.1.0'
 
 # =======================================================================================
 from unittest import TestCase
@@ -38,6 +38,7 @@ class TestConnectionInterface(TestCase):
             'close',
             'is_active',
             'ping',
+            'rollback'
         )
 
         cls.__tested_interface: Type[ABC] = ConnectionInterface

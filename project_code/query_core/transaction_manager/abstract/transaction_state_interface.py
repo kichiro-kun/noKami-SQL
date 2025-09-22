@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.0.0'
+__version__ = '0.1.0'
 
 # ========================================================================================
 from abc import ABC, abstractmethod
@@ -22,7 +22,7 @@ class TransactionStateInterface(ABC):
     def begin(self) -> None: ...
 
     @abstractmethod
-    def execute_in_active_transaction(self) -> None: ...
+    def execute_in_active_transaction(self, *params, query: str) -> None: ...
 
     @abstractmethod
     def commit(self) -> None: ...

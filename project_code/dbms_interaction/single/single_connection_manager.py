@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 # =======================================================================================
 from typing import Any, Dict
@@ -72,7 +72,7 @@ class SingleConnectionManager:
         return True
 
     # -----------------------------------------------------------------------------------
-    def get_adapter(self) -> ConnectionInterface:
+    def get_connection(self) -> ConnectionInterface:
         adapter: ConnectionInterface = self.__perform_adapter
 
         conn_is_works: bool = adapter.ping()
@@ -136,7 +136,7 @@ class NoSingleConnectionManager(SingleConnectionManager):
     def set_new_config(self, new_config: Dict[str, Any]) -> bool:
         return False
 
-    def get_adapter(self) -> ConnectionInterface:
+    def get_connection(self) -> ConnectionInterface:
         return None
 
     def initialize_new_connection(self) -> bool:

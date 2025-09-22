@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from query_core.transaction_manager.abstract.transaction_state_interface \
@@ -18,6 +18,8 @@ if TYPE_CHECKING:
         import TransactionManager
     from query_core.transaction_manager.transaction_states.transaction_manager_state_committed \
         import TransactionManagerStateCommitted
+    from dbms_interaction.single.abstract.connection_interface \
+        import ConnectionInterface
 
 
 # _______________________________________________________________________________________
@@ -32,8 +34,11 @@ class TransactionManagerStateActive(TransactionStateInterface):
         return
 
     # -----------------------------------------------------------------------------------
-    def execute_in_active_transaction(self) -> None:
-        return
+    def execute_in_active_transaction(self, *params, query: str) -> None:
+        conn: 'ConnectionInterface' = self.root.active_connection
+
+        cur = conn.get_cursor()
+        cur.execute(query, *params)
 
     # -----------------------------------------------------------------------------------
     def commit(self) -> None:

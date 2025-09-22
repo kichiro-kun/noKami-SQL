@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.8.0'
+__version__ = '0.8.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -134,7 +134,7 @@ class TestComponentPositive(BaseTestComponent):
             'set_new_config': {
                 'new_config': None
             },
-            'get_adapter': {},
+            'get_connection': {},
             'initialize_new_connection': {},
             'reinitialize_connection': {},
             'check_connection_status': {},
@@ -184,7 +184,7 @@ class TestComponentPositive(BaseTestComponent):
         op_result = instance.set_new_adapter(new_adapter=second_adapter)
 
         # Extract
-        actual_adapter = instance.get_adapter()
+        actual_adapter = instance.get_connection()
 
         # Check
         self.assertIs(
@@ -294,7 +294,7 @@ class TestComponentPositive(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_get_adapter_behavior_when_connection_is_work(self) -> None:
+    def test_get_connection_behavior_when_connection_is_work(self) -> None:
         # Build
         expected_adapter = self._adapter
 
@@ -311,7 +311,7 @@ class TestComponentPositive(BaseTestComponent):
             mock_method_ping.return_value = True
 
             # Operate & Extract
-            actual_adapter = instance.get_adapter()
+            actual_adapter = instance.get_connection()
 
             # Check
             mock_method_ping.assert_called_once()
@@ -731,7 +731,7 @@ class TestComponentNegative(BaseTestComponent):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_get_adapter_behavior_when_connection_is_not_work(self) -> None:
+    def test_get_connection_behavior_when_connection_is_not_work(self) -> None:
         # Build
         expected_adapter = self._adapter
 
@@ -748,7 +748,7 @@ class TestComponentNegative(BaseTestComponent):
             mock_method_ping.return_value = False
 
             # Operate & Extract
-            actual_adapter = instance.get_adapter()
+            actual_adapter = instance.get_connection()
 
             # Check
             mock_method_ping.assert_called_once()

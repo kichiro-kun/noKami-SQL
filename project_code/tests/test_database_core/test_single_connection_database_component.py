@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.10.0'
+__version__ = '0.10.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -145,7 +145,7 @@ class TestComponentPositive(BaseTestComponent):
         expected_active_connection = UM.MagicMock()
 
         # Prepare mock
-        connection_manager.get_adapter.return_value = expected_active_connection  # type:ignore
+        connection_manager.get_connection.return_value = expected_active_connection  # type:ignore
 
         # Pre-Check
         self.assertNotEqual(
@@ -320,6 +320,7 @@ class TestComponentPositive(BaseTestComponent):
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     # Учесть интерфейс методов официального коннектора-курсора
+
     def test_execute_query_no_returns_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
@@ -333,14 +334,14 @@ class TestComponentPositive(BaseTestComponent):
         instance.set_new_connection_manager(new_manager=conn_manager)
 
         # Prepare mock
-        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
         conn_adapter.get_cursor.return_value = cursor
 
         # Operate
         op_result = instance.execute_query_no_returns(query=query)
 
         # Check
-        conn_manager.get_adapter.assert_called_once()  # type:ignore
+        conn_manager.get_connection.assert_called_once()  # type:ignore
         conn_adapter.get_cursor.assert_called_once()
         cursor.execute.assert_called_once()
         cursor.close.assert_called_once()
@@ -365,7 +366,7 @@ class TestComponentPositive(BaseTestComponent):
         instance.set_new_connection_manager(new_manager=conn_manager)
 
         # Prepare mock
-        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
         conn_adapter.get_cursor.return_value = cursor
 
         op_result = None
@@ -379,7 +380,7 @@ class TestComponentPositive(BaseTestComponent):
             op_result = instance.execute_query_returns_one(query=query)
 
             # Check
-            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
             cursor.execute.assert_called_once()
             cursor.fetchone.assert_called_once()
@@ -413,7 +414,7 @@ class TestComponentPositive(BaseTestComponent):
         instance.set_new_connection_manager(new_manager=conn_manager)
 
         # Prepare mock
-        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
         conn_adapter.get_cursor.return_value = cursor
 
         op_result = None
@@ -427,7 +428,7 @@ class TestComponentPositive(BaseTestComponent):
             op_result = instance.execute_query_returns_all(query=query)
 
             # Check
-            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
             cursor.execute.assert_called_once()
             cursor.fetchall.assert_called_once()
@@ -466,7 +467,7 @@ class TestComponentPositive(BaseTestComponent):
         instance.set_new_connection_manager(new_manager=conn_manager)
 
         # Prepare mock
-        conn_manager.get_adapter.return_value = conn_adapter  # type:ignore
+        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
         conn_adapter.get_cursor.return_value = cursor
 
         op_result = None
@@ -482,7 +483,7 @@ class TestComponentPositive(BaseTestComponent):
                                                     returns_count=returns_count)
 
             # Check
-            conn_manager.get_adapter.assert_called_once()  # type:ignore
+            conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
             cursor.execute.assert_called_once()
             cursor.fetchmany.assert_called_once()
@@ -612,4 +613,4 @@ class TestComponentNegative(BaseTestComponent):
             self.assertTrue(
                 expr=(mock_method_check_connection_status.call_count == execute_methods_count)
             )
-            conn_manager.get_adapter.assert_not_called()  # type:ignore
+            conn_manager.get_connection.assert_not_called()  # type:ignore

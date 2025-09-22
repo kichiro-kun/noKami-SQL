@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.9.1'
+__version__ = '0.9.2'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -73,7 +73,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
             arg_name='new_manager'
         )
 
-        active_connection: ConnectionInterface = self._perform_connection_manager.get_adapter()
+        active_connection: ConnectionInterface = self._perform_connection_manager.get_connection()
 
         # Prepare new TransactionManager
         new_manager.query_param_placeholder = self.query_param_placeholder
@@ -95,7 +95,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
         conn_is_active: bool = conn_manager.check_connection_status()
         if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_adapter()
+            adapter: ConnectionInterface = conn_manager.get_connection()
             cur: CursorInterfaceType = adapter.get_cursor()
             cur.execute()
             cur.close()
@@ -110,7 +110,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
         conn_is_active: bool = conn_manager.check_connection_status()
         if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_adapter()
+            adapter: ConnectionInterface = conn_manager.get_connection()
             cur: CursorInterfaceType = adapter.get_cursor()
             cur.execute()
             result = cur.fetchone()
@@ -128,7 +128,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
         conn_is_active: bool = conn_manager.check_connection_status()
         if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_adapter()
+            adapter: ConnectionInterface = conn_manager.get_connection()
             cur: CursorInterfaceType = adapter.get_cursor()
             cur.execute()
             result = cur.fetchall()
@@ -146,7 +146,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
         conn_is_active: bool = conn_manager.check_connection_status()
         if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_adapter()
+            adapter: ConnectionInterface = conn_manager.get_connection()
             cur: CursorInterfaceType = adapter.get_cursor()
             cur.execute()
             result = cur.fetchmany()

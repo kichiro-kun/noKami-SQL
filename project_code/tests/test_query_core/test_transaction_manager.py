@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # ========================================================================================
 from unittest import TestCase, mock as UM
@@ -25,8 +25,6 @@ from query_core.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
 from query_core.transaction_manager.transaction_states import *
 
-from dbms_interaction.single.abstract.connection_interface \
-    import ConnectionInterface
 from shared.exceptions.common import InvalidArgumentTypeError
 
 from tests.utils.base_test_case_cls import BaseTestCase
@@ -181,10 +179,6 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
     def get_mock_instance_of_transaction_manager_state(self) -> TransactionStateInterface:
         return UM.MagicMock(spec=TransactionStateInterface)
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_mock_instance_of_connection(self) -> ConnectionInterface:
-        return UM.MagicMock(spec=ConnectionInterface)
-
     # -----------------------------------------------------------------------------------
     def test_apply_isolation_level_behavior(self) -> None:
         # Build
@@ -295,7 +289,7 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
 
         # Operate
         instance.begin()
-        instance.execute_in_active_transaction()
+        instance.execute_in_active_transaction(query='')
         instance.commit()
         instance.rollback()
 
@@ -360,7 +354,13 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
             },
             'set_state': {
                 'new_state': None
-            }
+            },
+            'begin': {},
+            'execute_in_active_transaction': {
+                'query': GeneratingToolKit.generate_random_string()
+            },
+            'commit': {},
+            'rollback': {}
         }  # Param name & kwargs
 
         # Prepare data

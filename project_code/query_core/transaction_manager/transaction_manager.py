@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # =======================================================================================
 from enum import Enum
@@ -32,7 +32,6 @@ class IsolationLevel(Enum):
 # _______________________________________________________________________________________
 class TransactionManager(TransactionStateInterface):
 
-    active_connection: ConnectionInterface
     isolation_level: IsolationLevel
     query_param_placeholder: str
 
@@ -44,6 +43,8 @@ class TransactionManager(TransactionStateInterface):
         self.rolledback_state = TransactionManagerStateRolledBack(transaction_manager=self)
 
         self.__state: TransactionStateInterface = self.initialized_state
+
+        self.active_connection: ConnectionInterface = None
 
     # -----------------------------------------------------------------------------------
     def apply_isolation_level(self, new_level: IsolationLevel) -> None:
@@ -74,9 +75,9 @@ class TransactionManager(TransactionStateInterface):
         current_state.begin()
 
     # -----------------------------------------------------------------------------------
-    def execute_in_active_transaction(self) -> None:
+    def execute_in_active_transaction(self, *params, query: str) -> None:
         current_state: TransactionStateInterface = self.__state
-        current_state.execute_in_active_transaction()
+        current_state.execute_in_active_transaction(query=query, *params)
 
     # -----------------------------------------------------------------------------------
     def commit(self) -> None:
@@ -100,7 +101,7 @@ class NoTransactionManager(TransactionManager):
     def begin(self) -> None:
         return
 
-    def execute_in_active_transaction(self) -> None:
+    def execute_in_active_transaction(self, *params, query: str) -> None:
         return
 
     def commit(self) -> None:

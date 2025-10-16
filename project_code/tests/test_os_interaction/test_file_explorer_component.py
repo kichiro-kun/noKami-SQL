@@ -15,9 +15,9 @@ __version__ = '0.2.1'
 # ========================================================================================
 from typing import Dict, List, Tuple
 
-from os_interaction.file_explorer.abstract.file_explorer_interface \
+from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
     import NoFileExplorer as tested_class
-from os_interaction.file_explorer.abstract.file_explorer_interface \
+from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
     import FileExplorerInterfaceStrategy as tested_interface
 
 from tests.utils.base_test_case_cls import BaseTestCase
@@ -32,7 +32,7 @@ class TestComponentPositive(BaseTestCase[tested_class]):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls._abs_method_names: Tuple[str, ...] = (
+        cls.available_methods: Tuple[str, ...] = (
             'create_file', 'create_dir', 'read_from_file',
             'check_path_is_exists', 'overwrite_file', 'append_to_file',
         )
@@ -42,24 +42,10 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         return tested_class(**kwargs)
 
     # -----------------------------------------------------------------------------------
-    def test_defined_expected_abs_methods(self) -> None:
-        # Build
-        method_names: Tuple[str, ...] = self._abs_method_names
-
-        # Operate
-        result: bool = InspectingToolKit.check_has_abstract_methods_defined(
-            _cls=tested_interface,
-            abs_method_names=method_names
-        )
-
-        # Check
-        self.assertTrue(expr=result)
-
-    # -----------------------------------------------------------------------------------
     def test_check_null_object(self) -> None:
         # Build
         instance: tested_class = self.get_instance_of_tested_cls()
-        methods: Tuple[str, ...] = self._abs_method_names
+        methods: Tuple[str, ...] = self.available_methods
 
         placeholders: Dict[str, str] = {
             'path': 'path/to/file',

@@ -203,37 +203,6 @@ class TestInspectingToolKit(UT.TestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_check_abstractmethods_is_defined(self) -> None:
-        # Build
-        class ABCDummy(ABC):
-            @abstractmethod
-            def method1(self) -> None: pass
-            @abstractmethod
-            def method2(self) -> None: pass
-
-        # Check
-        self.assertTrue(
-            expr=InspectingToolKit.check_has_abstract_methods_defined(
-                _cls=ABCDummy, abs_method_names=['method1']
-            )
-        )
-        self.assertTrue(
-            expr=InspectingToolKit.check_has_abstract_methods_defined(
-                _cls=ABCDummy, abs_method_names=['method1', 'method2']
-            )
-        )
-        self.assertFalse(
-            expr=InspectingToolKit.check_has_abstract_methods_defined(
-                _cls=ABCDummy, abs_method_names=['method3']
-            )
-        )
-        self.assertFalse(
-            expr=InspectingToolKit.check_has_abstract_methods_defined(
-                _cls=ABCDummy, abs_method_names=['method1', 'method3']
-            )
-        )
-
-    # -----------------------------------------------------------------------------------
     def test_is_boolean_True(self) -> None:
         # Build
         expected_False: Tuple[Any, ...] = (

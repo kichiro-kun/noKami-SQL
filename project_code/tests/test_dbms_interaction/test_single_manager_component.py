@@ -17,9 +17,9 @@ __version__ = '0.8.1'
 from unittest import mock as UM
 from typing import Any, Dict, List, Tuple
 
-from dbms_interaction.single.single_connection_manager \
+from dbms_interaction.single_connection_manager_component.single_connection_manager \
     import SingleConnectionManager as tested_cls
-from dbms_interaction.single.abstract.connection_interface import ConnectionInterface
+from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
 
 from tests.test_dbms_interaction.common import *
 
@@ -124,7 +124,7 @@ class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     def test_null_object_realization(self) -> None:
-        from dbms_interaction.single.single_connection_manager import NoSingleConnectionManager
+        from dbms_interaction.single_connection_manager_component.single_connection_manager import NoSingleConnectionManager
 
         # Build
         method_calls: Dict[str, Dict[str, Any]] = {

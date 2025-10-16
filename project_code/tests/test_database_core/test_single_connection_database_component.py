@@ -17,14 +17,14 @@ __version__ = '0.10.1'
 from unittest import mock as UM
 from typing import Dict, List, Tuple, Any
 
-import database_core.single.abstract.single_connection_database as tested_module
-from database_core.single.abstract.single_connection_database import SingleConnectionDataBase as tested_cls
-from database_core.abstract.abstract_database import DataBase
-from dbms_interaction.single.single_connection_manager \
+import database_core.single_connection_database_component.single_connection_database as tested_module
+from database_core.single_connection_database_component.single_connection_database import SingleConnectionDataBase as tested_cls
+from database_core.abstract_database_component.database import DataBase
+from dbms_interaction.single_connection_manager_component.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
-from query_core.transaction_manager.transaction_manager \
+from dbms_interaction.transaction_manager_component.transaction_manager \
     import TransactionManager, NoTransactionManager
-from query_core.query_interface.query_interface import QueryInterface
+from query_core.query_interface_component.query_interface import QueryInterface
 
 from shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
 from shared.types.dbms_interaction import CursorInterfaceType
@@ -329,6 +329,11 @@ class TestComponentPositive(BaseTestComponent):
         cursor: CursorInterfaceType = UM.MagicMock()
 
         query: str = GeneratingToolKit.generate_random_string()
+        params: Tuple[str, ...] = (
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string()
+        )
 
         # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
@@ -338,12 +343,12 @@ class TestComponentPositive(BaseTestComponent):
         conn_adapter.get_cursor.return_value = cursor
 
         # Operate
-        op_result = instance.execute_query_no_returns(query=query)
+        op_result = instance.execute_query_no_returns(query=query, *params)
 
         # Check
         conn_manager.get_connection.assert_called_once()  # type:ignore
         conn_adapter.get_cursor.assert_called_once()
-        cursor.execute.assert_called_once()
+        cursor.execute.assert_called_once_with(query, *params)
         cursor.close.assert_called_once()
 
         # Post-Check
@@ -382,7 +387,7 @@ class TestComponentPositive(BaseTestComponent):
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once()
+            cursor.execute.assert_called_once_with(query)
             cursor.fetchone.assert_called_once()
             cursor.close.assert_called_once()
 
@@ -430,7 +435,7 @@ class TestComponentPositive(BaseTestComponent):
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once()
+            cursor.execute.assert_called_once_with(query)
             cursor.fetchall.assert_called_once()
             cursor.close.assert_called_once()
 
@@ -485,7 +490,7 @@ class TestComponentPositive(BaseTestComponent):
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once()
+            cursor.execute.assert_called_once_with(query)
             cursor.fetchmany.assert_called_once()
             cursor.close.assert_called_once()
 

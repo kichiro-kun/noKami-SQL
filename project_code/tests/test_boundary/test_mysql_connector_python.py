@@ -7,6 +7,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 
 __all__: list[str] = [
     'TestMySQLBoundaryPositive',
+    'TestMySQLBoundaryNegative'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
@@ -14,8 +15,9 @@ __version__ = '0.2.0'
 
 # =======================================================================================
 import unittest
-from unittest import TestCase
 from random import randint
+
+from tests.test_boundary.common import BaseTestCase
 
 from mysql.connector import MySQLConnection
 from mysql.connector.errors import ProgrammingError, OperationalError, InterfaceError
@@ -24,34 +26,8 @@ from tests.utils.toolkit import GeneratingToolKit
 
 from typing import Any, Dict, List, Tuple
 
-CONFIG: dict = {
-    'database': 'test_db',
-    'username': 'root',
-    'password': 'root_cr4ck_GOOD',
-    'port': '3333'
-}
+
 MYSQL_IS_ACTIVE: bool = True  # MySQL server is on?
-
-
-# _______________________________________________________________________________________
-class BaseTestCase(TestCase):
-    # Important data about Test Table
-    test_table_name: str = 'test'
-    expected_row_structure: Tuple = ('id', 'title', 'description', 'cost')
-    expected_table_row_count: int = 15
-
-    # Helpful queries
-    query_select_all: str = f'SELECT * FROM {test_table_name};'
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_connection(self) -> MySQLConnection:
-        return MySQLConnection(**CONFIG)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def check_connection_should_be_connected(self, conn: MySQLConnection) -> None:
-        self.assertTrue(
-            expr=conn.is_connected()
-        )
 
 
 # _______________________________________________________________________________________
@@ -61,17 +37,15 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        self.__connection: MySQLConnection = self.get_connection()
-
     # -----------------------------------------------------------------------------------
     def test_establishing_connection(self) -> None:
         # Check
-        self.check_connection_should_be_connected(conn=self.__connection)
+        self.check_connection_should_be_connected(conn=self.get_connection())
 
     # -----------------------------------------------------------------------------------
     def test_method_disconnect(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -87,7 +61,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_close(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -101,9 +75,9 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_method_reconnect(self) -> None:
+    def test_method_reconnect_when_connection_is_not_active(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -125,7 +99,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_reconnect_when_connection_is_active(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -139,7 +113,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_cursor(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -150,7 +124,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_ping_without_reconnect_param(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-check
         self.check_connection_should_be_connected(conn=conn)
@@ -166,7 +140,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_ping_with_reconnect_param(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Operate
         conn.disconnect()
@@ -180,7 +154,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_autocommit_field_default_value(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Extract
         actual_value: bool = conn.autocommit
@@ -193,7 +167,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_method_commit_without_queries(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Check
         self.check_connection_should_be_connected(conn=conn)
@@ -206,7 +180,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         from random import randint
 
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         params: Dict[str, Any] = {
             'title': GeneratingToolKit.generate_random_string(),
@@ -216,7 +190,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
 
         sql_query: str = f"""
         INSERT INTO
-            {self.test_table_name} (title, description, cost)
+            {self.table_name} (title, description, cost)
         VALUES
             (
                 "{params['title']}",
@@ -229,7 +203,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         SELECT
             *
         FROM
-            {self.test_table_name}
+            {self.table_name}
         WHERE
             title = "{params['title']}"
             AND description = "{params['description']}"
@@ -271,7 +245,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_close(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Operate
         cur = conn.cursor()
@@ -282,11 +256,11 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_close_after_execute_query_and_not_committed(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         sql_query: str = f"""
         INSERT INTO
-            {self.test_table_name} (title, description, cost)
+            {self.table_name} (title, description, cost)
         VALUES
             ("BananaTitle", "BananaDescription", 10);
         """
@@ -294,7 +268,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         SELECT
             *
         FROM
-            {self.test_table_name}
+            {self.table_name}
         WHERE
             title = "BananaTitle";
         """
@@ -315,11 +289,13 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur.close()
 
     # -----------------------------------------------------------------------------------
-    def test_cursor_method_execute(self) -> None:
+    def test_cursor_method_execute_with_params(self) -> None:
         # Build
-        conn = self.__connection
-        sql_query: str = ''
-        query_params: Tuple = ()
+        conn = self.get_connection()
+        sql_query: str = f'SELECT * FROM {self.table_name} WHERE id=%s;'
+        query_params: Tuple = (
+            1,
+        )
 
         # Pre-Operate
         cur = conn.cursor()
@@ -330,7 +306,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_executemany(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
         sql_query: str = ''
         query_data: List[Tuple] = [
             (),
@@ -347,7 +323,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_fetchall(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Operate
         cur = conn.cursor()
@@ -370,7 +346,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_fetchmany_without_pass_size(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
         expected_row_count: int = 1
 
         # Pre-Operate
@@ -394,7 +370,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_fetchmany_with_size_arg(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
         available_count: int = self.expected_table_row_count
 
         # Pre-Check
@@ -426,7 +402,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_fetchmany_with_biggest_size_arg(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
         expected_row_count: int = self.expected_table_row_count
         requested_row_count: int = randint(a=20, b=33)
 
@@ -457,7 +433,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_cursor_method_fetchone(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # Pre-Operate
         cur = conn.cursor()
@@ -481,7 +457,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
     # -----------------------------------------------------------------------------------
     def test_double_close_connection(self) -> None:
         # Build
-        conn = self.__connection
+        conn = self.get_connection()
 
         # First-Operate
         conn.close()
@@ -491,9 +467,11 @@ class TestMySQLBoundaryPositive(BaseTestCase):
 
     # -----------------------------------------------------------------------------------
     def test_double_establishing_connection(self) -> None:
+        from tests.test_boundary.db_config import DB_CONFIG
+
         # Operate
-        conn1 = MySQLConnection(**CONFIG)
-        conn2 = MySQLConnection(**CONFIG)
+        conn1 = MySQLConnection(**DB_CONFIG)
+        conn2 = MySQLConnection(**DB_CONFIG)
 
         # Check
         self.assertIsNot(
@@ -506,7 +484,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
 @unittest.skipIf(condition=(MYSQL_IS_ACTIVE is False), reason='MySQL server is off!')
 class TestMySQLBoundaryNegative(BaseTestCase):
     # -----------------------------------------------------------------------------------
-    def test_incorrect_config_establishing_connection(self) -> None:
+    def test_try_establishing_connection_with_incorrect_config(self) -> None:
         # Build
         invalid_config: dict = {
             'database': GeneratingToolKit.generate_random_string(),

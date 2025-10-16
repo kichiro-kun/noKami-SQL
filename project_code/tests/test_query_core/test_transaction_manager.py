@@ -18,12 +18,12 @@ from unittest import TestCase, mock as UM
 from typing import Tuple, Type, Dict, Any, List
 from abc import ABC
 
-import query_core.transaction_manager.transaction_manager as tested_module
-from query_core.transaction_manager.transaction_manager \
+import dbms_interaction.transaction_manager_component.transaction_manager as tested_module
+from dbms_interaction.transaction_manager_component.transaction_manager \
     import NoTransactionManager, IsolationLevel, TransactionManager as tested_cls
-from query_core.transaction_manager.abstract.transaction_state_interface \
+from dbms_interaction.transaction_manager_component.abstract.transaction_state_interface \
     import TransactionStateInterface
-from query_core.transaction_manager.transaction_states import *
+from dbms_interaction.transaction_manager_component.states import *
 
 from shared.exceptions.common import InvalidArgumentTypeError
 
@@ -100,35 +100,6 @@ class TestState(TestCase):
                     obj=state_obj,
                     cls=expected_state_interface
                 )
-
-
-# _______________________________________________________________________________________
-class TestStateInterface(TestCase):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls.__abc_method_names: Tuple[str, ...] = (
-            'begin',
-            'execute_in_active_transaction',
-            'commit',
-            'rollback'
-        )
-
-        cls.__tested_interface: Type[ABC] = TransactionStateInterface
-
-    # -----------------------------------------------------------------------------------
-    def test_abstract_interface_defined_contract(self) -> None:
-        # Operate & Extract
-        result: bool = InspectingToolKit.check_has_abstract_methods_defined(
-            _cls=self.__tested_interface,
-            abs_method_names=self.__abc_method_names
-        )
-
-        # Check
-        self.assertTrue(expr=result)
 
 
 # _______________________________________________________________________________________

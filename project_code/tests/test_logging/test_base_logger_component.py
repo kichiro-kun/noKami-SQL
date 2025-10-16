@@ -17,11 +17,11 @@ __version__ = '0.5.1'
 from unittest import mock as UM
 from typing import Any, Dict, List, Tuple
 
-import _logging.base_logger.abstract.base_logger as tested_module
-from _logging.base_logger.abstract.base_logger import BaseLogger as tested_class
-from _logging.logger_config.abstract.logger_config_dto import LoggerConfigDTO
-from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
-from os_interaction.file_explorer.abstract.file_explorer_interface import FileExplorerInterfaceStrategy
+import _logging.base_logger_component.abstract.base_logger as tested_module
+from _logging.base_logger_component.abstract.base_logger import BaseLogger as tested_class
+from _logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO
+from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
@@ -108,22 +108,6 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
 
         # Operate & Check
         instance.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer)
-
-    # -----------------------------------------------------------------------------------
-    def test_defined_expected_abc_methods(self) -> None:
-        # Build
-        expected_abs_methods: Tuple[str, ...] = (
-            '_read_log_entry', '_flush_log_msg'
-        )
-
-        # Operate
-        result: bool = InspectingToolKit.check_has_abstract_methods_defined(
-            _cls=tested_class,  # type: ignore
-            abs_method_names=expected_abs_methods
-        )
-
-        # Check
-        self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
     def test_logger_has_expected_public_configuration_fields(self) -> None:

@@ -38,6 +38,8 @@ IF %isPrepareMySQL%==true (
     echo.
 )
 
+REM -------------------------------------------------------------------------------------
+
 REM Run Tests
 coverage run --source=. -m unittest discover .\tests\ "test_*.py"
 coverage report

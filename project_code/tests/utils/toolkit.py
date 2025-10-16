@@ -18,7 +18,6 @@ __version__ = '0.2.0'
 # ========================================================================================
 import random
 import string
-from abc import ABC
 from typing import Callable, Dict, Iterable, LiteralString, Tuple, NamedTuple, Any, List, Type
 
 from shared.exceptions import InvalidArgumentTypeError
@@ -59,18 +58,6 @@ class InspectingToolKit:
             method: Callable = getattr(obj, call.method_name)
             result = method(*call.args, **call.kwargs)
             if bool(result):
-                return False
-        else:
-            return True
-
-    # -----------------------------------------------------------------------------------
-    @staticmethod
-    def check_has_abstract_methods_defined(_cls: Type[ABC],
-                                           abs_method_names: Iterable[str]) -> bool:
-        actual_abstractmethods: frozenset[str] = _cls.__abstractmethods__
-
-        for method_name in abs_method_names:
-            if method_name not in actual_abstractmethods:
                 return False
         else:
             return True

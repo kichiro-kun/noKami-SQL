@@ -17,13 +17,13 @@ __version__ = '0.6.0'
 from unittest import mock as UM
 from typing import Any, List, Tuple
 
-import database_core.abstract.abstract_database as tested_module
-from database_core.abstract.abstract_database import DataBase as tested_class
+import database_core.abstract_database_component.database as tested_module
+from database_core.abstract_database_component.database import DataBase as tested_class
 from shared.exceptions.common import InvalidArgumentTypeError
-from _logging.log_entry.log_entry_factory import LogEntryFactory
-from _logging.logger_subject.logger_subject_interface import LoggerSubjectInterface
-from _logging.logger_subject.logger_observer_interface import LoggerObserverInterface
-from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
+from _logging.log_entry_component.log_entry_factory import LogEntryFactory
+from _logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
+from _logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
+from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit

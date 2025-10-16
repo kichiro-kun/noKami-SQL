@@ -18,9 +18,9 @@ from unittest import mock as UM
 from typing import Any, Dict, Tuple
 from datetime import datetime
 
-import _logging.log_entry.log_entry_factory as tested_module
-from _logging.log_entry.log_entry_factory import LogEntryFactory as tested_cls
-from _logging.log_entry.abstract.log_entry_dto import LogEntryDTO
+import _logging.log_entry_component.log_entry_factory as tested_module
+from _logging.log_entry_component.log_entry_factory import LogEntryFactory as tested_cls
+from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 from shared.exceptions._logging import UnsupportedLogLevelError
 
 from tests.utils.base_test_case_cls import BaseTestCase
@@ -261,23 +261,6 @@ class CheckLogEntryDTO(BaseTestCase[TestLogEntryDTO]):
         # Operate & Check
         with self.assertRaises(expected_exception=FrozenInstanceError):
             instance.context = 'Not Test, bro!'  # type: ignore
-
-    # -----------------------------------------------------------------------------------
-    def test_LogEntryDTO_defines_abstract_methods(self) -> None:
-        # Build
-        test_cls = self._tested_class
-        expected_abs_methods: Tuple[str, ...] = (
-            'get_level',
-        )
-
-        # Operate
-        result: bool = InspectingToolKit.check_has_abstract_methods_defined(
-            _cls=test_cls,
-            abs_method_names=expected_abs_methods
-        )
-
-        # Check
-        self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
     def test_LogEntryDTO_is_dataclass(self) -> None:

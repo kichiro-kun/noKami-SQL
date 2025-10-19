@@ -302,7 +302,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
     
-        <a href="8897cb41ce99f0382acd805df1a2d6c6.html" target="content" style="white-space: nowrap;">(PostgreSQLPoolConnection→PoolConnectionManagerStrategy)</a>
+        <a href="8897cb41ce99f0382acd805df1a2d6c6.html" target="content" style="white-space: nowrap;">(PostgreSQLPoolConnection→PoolConnectionManager)</a>
     
 </div>
                                                                     
@@ -380,7 +380,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
     
-        <a href="1348bd6a17cf6ba6e3cd421473fef696.html" target="content" style="white-space: nowrap;">(MySQLPoolConnection→PoolConnectionManagerStrategy)</a>
+        <a href="1348bd6a17cf6ba6e3cd421473fef696.html" target="content" style="white-space: nowrap;">(MySQLPoolConnection→PoolConnectionManager)</a>
     
 </div>
                                                                     
@@ -628,6 +628,17 @@
                                                     
                                                 </li>
                                                 
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLComponent"></span>
+    
+        <a href="1654c9e1d7c5b8e1868298446c486367.html" target="content" style="white-space: nowrap;">External Libraries</a>
+    
+</div>
+                                                    
+                                                </li>
+                                                
                                             </ol>
                                             
                                         </li>
@@ -663,7 +674,7 @@
                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLComponent"></span>
     
-        <a href="e7e808e6f2985273e6010e0dc6d5a208.html" target="content" style="white-space: nowrap;">Single Manager Component</a>
+        <a href="e7e808e6f2985273e6010e0dc6d5a208.html" target="content" style="white-space: nowrap;">Single Connection Manager Component</a>
     
 </div>
                                                     
@@ -912,7 +923,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociation"></span>
     
-        <a href="efe9b315de5c5acb918f8f108a6d8ee9.html" target="content" style="white-space: nowrap;">(SingleConnectionManager—SingleConnectionDataBase)</a>
+        <a href="12f284d3de38054cabd029c8396c24d4.html" target="content" style="white-space: nowrap;">(SingleConnectionManager—SingleConnectionDataBase)</a>
     
 </div>
                                                                     
@@ -923,7 +934,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
     
-        <a href="a37d03097aa76de49f652f6c7eaf3694.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+        <a href="e87b3c511256126daadb41ee024ab5ab.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
     
 </div>
                                                                         </li>
@@ -933,42 +944,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
     
-        <a href="ef4b908c753bcf9fe1cd420c33fbe970.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="5384c882e0a10a58023c1bfe64b3a662.html" target="content" style="white-space: nowrap;">(SingleConnectionManager—ConnectionInterface)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="2b4ae8e175ce6d4697b7d1c5c1af394e.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="32180b319307f47218a9c236deff618e.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+        <a href="fa8e9a11279a01ef82219fbb4ae70c87.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
     
 </div>
                                                                         </li>
@@ -1010,349 +986,11 @@
                                                         
                                                         <li>
                                                             <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="7928939098c2ea3c47c218a0a502b102.html" target="content" style="white-space: nowrap;">MySQLAdapter</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="85d12c32dc414f3f6e86d7ba88088b8e.html" target="content" style="white-space: nowrap;">adaptee</a>
+        <a href="ab8476cbb67fce65dc929a5969b1f272.html" target="content" style="white-space: nowrap;">(Single Connection Manager Component→Adapters Component)</a>
     
 </div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="a0f24c9b27b436c32b348f2df45f1224.html" target="content" style="white-space: nowrap;">(MySQLAdapter—MySQLConnection)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="db76b17bc4a84f27f3161d480c51dd75.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="de29e3339beb0a197b6533415c955d1b.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
-    
-        <a href="c311d73fd9030dbd73337227a3ec8574.html" target="content" style="white-space: nowrap;">(MySQLAdapter→SingleConnectionManager)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="bd7354334922733bc4f731dff8cbb24b.html" target="content" style="white-space: nowrap;">(MySQLAdapter→ConnectionInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="7e15ed162b39af2e4ca75436100a7488.html" target="content" style="white-space: nowrap;">PostgreSQLAdapter</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="e9dd458663200367aaec9a33841f725b.html" target="content" style="white-space: nowrap;">adaptee</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="c976b6dfbc24d46862d5adbff329496d.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapter—PostgreSQLConnection)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="0a95e4aca9c2cd2aff8ee9a1ab097390.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="3017122c0c69fd9350e691a487abe967.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
-    
-        <a href="73a16499d24166f362c6bd365efa6aa0.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapter→SingleConnectionManager)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="78d92aab8d657befd371cdd8eba644e5.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapter→ConnectionInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterface"></span>
-    
-        <a href="b90a17027a2ce7b438ea53b33286bb0c.html" target="content" style="white-space: nowrap;">ConnectionInterface</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="5fbca2a9dfc8616b6c085ccd46a201d9.html" target="content" style="white-space: nowrap;">connect</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="6214515d8897cabbbe055106f0431a28.html" target="content" style="white-space: nowrap;">config</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="9a3bbe7b953ce7fd04c18e409e97fc6b.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="f3d391c2ba9640366ff4fb88b16df549.html" target="content" style="white-space: nowrap;">reconnect</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="affe7ecd683b2a6abab47b0042ced4ba.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="3ad5653538a8b24bc938248f72442686.html" target="content" style="white-space: nowrap;">get_cursor</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="0252a773a6aea3c4a446225c4770e05c.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="c98f2046fe533b1a0a3f9e86a9d5a5db.html" target="content" style="white-space: nowrap;">commit</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="7f4264c333c807e10524362b0de643bc.html" target="content" style="white-space: nowrap;">close</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="2946bbe57c02037f171af274086e4f8b.html" target="content" style="white-space: nowrap;">is_active</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="090c98809472e1f4dabaddf2b92d87a8.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="89e5059d5bd3070258e85acbba4e9536.html" target="content" style="white-space: nowrap;">ping</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="63815f766c65a4f59c574ee4aed7abac.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="683433ba7681db1cd448cc6e982b3a35.html" target="content" style="white-space: nowrap;">rollback</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
                                                             
                                                         </li>
                                                         
@@ -1376,7 +1014,7 @@
                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLClass"></span>
     
-        <a href="602364cc1d038e27a5aea9829e426004.html" target="content" style="white-space: nowrap;">PoolConnectionManagerStrategy</a>
+        <a href="602364cc1d038e27a5aea9829e426004.html" target="content" style="white-space: nowrap;">PoolConnectionManager</a>
     
 </div>
                                                             
@@ -1492,7 +1130,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociation"></span>
     
-        <a href="139d396b43aef503b279c8fa5bc5a3a2.html" target="content" style="white-space: nowrap;">(PoolConnectionManagerStrategy—PoolConnectionDataBase)</a>
+        <a href="4611cc089f03d175753703359d4405bd.html" target="content" style="white-space: nowrap;">(PoolConnectionManager—PoolConnectionDataBase)</a>
     
 </div>
                                                                     
@@ -1503,7 +1141,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
     
-        <a href="0334d02cf1d87bc983dd29356548a859.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+        <a href="a974099d5e4a38f9ebc08cb19edc7bc1.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
     
 </div>
                                                                         </li>
@@ -1513,7 +1151,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
     
-        <a href="d9942488748003c477c11098856b904b.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+        <a href="5bd67d5a8057017cce1a95553a9d35f3.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
     
 </div>
                                                                         </li>
@@ -1523,6 +1161,1642 @@
                                                                 </li>
                                                                 
                                                             </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="8ddddcedbcc42407a2f4a782cf02f373.html" target="content" style="white-space: nowrap;">(Pool Manager Component→Adapters Component)</a>
+    
+</div>
+                                                            
+                                                        </li>
+                                                        
+                                                    </ol>
+                                                    
+                                                </li>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLComponent"></span>
+    
+        <a href="7c229d7031a82db6dd0af498b9dd790d.html" target="content" style="white-space: nowrap;">Transaction Manager Component</a>
+    
+</div>
+                                                    
+                                                    <ol>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="570af3efbc91a7351b316005e6227161.html" target="content" style="white-space: nowrap;">TransactionManager</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="08a9425fc21037d808a2982ec93ba667.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="0e495ca62383d518e2d123b23549fd1b.html" target="content" style="white-space: nowrap;">query_param_placeholder</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="730ca7663414c39df59e4e14b6c8a612.html" target="content" style="white-space: nowrap;">active_connection</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="fa63edde9a3ccf67b2d84a6b811ec89b.html" target="content" style="white-space: nowrap;">isolation_level</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="7eb43163c3ee835d8d70197ad3722fb3.html" target="content" style="white-space: nowrap;">initialized_state</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="8f47118034c102b6b4bb9e1434b62dbe.html" target="content" style="white-space: nowrap;">active_state</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="49212b96e3fc178c1782252cc52d1f66.html" target="content" style="white-space: nowrap;">committed_state</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="3ac9e523da0e86941c744584e896a55b.html" target="content" style="white-space: nowrap;">rolledback_state</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="979d9aaff28fb53074e6e5d70659c37a.html" target="content" style="white-space: nowrap;">state</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="cd1bcb20426f0402a0ca5a8913a18ee3.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="6c3b51d067e0a34e0cd1e0b5542b5aa3.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="e7bfde4d8d3dd0494b7a99a31a60762f.html" target="content" style="white-space: nowrap;">apply_isolation_level</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="a8013d8629dc320be313f28366de0e52.html" target="content" style="white-space: nowrap;">new_level</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="a10f92c5f1f66aa7a04d0d9ad8978749.html" target="content" style="white-space: nowrap;">set_state</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="8bca8c48e1c8d7aef7bd3620f25b4d03.html" target="content" style="white-space: nowrap;">new_state</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="546a09c2387b27a2d4740c71621c179a.html" target="content" style="white-space: nowrap;">(TransactionManager—PoolConnectionDataBase)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="8502f0d357afccc9d740644fe8a7b6c8.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="464880fbd77cb50c1fd843cfaadcfae5.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="03eec1798f36566a0fab0dcdd691b9c8.html" target="content" style="white-space: nowrap;">(TransactionManager—SingleConnectionDataBase)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="d1a7854ff3bdcca52eb078286e288be2.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="f049553b7eaa4668976c2e1e372ac5c5.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="41a6fc5738084f95792e333e87bbba98.html" target="content" style="white-space: nowrap;">(TransactionManager→IsolationLevel)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="ebbfa5e7b096f59f0a3d91a743eccec9.html" target="content" style="white-space: nowrap;">(TransactionManager→TransactionStateInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="bc9eba57ce2d02a2a2db64f728d524db.html" target="content" style="white-space: nowrap;">«Enum»IsolationLevel</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="b8235f5fd656c180897be51aa712ee3f.html" target="content" style="white-space: nowrap;">READ_UNCOMMITTED</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="57b6e8fa77cd8eb1c0d6679d3e789344.html" target="content" style="white-space: nowrap;">READ_COMMITTED</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="c97bd8ae8c1c74a49daf30e49afc6661.html" target="content" style="white-space: nowrap;">REPEATABLE_READ</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="0e0a13038f6322b6de18f7a043bd45c0.html" target="content" style="white-space: nowrap;">SERIALIZABLE</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="4fe19bcf656849dfd4d4615fbeefa65e.html" target="content" style="white-space: nowrap;">NoTransactionManager</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="d5dc4259bbff537c3de961c8f8c7638e.html" target="content" style="white-space: nowrap;">(NoTransactionManager→TransactionManager)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="1c400d6297eef524dac1bc169190b177.html" target="content" style="white-space: nowrap;">TransactionManagerStateRolledBack</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="5bdfce17667a1d09f41ea1d66399482b.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="8ba3eeeef9603a644cf8dcf01c74e88a.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="74296f5069c99701ba61232403be6d46.html" target="content" style="white-space: nowrap;">transaction_manager</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="0bdecd5aecd8a124e2b3ba601f21b9f0.html" target="content" style="white-space: nowrap;">(TransactionManagerStateRolledBack→TransactionStateInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="27c5970b45903a15365dfce7064a42ee.html" target="content" style="white-space: nowrap;">TransactionManagerStateCommitted</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="a1bad447fb74f35097d7a6efb2d124cb.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="af6692fbee65a85ff923f055dda6905b.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="44d3dc385dfcdedc4a1714f70a28f6ce.html" target="content" style="white-space: nowrap;">transaction_manager</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="b275c63a794461fac87cabd031a02807.html" target="content" style="white-space: nowrap;">(TransactionManagerStateCommitted→TransactionStateInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="bef98f24f6f4b8b2a772f2bb274f166d.html" target="content" style="white-space: nowrap;">TransactionManagerStateActive</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="e2459f926efb52ac64e5c0df86ffc987.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="6548bf26e8c1feec5ae5aeebca70f236.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="ee7cc2732e7fc32ad0985fd86c8d658c.html" target="content" style="white-space: nowrap;">transaction_manager</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="db570f3a1c9c71da95e72e179271ffa6.html" target="content" style="white-space: nowrap;">(TransactionManagerStateActive→TransactionStateInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="522ee73e502bab1f8283ba9d5bd1d055.html" target="content" style="white-space: nowrap;">TransactionManagerStateInitialized</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="78c58f14d13b25514ab2f54a677872bd.html" target="content" style="white-space: nowrap;">root</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="c95caca64047da77195f26cc6517aded.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="1bef111e2145d8eb19af9696cf45baeb.html" target="content" style="white-space: nowrap;">transaction_manager</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="89d48c86726ec2ffe38d16d824bd69db.html" target="content" style="white-space: nowrap;">(TransactionManagerStateInitialized→TransactionStateInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterface"></span>
+    
+        <a href="3064fc68a941f58a8050b307fba7caee.html" target="content" style="white-space: nowrap;">TransactionStateInterface</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="bc6fdef75f6f251f606ac52e80e14771.html" target="content" style="white-space: nowrap;">begin</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="4bf1e239711f391ac55b97be749697b4.html" target="content" style="white-space: nowrap;">execute_in_active_transaction</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="62ded55d57e1bcf1f0165111bb04fbcf.html" target="content" style="white-space: nowrap;">query</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="ab0de1e4adbc402beedeab259ab609e6.html" target="content" style="white-space: nowrap;">*params</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="d015cc4a220b7000ffab585b83b57d19.html" target="content" style="white-space: nowrap;">commit</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="db35e6ed75b08287486c762f4c8549d1.html" target="content" style="white-space: nowrap;">rollback</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="61aa85c346cf79b61d29546c45f4d48b.html" target="content" style="white-space: nowrap;">(TransactionStateInterface—TransactionManager)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="fe6b531adc8c53c2b02cd84462531fce.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="9f60e49d4f189dce0232a86402e419d6.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="276a611711a90603dc19c91e31644d61.html" target="content" style="white-space: nowrap;">(Transaction Manager Component→Adapters Component)</a>
+    
+</div>
+                                                            
+                                                        </li>
+                                                        
+                                                    </ol>
+                                                    
+                                                </li>
+                                                
+                                                
+                                                <li>
+                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLComponent"></span>
+    
+        <a href="cee691f04f7cb7340ae589b0ac864a99.html" target="content" style="white-space: nowrap;">Adapters Component</a>
+    
+</div>
+                                                    
+                                                    <ol>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="e892d815e5c44cc9fbe9b1356dbfed21.html" target="content" style="white-space: nowrap;">PostgreSQLAdapterCursor</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="883feb41e1dc498e9f1a0d3038ad8b37.html" target="content" style="white-space: nowrap;">adaptee</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="7a45567f825dfaa52fa4f73d0cd8b325.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapterCursor—PostgreSQLCursor)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="ff2623da69c62df82570b9581dfad933.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="8fe710af42ea2ab5778b5ab41851ea31.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="1573ca15a58e28e5a7b80e252f50ba3e.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapterCursor→CursorInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="45123acd272871c074a03fe1e98c052c.html" target="content" style="white-space: nowrap;">PostgreSQLCursor</a>
+    
+</div>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="59110156c58e142d1e9c68798ef2298c.html" target="content" style="white-space: nowrap;">MySQLCursor</a>
+    
+</div>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="15c805301c125e2bd12b599b27857870.html" target="content" style="white-space: nowrap;">MySQLAdapterCursor</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="5541893d4a19e7d6c996d8854183c3f1.html" target="content" style="white-space: nowrap;">adaptee</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="ad49814e94e55151fb88961929e5f2f0.html" target="content" style="white-space: nowrap;">(MySQLAdapterCursor—MySQLCursor)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="4d72124e28dffd1496c9f6d21551f4b6.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="3b62018f3dd85620761d51a73fbbe21d.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="72713e36571ed88bbd029a165c99764f.html" target="content" style="white-space: nowrap;">(MySQLAdapterCursor→CursorInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="7e15ed162b39af2e4ca75436100a7488.html" target="content" style="white-space: nowrap;">PostgreSQLAdapterConnection</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="e9dd458663200367aaec9a33841f725b.html" target="content" style="white-space: nowrap;">adaptee</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="c976b6dfbc24d46862d5adbff329496d.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapterConnection—PostgreSQLConnection)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="0a95e4aca9c2cd2aff8ee9a1ab097390.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="3017122c0c69fd9350e691a487abe967.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="73a16499d24166f362c6bd365efa6aa0.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapterConnection→SingleConnectionManager)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="78d92aab8d657befd371cdd8eba644e5.html" target="content" style="white-space: nowrap;">(PostgreSQLAdapterConnection→ConnectionInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLClass"></span>
+    
+        <a href="7928939098c2ea3c47c218a0a502b102.html" target="content" style="white-space: nowrap;">MySQLAdapterConnection</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
+    
+        <a href="85d12c32dc414f3f6e86d7ba88088b8e.html" target="content" style="white-space: nowrap;">adaptee</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="a0f24c9b27b436c32b348f2df45f1224.html" target="content" style="white-space: nowrap;">(MySQLAdapterConnection—MySQLConnection)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="db76b17bc4a84f27f3161d480c51dd75.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="de29e3339beb0a197b6533415c955d1b.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
+    
+        <a href="c311d73fd9030dbd73337227a3ec8574.html" target="content" style="white-space: nowrap;">(MySQLAdapterConnection→SingleConnectionManager)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
+    
+        <a href="bd7354334922733bc4f731dff8cbb24b.html" target="content" style="white-space: nowrap;">(MySQLAdapterConnection→ConnectionInterface)</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterface"></span>
+    
+        <a href="f2bea8ffb4e2a86be2fe4c3aef24fcbd.html" target="content" style="white-space: nowrap;">CursorInterface</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="9096221086869210e09dfcd858f25a72.html" target="content" style="white-space: nowrap;">execute</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="a3cceb6e4d6ce67a39775899d7fd3fa1.html" target="content" style="white-space: nowrap;">query</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="67346bea7bed151d28304f5ed8f078a6.html" target="content" style="white-space: nowrap;">params</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="0d5c7d970ccac3e4e0a5c28ec5af3cfe.html" target="content" style="white-space: nowrap;">executemany</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="96d9fb9e8629d1eb9c6a46129e164ad5.html" target="content" style="white-space: nowrap;">query</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="5cbb98cf2d51c5d68fc801b62a8d7362.html" target="content" style="white-space: nowrap;">data</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="c9bed89d1b96f85c94898f4db5ec9374.html" target="content" style="white-space: nowrap;">close</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="848cc9cc9bc2b7a7ffb06591fcb4b68e.html" target="content" style="white-space: nowrap;">fetchone</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="168d42a4ed3ae4e11ea71ce38d3b4eb3.html" target="content" style="white-space: nowrap;">fetchmany</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="f657ece422102d865911e95d1c8994de.html" target="content" style="white-space: nowrap;">fetchall</a>
+    
+</div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="a0a39ea059936b49874c3a7a7d368d01.html" target="content" style="white-space: nowrap;">get_row_count</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="063cde7256f6c8edf5ca3360df29c3e4.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="55a8230c8e0ea3c30264f068d66d1575.html" target="content" style="white-space: nowrap;">get_last_row_id</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="4b135a845fd129e992a9cc8d6593ab2d.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLInterface"></span>
+    
+        <a href="b90a17027a2ce7b438ea53b33286bb0c.html" target="content" style="white-space: nowrap;">ConnectionInterface</a>
+    
+</div>
+                                                            
+                                                            <ol>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="5fbca2a9dfc8616b6c085ccd46a201d9.html" target="content" style="white-space: nowrap;">connect</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="6214515d8897cabbbe055106f0431a28.html" target="content" style="white-space: nowrap;">config</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="9a3bbe7b953ce7fd04c18e409e97fc6b.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="f3d391c2ba9640366ff4fb88b16df549.html" target="content" style="white-space: nowrap;">reconnect</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="affe7ecd683b2a6abab47b0042ced4ba.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="3ad5653538a8b24bc938248f72442686.html" target="content" style="white-space: nowrap;">get_cursor</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="0252a773a6aea3c4a446225c4770e05c.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="c98f2046fe533b1a0a3f9e86a9d5a5db.html" target="content" style="white-space: nowrap;">commit</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="3423b34d9b8ad08dd799545bc9eeb76d.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="7f4264c333c807e10524362b0de643bc.html" target="content" style="white-space: nowrap;">close</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="429f896da5efdb23e2491512e522eeda.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="2946bbe57c02037f171af274086e4f8b.html" target="content" style="white-space: nowrap;">is_active</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="090c98809472e1f4dabaddf2b92d87a8.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="89e5059d5bd3070258e85acbba4e9536.html" target="content" style="white-space: nowrap;">ping</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="63815f766c65a4f59c574ee4aed7abac.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="683433ba7681db1cd448cc6e982b3a35.html" target="content" style="white-space: nowrap;">rollback</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="830e08ad70fc206dce3102a1ad40eada.html" target="content" style="white-space: nowrap;">return_value</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="c85e8737ea10041d0d8b0cb20209f277.html" target="content" style="white-space: nowrap;">(ConnectionInterface—CursorInterface)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="b6b6df963000bce7e72d35e88cde0b1a.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="08b2bee32122435f44fde6a933f5104e.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="8ad4c7758e7bf777c0fbcc7cf00be93a.html" target="content" style="white-space: nowrap;">(ConnectionInterface—SingleConnectionManager)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="2844394584b924ffe6eb9d08324bb061.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="e740a36660c7cf498c12a882b1ca4a39.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
+    
+        <a href="bb672c4e55d8cb83fd86c9abb985102f.html" target="content" style="white-space: nowrap;">(ConnectionInterface—TransactionManager)</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="1cda32018e51f25a0e7ff292bdaec259.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
+    
+        <a href="51419a421e8ed1189b9f2a78b6ec5bdb.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                            </ol>
+                                                            
+                                                        </li>
+                                                        
+                                                        
+                                                        <li>
+                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="80fd3676f014c95aba21600a73856ef9.html" target="content" style="white-space: nowrap;">(Adapters Component→External Libraries)</a>
+    
+</div>
                                                             
                                                         </li>
                                                         
@@ -1539,7 +2813,7 @@
                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLPackage"></span>
     
-        <a href="21d659615977d5737b5f44ce253587e7.html" target="content" style="white-space: nowrap;">Query Processing</a>
+        <a href="21d659615977d5737b5f44ce253587e7.html" target="content" style="white-space: nowrap;">Query Core</a>
     
 </div>
                                             
@@ -1739,562 +3013,6 @@
     <span class="node-icon staruml-icon icon-UMLParameter"></span>
     
         <a href="cc8ce6d5f84b7c5d28f04603e9d93c24.html" target="content" style="white-space: nowrap;">return_value</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                    </ol>
-                                                    
-                                                </li>
-                                                
-                                                
-                                                <li>
-                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLComponent"></span>
-    
-        <a href="7c229d7031a82db6dd0af498b9dd790d.html" target="content" style="white-space: nowrap;">Transaction Manager Component</a>
-    
-</div>
-                                                    
-                                                    <ol>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="570af3efbc91a7351b316005e6227161.html" target="content" style="white-space: nowrap;">TransactionManager</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="979d9aaff28fb53074e6e5d70659c37a.html" target="content" style="white-space: nowrap;">state</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="fa63edde9a3ccf67b2d84a6b811ec89b.html" target="content" style="white-space: nowrap;">isolation_level</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="748ac5e7c8bddfeaa4df00da3666f19e.html" target="content" style="white-space: nowrap;">active_connection</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="c7fa1a275bee5e1f86badd80c468aad0.html" target="content" style="white-space: nowrap;">query_param_placeholder</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="e7bfde4d8d3dd0494b7a99a31a60762f.html" target="content" style="white-space: nowrap;">apply_isolation_level</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="a8013d8629dc320be313f28366de0e52.html" target="content" style="white-space: nowrap;">new_level</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="a10f92c5f1f66aa7a04d0d9ad8978749.html" target="content" style="white-space: nowrap;">set_state</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="8bca8c48e1c8d7aef7bd3620f25b4d03.html" target="content" style="white-space: nowrap;">new_state</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="0c937fbcce447652aaf480df1039afa8.html" target="content" style="white-space: nowrap;">(TransactionManager—PoolConnectionDataBase)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="0ca9eaedfa15e589d007984abf3d37a0.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="3622f1756020d144934421bd2c53534f.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="597e10d4100c7fd7dc1ef284e1838ed4.html" target="content" style="white-space: nowrap;">(TransactionManager—SingleConnectionDataBase)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="b0931f0772bda9cbd1ad7cb66f3527f8.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="2c541f5ac860322070ec6472745b2e23.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLDependency"></span>
-    
-        <a href="41a6fc5738084f95792e333e87bbba98.html" target="content" style="white-space: nowrap;">(TransactionManager→IsolationLevel)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="bc9eba57ce2d02a2a2db64f728d524db.html" target="content" style="white-space: nowrap;">«Enum»IsolationLevel</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="b8235f5fd656c180897be51aa712ee3f.html" target="content" style="white-space: nowrap;">READ_UNCOMMITTED</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="57b6e8fa77cd8eb1c0d6679d3e789344.html" target="content" style="white-space: nowrap;">READ_COMMITTED</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="c97bd8ae8c1c74a49daf30e49afc6661.html" target="content" style="white-space: nowrap;">REPEATABLE_READ</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="0e0a13038f6322b6de18f7a043bd45c0.html" target="content" style="white-space: nowrap;">SERIALIZABLE</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="4fe19bcf656849dfd4d4615fbeefa65e.html" target="content" style="white-space: nowrap;">NoTransactionManager</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLGeneralization"></span>
-    
-        <a href="d5dc4259bbff537c3de961c8f8c7638e.html" target="content" style="white-space: nowrap;">(NoTransactionManager→TransactionManager)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="1c400d6297eef524dac1bc169190b177.html" target="content" style="white-space: nowrap;">TransactionManagerStateRolledBack</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="60d3a80626c98e48d29c1a9b79d190d4.html" target="content" style="white-space: nowrap;">active_connection</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="0bdecd5aecd8a124e2b3ba601f21b9f0.html" target="content" style="white-space: nowrap;">(TransactionManagerStateRolledBack→TransactionStateInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="27c5970b45903a15365dfce7064a42ee.html" target="content" style="white-space: nowrap;">TransactionManagerStateCommited</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="7097d668d89dfb9e5239a1a7fb8a6ea4.html" target="content" style="white-space: nowrap;">active_connection</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="b275c63a794461fac87cabd031a02807.html" target="content" style="white-space: nowrap;">(TransactionManagerStateCommited→TransactionStateInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="bef98f24f6f4b8b2a772f2bb274f166d.html" target="content" style="white-space: nowrap;">TransactionManagerStateActive</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="b93261d88417f1b44d60b8c680c4c34b.html" target="content" style="white-space: nowrap;">active_connection</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="db570f3a1c9c71da95e72e179271ffa6.html" target="content" style="white-space: nowrap;">(TransactionManagerStateActive→TransactionStateInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLClass"></span>
-    
-        <a href="522ee73e502bab1f8283ba9d5bd1d055.html" target="content" style="white-space: nowrap;">TransactionManagerStateInitialized</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAttribute"></span>
-    
-        <a href="03ad561560ba9de7e977f899846035fb.html" target="content" style="white-space: nowrap;">active_connection</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterfaceRealization"></span>
-    
-        <a href="89d48c86726ec2ffe38d16d824bd69db.html" target="content" style="white-space: nowrap;">(TransactionManagerStateInitialized→TransactionStateInterface)</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                            </ol>
-                                                            
-                                                        </li>
-                                                        
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLInterface"></span>
-    
-        <a href="3064fc68a941f58a8050b307fba7caee.html" target="content" style="white-space: nowrap;">TransactionStateInterface</a>
-    
-</div>
-                                                            
-                                                            <ol>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="bc6fdef75f6f251f606ac52e80e14771.html" target="content" style="white-space: nowrap;">begin</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="4bf1e239711f391ac55b97be749697b4.html" target="content" style="white-space: nowrap;">execute_in_active_transaction</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="62ded55d57e1bcf1f0165111bb04fbcf.html" target="content" style="white-space: nowrap;">query</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="ab0de1e4adbc402beedeab259ab609e6.html" target="content" style="white-space: nowrap;">*params</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                    </ol>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="d015cc4a220b7000ffab585b83b57d19.html" target="content" style="white-space: nowrap;">commit</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLOperation"></span>
-    
-        <a href="db35e6ed75b08287486c762f4c8549d1.html" target="content" style="white-space: nowrap;">rollback</a>
-    
-</div>
-                                                                    
-                                                                </li>
-                                                                
-                                                                
-                                                                <li>
-                                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociation"></span>
-    
-        <a href="9e6bec9ef5e189d6edcd623e2b859d86.html" target="content" style="white-space: nowrap;">(TransactionStateInterface—TransactionManager)</a>
-    
-</div>
-                                                                    
-                                                                    <ol>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="02e8853d8eaf0eced97466efdcd0d10a.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLAssociationEnd"></span>
-    
-        <a href="a24bcc26f65daeff84d82aa1ad38eb5e.html" target="content" style="white-space: nowrap;">(AssociationEnd)</a>
     
 </div>
                                                                         </li>
@@ -2845,6 +3563,31 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLOperation"></span>
     
+        <a href="d293232a4955a104de140f19de1127e5.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="6421980f5f146b49bc9dd91d4f0ddabc.html" target="content" style="white-space: nowrap;">query_param_placeholder</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
         <a href="219975f2a3ba6c5c7b8ef8ce91aa4ec6.html" target="content" style="white-space: nowrap;">deconstruct_database_and_components</a>
     
 </div>
@@ -2856,7 +3599,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLOperation"></span>
     
-        <a href="871f372d4036c711b919eaae8a4937c1.html" target="content" style="white-space: nowrap;">change_query_placeholder</a>
+        <a href="871f372d4036c711b919eaae8a4937c1.html" target="content" style="white-space: nowrap;">change_query_param_placeholder</a>
     
 </div>
                                                                     
@@ -2867,7 +3610,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLParameter"></span>
     
-        <a href="902ddbea8c12333209511b1a67e61937.html" target="content" style="white-space: nowrap;">new_query_placeholder</a>
+        <a href="902ddbea8c12333209511b1a67e61937.html" target="content" style="white-space: nowrap;">new_placeholder</a>
     
 </div>
                                                                         </li>
@@ -2966,7 +3709,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLAttribute"></span>
     
-        <a href="66456b4aef0c39b7ae574a6ca45b7875.html" target="content" style="white-space: nowrap;">connection_manager</a>
+        <a href="66456b4aef0c39b7ae574a6ca45b7875.html" target="content" style="white-space: nowrap;">perform_connection_manager</a>
     
 </div>
                                                                     
@@ -2980,6 +3723,31 @@
         <a href="aaa0b7cabc8e037daed3f4a694323968.html" target="content" style="white-space: nowrap;">transaction_manager</a>
     
 </div>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLOperation"></span>
+    
+        <a href="a72a5de5e87868cef96fe1940cda9586.html" target="content" style="white-space: nowrap;">__init__</a>
+    
+</div>
+                                                                    
+                                                                    <ol>
+                                                                        
+                                                                        
+                                                                        <li>
+                                                                            <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLParameter"></span>
+    
+        <a href="c28e676791904e98630870472012c015.html" target="content" style="white-space: nowrap;">query_param_placeholder</a>
+    
+</div>
+                                                                        </li>
+                                                                        
+                                                                    </ol>
                                                                     
                                                                 </li>
                                                                 
@@ -3038,7 +3806,7 @@
                                                                     <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLOperation"></span>
     
-        <a href="a72a5de5e87868cef96fe1940cda9586.html" target="content" style="white-space: nowrap;">__init__</a>
+        <a href="8b664e5a7410b1efc76c938e64a582e5.html" target="content" style="white-space: nowrap;">set_new_connection_config</a>
     
 </div>
                                                                     
@@ -3049,27 +3817,7 @@
                                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLParameter"></span>
     
-        <a href="3d7546f61bde4e05529aaaf06dfa31c9.html" target="content" style="white-space: nowrap;">config</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="ce22ccdd7cf0be7c6fac7fa0e3a5ea28.html" target="content" style="white-space: nowrap;">conn_manager</a>
-    
-</div>
-                                                                        </li>
-                                                                        
-                                                                        
-                                                                        <li>
-                                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLParameter"></span>
-    
-        <a href="30d77a6b8e21f7e8fcc7ea5507027ade.html" target="content" style="white-space: nowrap;">transaction_manager</a>
+        <a href="a92962efe6e816dd4ad6ee6b5d8d2d66.html" target="content" style="white-space: nowrap;">new_config</a>
     
 </div>
                                                                         </li>
@@ -3120,7 +3868,7 @@
                                                             <div style="display: inline-block; white-space: nowrap">
     <span class="node-icon staruml-icon icon-UMLDependency"></span>
     
-        <a href="7e5832a3ea7724b241e93ab68dc3e297.html" target="content" style="white-space: nowrap;">(Single Connection DataBase Component→Single Manager Component)</a>
+        <a href="7e5832a3ea7724b241e93ab68dc3e297.html" target="content" style="white-space: nowrap;">(Single Connection DataBase Component→Single Connection Manager Component)</a>
     
 </div>
                                                             
@@ -3613,6 +4361,17 @@
                                                                         </li>
                                                                         
                                                                     </ol>
+                                                                    
+                                                                </li>
+                                                                
+                                                                
+                                                                <li>
+                                                                    <div style="display: inline-block; white-space: nowrap">
+    <span class="node-icon staruml-icon icon-UMLDependency"></span>
+    
+        <a href="5cf7c13fdb4ae4eefd0686f1377bebcb.html" target="content" style="white-space: nowrap;">use (BaseLogger→LogEntryDTO)</a>
+    
+</div>
                                                                     
                                                                 </li>
                                                                 
@@ -4483,17 +5242,6 @@
                                                             
                                                         </li>
                                                         
-                                                        
-                                                        <li>
-                                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLDependency"></span>
-    
-        <a href="891cc75512002a289c50fa3b388615a1.html" target="content" style="white-space: nowrap;">(LogEntry Component→Shared Component)</a>
-    
-</div>
-                                                            
-                                                        </li>
-                                                        
                                                     </ol>
                                                     
                                                 </li>
@@ -4844,32 +5592,6 @@
                                                         </li>
                                                         
                                                     </ol>
-                                                    
-                                                </li>
-                                                
-                                            </ol>
-                                            
-                                        </li>
-                                        
-                                        
-                                        <li>
-                                            <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLPackage"></span>
-    
-        <a href="9eae55d6592b61d9c07d519577f4e202.html" target="content" style="white-space: nowrap;">Shared</a>
-    
-</div>
-                                            
-                                            <ol>
-                                                
-                                                
-                                                <li>
-                                                    <div style="display: inline-block; white-space: nowrap">
-    <span class="node-icon staruml-icon icon-UMLComponent"></span>
-    
-        <a href="7b9680f96c7e052beb9ee44dcc11e918.html" target="content" style="white-space: nowrap;">Shared Component</a>
-    
-</div>
                                                     
                                                 </li>
                                                 

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Single Manager Component</title>
+    <title>Single Connection Manager Component</title>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Source+Code+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../assets/css/bootstrap.css">
 <link rel="stylesheet" href="../assets/css/jquery.bonsai.css">
@@ -19,7 +19,7 @@
 
       <!-- Name Title -->
 
-      <h1>Single Manager Component</h1>
+      <h1>Single Connection Manager Component</h1>
 
       <!-- Type and Stereotype -->
 
@@ -50,7 +50,7 @@
           <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
+          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Connection Manager Component</a></span>
         
       </section>
 
@@ -243,7 +243,7 @@
     
     <tr>
         <td>name</td>
-        <td>Single Manager Component</td>
+        <td>Single Connection Manager Component</td>
     </tr>
     
     
@@ -335,6 +335,15 @@
 
         
         
+<section class="element-list">
+    <h3>Dependencies</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='cee691f04f7cb7340ae589b0ac864a99.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Adapters Component</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -359,7 +368,9 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='7e5832a3ea7724b241e93ab68dc3e297.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Single Connection DataBase Component→Single Manager Component)</a></li>
+        <li><a href='7e5832a3ea7724b241e93ab68dc3e297.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Single Connection DataBase Component→Single Connection Manager Component)</a></li>
+        
+        <li><a href='ab8476cbb67fce65dc929a5969b1f272.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Single Connection Manager Component→Adapters Component)</a></li>
         
     </ul>
 </section>
@@ -378,33 +389,13 @@
         
         <li><a href='84a3e28472db66b1a07ad5fe21ea3277.html'><span class='node-icon staruml-icon icon-UMLClass'></span>NoSingleConnectionManager</a></li>
         
-        <li><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a></li>
-        
-        <li><a href='7928939098c2ea3c47c218a0a502b102.html'><span class='node-icon staruml-icon icon-UMLClass'></span>MySQLAdapter</a></li>
-        
-        <li><a href='7e15ed162b39af2e4ca75436100a7488.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PostgreSQLAdapter</a></li>
+        <li><a href='ab8476cbb67fce65dc929a5969b1f272.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Single Connection Manager Component→Adapters Component)</a></li>
         
     </ul>
 </section>
 
 
 
-      <!-- Diagrams -->
-      
-      
-      
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='ccd79ba8f1e62d81fb92c4268fc790b0.html'><span class='node-icon staruml-icon icon-UMLComponentDiagram'></span>Main Concept - Component Diagram</a></li>
-        
-    </ul>
-</section>
-
-
-      
-      
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

@@ -110,9 +110,9 @@
     <h3>Specialized Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='6800ee5da5685a80c7a838f705e1eeca.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcretePoolConnectionDataBase1</a></li>
-        
         <li><a href='7a7c7fc0120c22c00b20e8ceeed945fc.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcretePoolConnectionDataBase2</a></li>
+        
+        <li><a href='6800ee5da5685a80c7a838f705e1eeca.html'><span class='node-icon staruml-icon icon-UMLClass'></span>ConcretePoolConnectionDataBase1</a></li>
         
     </ul>
 </section>
@@ -185,7 +185,7 @@
           <tr>
             <td>protected</td>
             <td><a href="6d706112a7f592b130c3e3b027a48fab.html">perform_connection_manager</a></td>
-            <td><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManagerStrategy</a> </td>
+            <td><a href='602364cc1d038e27a5aea9829e426004.html'><span class='node-icon staruml-icon icon-UMLClass'></span>PoolConnectionManager</a> </td>
             <td></td>
           </tr>
           
@@ -227,7 +227,7 @@
           
           <tr>
             <td>public</td>
-            <td><a href="4b13ef9e24acde73c74da38df601cfbe.html">set_new_pool_manager(new_manager: PoolConnectionManagerStrategy)</a></td>
+            <td><a href="4b13ef9e24acde73c74da38df601cfbe.html">set_new_pool_manager(new_manager: PoolConnectionManager)</a></td>
             <td></td>
           </tr>
           
@@ -453,19 +453,19 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
-        <li><a href='347852ab93e54f87ef7855ae7e3fd13c.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcretePoolConnectionDataBase1→PoolConnectionDataBase)</a></li>
-        
         <li><a href='c01cca6de30e1911f1c702ffed084c96.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcretePoolConnectionDataBase2→PoolConnectionDataBase)</a></li>
         
-        <li><a href='139d396b43aef503b279c8fa5bc5a3a2.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConnectionManagerStrategy—PoolConnectionDataBase)</a></li>
-        
-        <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
+        <li><a href='347852ab93e54f87ef7855ae7e3fd13c.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(ConcretePoolConnectionDataBase1→PoolConnectionDataBase)</a></li>
         
         <li><a href='1ef80138b71dd9c043773320e7a53d99.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConfigDTO—PoolConnectionDataBase)</a></li>
         
         <li><a href='d608ca1e42ba151da87a297be47bec7b.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PoolConnectionDataBase→DataBase)</a></li>
         
         <li><a href='fc80d3f6ca98f48aacc95884c4f1c5d7.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PoolConnectionDataBase→QueryInterface)</a></li>
+        
+        <li><a href='4611cc089f03d175753703359d4405bd.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(PoolConnectionManager—PoolConnectionDataBase)</a></li>
+        
+        <li><a href='546a09c2387b27a2d4740c71621c179a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
         
     </ul>
 </section>
@@ -489,22 +489,6 @@
 
 
 
-      <!-- Diagrams -->
-      
-      
-      
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='08b1447aa58891767edce965d0f555b1.html'><span class='node-icon staruml-icon icon-UMLClassDiagram'></span>Main Concept - Class Diagram</a></li>
-        
-    </ul>
-</section>
-
-
-      
-      
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

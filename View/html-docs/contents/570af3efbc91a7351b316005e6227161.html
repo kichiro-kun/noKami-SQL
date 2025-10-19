@@ -49,7 +49,7 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='7c229d7031a82db6dd0af498b9dd790d.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Transaction Manager Component</a></span>
@@ -110,6 +110,15 @@
 
         
         
+<section class="element-list">
+    <h3>Interfaces</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -164,29 +173,64 @@
           
           <tr>
             <td>private</td>
-            <td><a href="979d9aaff28fb53074e6e5d70659c37a.html">state</a></td>
-            <td><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a> </td>
+            <td><a href="08a9425fc21037d808a2982ec93ba667.html">root</a></td>
+            <td><a href='11f385d60b83a54183bd4e6170b6f7cb.html'><span class='node-icon staruml-icon icon-UMLClass'></span>DataBase</a> </td>
             <td></td>
           </tr>
           
           <tr>
-            <td>private</td>
-            <td><a href="fa63edde9a3ccf67b2d84a6b811ec89b.html">isolation_level</a></td>
-            <td><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>IsolationLevel</a> </td>
+            <td>public</td>
+            <td><a href="0e495ca62383d518e2d123b23549fd1b.html">query_param_placeholder</a></td>
+            <td>str </td>
             <td></td>
           </tr>
           
           <tr>
-            <td>private</td>
-            <td><a href="748ac5e7c8bddfeaa4df00da3666f19e.html">active_connection</a></td>
+            <td>public</td>
+            <td><a href="730ca7663414c39df59e4e14b6c8a612.html">active_connection</a></td>
             <td><a href='b90a17027a2ce7b438ea53b33286bb0c.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>ConnectionInterface</a> </td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="c7fa1a275bee5e1f86badd80c468aad0.html">query_param_placeholder</a></td>
-            <td>str </td>
+            <td><a href="fa63edde9a3ccf67b2d84a6b811ec89b.html">isolation_level</a></td>
+            <td><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>IsolationLevel</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="7eb43163c3ee835d8d70197ad3722fb3.html">initialized_state</a></td>
+            <td><a href='522ee73e502bab1f8283ba9d5bd1d055.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateInitialized</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="8f47118034c102b6b4bb9e1434b62dbe.html">active_state</a></td>
+            <td><a href='bef98f24f6f4b8b2a772f2bb274f166d.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateActive</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="49212b96e3fc178c1782252cc52d1f66.html">committed_state</a></td>
+            <td><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommitted</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="3ac9e523da0e86941c744584e896a55b.html">rolledback_state</a></td>
+            <td><a href='1c400d6297eef524dac1bc169190b177.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateRolledBack</a> </td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>private</td>
+            <td><a href="979d9aaff28fb53074e6e5d70659c37a.html">state</a></td>
+            <td><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a> </td>
             <td></td>
           </tr>
           
@@ -204,6 +248,12 @@
             <th>Visibility</th>
             <th>Name</th>
             <th>Description</th>
+          </tr>
+          
+          <tr>
+            <td>public</td>
+            <td><a href="cd1bcb20426f0402a0ca5a8913a18ee3.html">__init__(root: DataBase)</a></td>
+            <td></td>
           </tr>
           
           <tr>
@@ -416,6 +466,8 @@
         
         <li><a href='bc9eba57ce2d02a2a2db64f728d524db.html'><span class='node-icon staruml-icon icon-UMLClass'></span>«Enum»IsolationLevel</a></li>
         
+        <li><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a></li>
+        
     </ul>
 </section>
 
@@ -436,13 +488,17 @@
         
         <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
         
-        <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
-        
-        <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
+        <li><a href='ebbfa5e7b096f59f0a3d91a743eccec9.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManager→TransactionStateInterface)</a></li>
         
         <li><a href='d5dc4259bbff537c3de961c8f8c7638e.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoTransactionManager→TransactionManager)</a></li>
         
-        <li><a href='9e6bec9ef5e189d6edcd623e2b859d86.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
+        <li><a href='61aa85c346cf79b61d29546c45f4d48b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
+        
+        <li><a href='bb672c4e55d8cb83fd86c9abb985102f.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionInterface—TransactionManager)</a></li>
+        
+        <li><a href='546a09c2387b27a2d4740c71621c179a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
+        
+        <li><a href='03eec1798f36566a0fab0dcdd691b9c8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>
@@ -459,31 +515,17 @@
         
         <li><a href='41a6fc5738084f95792e333e87bbba98.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(TransactionManager→IsolationLevel)</a></li>
         
-        <li><a href='0c937fbcce447652aaf480df1039afa8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
+        <li><a href='ebbfa5e7b096f59f0a3d91a743eccec9.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManager→TransactionStateInterface)</a></li>
         
-        <li><a href='597e10d4100c7fd7dc1ef284e1838ed4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
+        <li><a href='546a09c2387b27a2d4740c71621c179a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—PoolConnectionDataBase)</a></li>
         
-    </ul>
-</section>
-
-
-
-      <!-- Diagrams -->
-      
-      
-      
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='08b1447aa58891767edce965d0f555b1.html'><span class='node-icon staruml-icon icon-UMLClassDiagram'></span>Main Concept - Class Diagram</a></li>
+        <li><a href='03eec1798f36566a0fab0dcdd691b9c8.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionManager—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>
 
 
-      
-      
+
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

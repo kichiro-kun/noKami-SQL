@@ -47,7 +47,7 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='7c229d7031a82db6dd0af498b9dd790d.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Transaction Manager Component</a></span>
@@ -119,9 +119,11 @@
     <h3>Implementing Classifiers</h3>
     <ul class="nav nav-list">
         
+        <li><a href='570af3efbc91a7351b316005e6227161.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManager</a></li>
+        
         <li><a href='1c400d6297eef524dac1bc169190b177.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateRolledBack</a></li>
         
-        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommited</a></li>
+        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommitted</a></li>
         
         <li><a href='bef98f24f6f4b8b2a772f2bb274f166d.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateActive</a></li>
         
@@ -388,9 +390,11 @@
     <h3>Dependants</h3>
     <ul class="nav nav-list">
         
+        <li><a href='570af3efbc91a7351b316005e6227161.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManager</a></li>
+        
         <li><a href='1c400d6297eef524dac1bc169190b177.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateRolledBack</a></li>
         
-        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommited</a></li>
+        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommitted</a></li>
         
         <li><a href='bef98f24f6f4b8b2a772f2bb274f166d.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateActive</a></li>
         
@@ -410,15 +414,17 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
+        <li><a href='ebbfa5e7b096f59f0a3d91a743eccec9.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManager→TransactionStateInterface)</a></li>
+        
         <li><a href='0bdecd5aecd8a124e2b3ba601f21b9f0.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManagerStateRolledBack→TransactionStateInterface)</a></li>
         
-        <li><a href='b275c63a794461fac87cabd031a02807.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManagerStateCommited→TransactionStateInterface)</a></li>
+        <li><a href='b275c63a794461fac87cabd031a02807.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManagerStateCommitted→TransactionStateInterface)</a></li>
         
         <li><a href='db570f3a1c9c71da95e72e179271ffa6.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManagerStateActive→TransactionStateInterface)</a></li>
         
         <li><a href='89d48c86726ec2ffe38d16d824bd69db.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(TransactionManagerStateInitialized→TransactionStateInterface)</a></li>
         
-        <li><a href='9e6bec9ef5e189d6edcd623e2b859d86.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
+        <li><a href='61aa85c346cf79b61d29546c45f4d48b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
         
     </ul>
 </section>
@@ -433,29 +439,13 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='9e6bec9ef5e189d6edcd623e2b859d86.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
+        <li><a href='61aa85c346cf79b61d29546c45f4d48b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(TransactionStateInterface—TransactionManager)</a></li>
         
     </ul>
 </section>
 
 
 
-      <!-- Diagrams -->
-      
-      
-      
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='08b1447aa58891767edce965d0f555b1.html'><span class='node-icon staruml-icon icon-UMLClassDiagram'></span>Main Concept - Class Diagram</a></li>
-        
-    </ul>
-</section>
-
-
-      
-      
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

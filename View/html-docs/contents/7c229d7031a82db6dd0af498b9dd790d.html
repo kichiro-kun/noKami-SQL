@@ -47,7 +47,7 @@
           <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='21d659615977d5737b5f44ce253587e7.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Query Processing</a></span>
+          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='7c229d7031a82db6dd0af498b9dd790d.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Transaction Manager Component</a></span>
@@ -335,6 +335,15 @@
 
         
         
+<section class="element-list">
+    <h3>Dependencies</h3>
+    <ul class="nav nav-list">
+        
+        <li><a href='cee691f04f7cb7340ae589b0ac864a99.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Adapters Component</a></li>
+        
+    </ul>
+</section>
+
 
 
         
@@ -365,6 +374,8 @@
         
         <li><a href='2866428957fba923b12006d68c4e87dc.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Pool Connection DataBase Component→Transaction Manager Component)</a></li>
         
+        <li><a href='276a611711a90603dc19c91e31644d61.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Transaction Manager Component→Adapters Component)</a></li>
+        
     </ul>
 </section>
 
@@ -386,7 +397,7 @@
         
         <li><a href='1c400d6297eef524dac1bc169190b177.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateRolledBack</a></li>
         
-        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommited</a></li>
+        <li><a href='27c5970b45903a15365dfce7064a42ee.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateCommitted</a></li>
         
         <li><a href='bef98f24f6f4b8b2a772f2bb274f166d.html'><span class='node-icon staruml-icon icon-UMLClass'></span>TransactionManagerStateActive</a></li>
         
@@ -394,27 +405,13 @@
         
         <li><a href='3064fc68a941f58a8050b307fba7caee.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>TransactionStateInterface</a></li>
         
-    </ul>
-</section>
-
-
-
-      <!-- Diagrams -->
-      
-      
-      
-<section class="element-list">
-    <h3>Diagrams</h3>
-    <ul class="nav nav-list">
-        
-        <li><a href='ccd79ba8f1e62d81fb92c4268fc790b0.html'><span class='node-icon staruml-icon icon-UMLComponentDiagram'></span>Main Concept - Component Diagram</a></li>
+        <li><a href='276a611711a90603dc19c91e31644d61.html'><span class='node-icon staruml-icon icon-UMLDependency'></span>(Transaction Manager Component→Adapters Component)</a></li>
         
     </ul>
 </section>
 
 
-      
-      
+
       <!-- Image Map Resizer (https://github.com/davidjbradshaw/image-map-resizer) -->
       <script>
       imageMapResize();

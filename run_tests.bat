@@ -11,7 +11,7 @@ REM MySQL Config
 set USER="root"
 set HOST="127.0.0.1"
 set PORT="3333"
-set QueryPATH=".\tests\test_boundary\sql_queries\prepare_database.sql"
+set QueryPATH=".\tests\test_boundary\sql_queries\prepare_mysql_database.sql"
 
 REM -------------------------------------------------------------------------------------
 

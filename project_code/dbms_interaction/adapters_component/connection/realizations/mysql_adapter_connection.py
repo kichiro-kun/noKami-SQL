@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'MySQLAdapter'
+    'MySQLAdapterConnection'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
@@ -27,7 +27,7 @@ from shared.exceptions.common import OperationFailedConnectionIsNotActive
 
 
 # _______________________________________________________________________________________
-class MySQLAdapter(ConnectionInterface):
+class MySQLAdapterConnection(ConnectionInterface):
 
     # -----------------------------------------------------------------------------------
     def __init__(self, connector: MySQLConnection) -> None:

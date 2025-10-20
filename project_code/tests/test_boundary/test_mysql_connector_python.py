@@ -17,7 +17,7 @@ __version__ = '0.2.0'
 import unittest
 from random import randint
 
-from tests.test_boundary.common import BaseTestCase
+from tests.test_boundary.common import BaseTestCaseMySQL
 
 from mysql.connector import MySQLConnection
 from mysql.connector.errors import ProgrammingError, OperationalError, InterfaceError
@@ -32,7 +32,7 @@ MYSQL_IS_ACTIVE: bool = True  # MySQL server is on?
 
 # _______________________________________________________________________________________
 @unittest.skipIf(condition=(MYSQL_IS_ACTIVE is False), reason='MySQL server is off!')
-class TestMySQLBoundaryPositive(BaseTestCase):
+class TestMySQLBoundaryPositive(BaseTestCaseMySQL):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
         super().setUp()
@@ -329,7 +329,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur = conn.cursor()
 
         # Pre-Operate
-        cur.execute(operation=self.query_select_all)
+        cur.execute(operation=self.QUERY_SELECT_ALL)
 
         # Operate
         data = cur.fetchall()
@@ -353,7 +353,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur = conn.cursor()
 
         # Pre-Operate
-        cur.execute(operation=self.query_select_all)
+        cur.execute(operation=self.QUERY_SELECT_ALL)
 
         # Operate
         data = cur.fetchmany()
@@ -385,7 +385,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur = conn.cursor()
 
         # Pre-Operate
-        cur.execute(operation=self.query_select_all)
+        cur.execute(operation=self.QUERY_SELECT_ALL)
 
         # Operate
         data = cur.fetchmany(size=expected_row_count)
@@ -416,7 +416,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur = conn.cursor()
 
         # Pre-Operate
-        cur.execute(operation=self.query_select_all)
+        cur.execute(operation=self.QUERY_SELECT_ALL)
 
         # Operate
         data = cur.fetchmany(size=requested_row_count)
@@ -439,7 +439,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
         cur = conn.cursor()
 
         # Pre-Operate
-        cur.execute(operation=self.query_select_all)
+        cur.execute(operation=self.QUERY_SELECT_ALL)
 
         # Operate
         data = cur.fetchone()
@@ -482,7 +482,7 @@ class TestMySQLBoundaryPositive(BaseTestCase):
 
 # _______________________________________________________________________________________
 @unittest.skipIf(condition=(MYSQL_IS_ACTIVE is False), reason='MySQL server is off!')
-class TestMySQLBoundaryNegative(BaseTestCase):
+class TestMySQLBoundaryNegative(BaseTestCaseMySQL):
     # -----------------------------------------------------------------------------------
     def test_try_establishing_connection_with_incorrect_config(self) -> None:
         # Build

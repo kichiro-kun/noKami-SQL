@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'BaseTestCase'
+    'BaseTestCaseMySQL'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
@@ -30,8 +30,11 @@ class BaseTestCase(TestCase):
     expected_table_row_count: int = 15
 
     # Helpful queries
-    query_select_all: str = f'SELECT * FROM {table_name};'
+    QUERY_SELECT_ALL: str = f'SELECT * FROM {table_name};'
 
+
+# _______________________________________________________________________________________
+class BaseTestCaseMySQL(BaseTestCase):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_connection(self) -> MySQLConnection:
         return MySQLConnection(**DB_CONFIG)

@@ -17,8 +17,8 @@ __version__ = '0.5.0'
 from unittest import mock as UM
 from typing import Tuple, Dict, Any
 
-from dbms_interaction.adapters_component.connection.realizations import mysql_adapter as tested_module
-from dbms_interaction.adapters_component.connection.realizations.mysql_adapter import MySQLAdapter as connection_adapter
+from dbms_interaction.adapters_component.connection.realizations import mysql_adapter_connection as tested_module
+from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection import MySQLAdapterConnection as connection_adapter
 from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
 
 from tests.utils.base_test_case_cls import BaseTestCase

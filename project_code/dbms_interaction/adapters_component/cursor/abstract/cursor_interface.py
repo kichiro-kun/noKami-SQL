@@ -10,12 +10,12 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from abc import ABC, abstractmethod
 from ast import TypeVar
-from typing import Any, Iterable, TypeVar, Generic
+from typing import Any, TypeVar, Generic, Sequence
 
 
 RowType = TypeVar('RowType')
@@ -25,11 +25,11 @@ RowType = TypeVar('RowType')
 class CursorInterface(ABC, Generic[RowType]):
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def execute(self, query: str, params: Iterable[Any]) -> None: ...
+    def execute(self, *params: Sequence[Any], query: str) -> None: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def executemany(self, query: str, data: Iterable[Iterable[Any]]) -> None: ...
+    def executemany(self, query: str, data: Sequence[Sequence[Any]]) -> None: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
@@ -41,16 +41,8 @@ class CursorInterface(ABC, Generic[RowType]):
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def fetchmany(self, count: int) -> Iterable[RowType]: ...
+    def fetchmany(self, count: int) -> Sequence[RowType]: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def fetchall(self) -> Iterable[RowType]: ...
-
-    # -----------------------------------------------------------------------------------
-    @abstractmethod
-    def get_row_count(self) -> int: ...
-
-    # -----------------------------------------------------------------------------------
-    @abstractmethod
-    def get_last_row_id(self) -> int: ...
+    def fetchall(self) -> Sequence[RowType]: ...

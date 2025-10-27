@@ -10,12 +10,13 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # ========================================================================================
-from typing import Any, Iterable
+from typing import Any, Sequence
 
 from mysql.connector import MySQLConnection
+from mysql.connector.cursor import MySQLCursor
 
 from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
     import CursorInterface
@@ -23,29 +24,47 @@ from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
 
 # _______________________________________________________________________________________
 class MySQLAdapterCursor(CursorInterface):
-    def __init__(self, connection: MySQLConnection) -> None:
-        connection.cursor()
 
-    def execute(self, query: str, params: Iterable[Any]) -> None:
-        return
+    # -----------------------------------------------------------------------------------
+    def __init__(self, connector: MySQLConnection) -> None:
+        self.___adaptee: MySQLCursor = connector.cursor()
 
-    def executemany(self, query: str, data: Iterable[Iterable[Any]]) -> None:
-        return
+    # -----------------------------------------------------------------------------------
+    def execute(self, *params: Sequence[Any], query: str) -> None:
+        cur: MySQLCursor = self.___adaptee
 
+        cur.execute(operation=query, *params)
+
+    # -----------------------------------------------------------------------------------
+    def executemany(self, query: str, data: Sequence[Sequence[Any]]) -> None:
+        cur: MySQLCursor = self.___adaptee
+
+        cur.executemany(operation=query, seq_params=data)
+
+    # -----------------------------------------------------------------------------------
     def close(self) -> None:
-        return
+        self.___adaptee.close()
 
+    # -----------------------------------------------------------------------------------
     def fetchone(self) -> Any:
-        return
+        cur: MySQLCursor = self.___adaptee
 
-    def fetchmany(self, count: int) -> Iterable:
-        return
+        result = cur.fetchone()
 
-    def fetchall(self) -> Iterable:
-        return
+        return result
 
-    def get_row_count(self) -> int:
-        return
+    # -----------------------------------------------------------------------------------
+    def fetchmany(self, count: int = 1) -> Sequence:
+        cur: MySQLCursor = self.___adaptee
 
-    def get_last_row_id(self) -> int:
-        return
+        result = cur.fetchmany(size=count)
+
+        return result
+
+    # -----------------------------------------------------------------------------------
+    def fetchall(self) -> Sequence:
+        cur: MySQLCursor = self.___adaptee
+
+        result = cur.fetchall()
+
+        return result

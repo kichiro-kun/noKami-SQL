@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -249,28 +249,31 @@ class TestMySQLAdapterPositive(BaseConnectionTestCase):
     def test_get_cursor_behavior_when_connection_is_exists(self) -> None:
         # Build
         connector: UM.MagicMock = self._connector
-        expected_cur = UM.MagicMock()
 
         instance = self.get_instance_of_tested_cls(
             connector=connector
         )
 
-        # Prepare mock
-        connector.cursor.return_value = expected_cur
+        # Prepare test context
+        with UM.patch.object(target=tested_module,
+                             attribute='MySQLAdapterCursor',
+                             autospec=True) as mock_cursor_adapter:
+            # Build
+            expected_cur = UM.MagicMock()
 
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = True
+            # Prepare-Mock
+            mock_cursor_adapter.return_value = expected_cur
 
             # Operate
             actual_cur = instance.get_cursor()
 
+            # Pre-Check
+            mock_cursor_adapter.assert_called_once_with(connector=connector)
+
             # Check
-            mock_method_is_active.assert_called_once()
-            self.assertEqual(
-                first=actual_cur,
-                second=expected_cur
+            self.assertIs(
+                expr1=actual_cur,
+                expr2=expected_cur
             )
 
     # -----------------------------------------------------------------------------------

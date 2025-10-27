@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.3'
+__version__ = '0.5.0'
 
 
 # =======================================================================================
@@ -20,8 +20,9 @@ from mysql.connector import MySQLConnection
 
 from dbms_interaction.adapters_component.connection.abstract.connection_interface\
     import ConnectionInterface
-from dbms_interaction.adapters_component.cursor.abstract.cursor_interface\
-    import CursorInterface
+
+from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor\
+    import MySQLAdapterCursor
 
 from shared.exceptions.common import OperationFailedConnectionIsNotActive
 
@@ -54,14 +55,16 @@ class MySQLAdapterConnection(ConnectionInterface):
         return True
 
     # -----------------------------------------------------------------------------------
-    def get_cursor(self) -> CursorInterface:
+    def get_cursor(self) -> MySQLAdapterCursor:
         connector: MySQLConnection = self.__adaptee
 
         connector_is_connected: bool = self.is_active()
         if connector_is_connected is False:
             raise OperationFailedConnectionIsNotActive()
 
-        return connector.cursor()
+        cur = MySQLAdapterCursor(connector=connector)
+
+        return cur
 
     # -----------------------------------------------------------------------------------
     def commit(self) -> bool:

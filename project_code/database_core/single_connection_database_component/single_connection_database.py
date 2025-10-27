@@ -6,22 +6,25 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.9.2'
+__version__ = '0.10.0'
 
 # =======================================================================================
 from abc import ABCMeta
-from typing import Any, Tuple, Dict
+from typing import Any, Sequence, Dict, Optional, Tuple, Callable
 
 from database_core.abstract_database_component.database import DataBase
-from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
 from query_core.query_interface_component.query_interface import QueryInterface
+
+from dbms_interaction.adapters_component.connection.abstract.connection_interface\
+    import ConnectionInterface
+from dbms_interaction.adapters_component.cursor.abstract.cursor_interface\
+    import CursorInterface
 from dbms_interaction.single_connection_manager_component.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
-from dbms_interaction.transaction_manager_component.transaction_manager \
+from dbms_interaction.transaction_manager_component.transaction_manager\
     import TransactionManager, NoTransactionManager
 
 from shared.exceptions.common import OperationFailedConnectionIsNotActive
-from shared.types.dbms_interaction import CursorInterfaceType
 
 from shared.utils.toolkit import ToolKit
 
@@ -89,72 +92,52 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         transaction_manager.query_param_placeholder = new_placeholder
 
     # -----------------------------------------------------------------------------------
-    # Проработать контракт передаваемых аргументов
+    def __execute_query(self, *params, query: str,
+                        fetch_processor: Optional[Callable[[CursorInterface], Any]] = None) -> Any:
+        conn_manager: SingleConnectionManager = self._perform_connection_manager
+
+        conn_is_active: bool = conn_manager.check_connection_status()
+        if conn_is_active:
+            adapter: ConnectionInterface = conn_manager.get_connection()
+            fetched_data = []
+
+            cur: CursorInterface = adapter.get_cursor()
+            cur.execute(query=query, *params)
+
+            if fetch_processor:
+                fetched_data: Sequence = fetch_processor(cur)
+
+            cur.close()
+
+            if fetched_data:
+                return fetched_data
+        else:
+            raise OperationFailedConnectionIsNotActive()
+
+    # -----------------------------------------------------------------------------------
     def execute_query_no_returns(self, *params, query: str) -> None:
-        conn_manager: SingleConnectionManager = self._perform_connection_manager
-
-        conn_is_active: bool = conn_manager.check_connection_status()
-        if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_connection()
-            cur: CursorInterfaceType = adapter.get_cursor()
-            cur.execute(query, *params)
-            cur.close()
-        else:
-            raise OperationFailedConnectionIsNotActive()
+        self.__execute_query(query=query, *params)
 
     # -----------------------------------------------------------------------------------
-    # Проработать контракт передаваемых аргументов
-    # Проработать возврат значения при запросе результата
     def execute_query_returns_one(self, *params, query: str) -> str:
-        conn_manager: SingleConnectionManager = self._perform_connection_manager
-
-        conn_is_active: bool = conn_manager.check_connection_status()
-        if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_connection()
-            cur: CursorInterfaceType = adapter.get_cursor()
-            cur.execute(query)
-            result = cur.fetchone()
-            cur.close()
-        else:
-            raise OperationFailedConnectionIsNotActive()
-
-        return result
+        return self.__execute_query(
+            query=query, *params,
+            fetch_processor=lambda cur: cur.fetchone()
+        )
 
     # -----------------------------------------------------------------------------------
-    # Проработать контракт передаваемых аргументов
-    # Проработать возврат значения при запросе результата
-    def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
-        conn_manager: SingleConnectionManager = self._perform_connection_manager
-
-        conn_is_active: bool = conn_manager.check_connection_status()
-        if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_connection()
-            cur: CursorInterfaceType = adapter.get_cursor()
-            cur.execute(query)
-            result = cur.fetchall()
-            cur.close()
-        else:
-            raise OperationFailedConnectionIsNotActive()
-
-        return result
+    def execute_query_returns_many(self, *params, query: str, returns_count: int = 0) -> Sequence[Any]:
+        return self.__execute_query(
+            query=query, *params,
+            fetch_processor=lambda cur: cur.fetchmany(count=returns_count)
+        )
 
     # -----------------------------------------------------------------------------------
-    # Проработать контракт передаваемых аргументов
-    # Проработать возврат значения при запросе результата
-    def execute_query_returns_many(self, *params, query: str, returns_count: int = 0) -> Tuple[str, ...]:
-        conn_manager: SingleConnectionManager = self._perform_connection_manager
-
-        conn_is_active: bool = conn_manager.check_connection_status()
-        if conn_is_active:
-            adapter: ConnectionInterface = conn_manager.get_connection()
-            cur: CursorInterfaceType = adapter.get_cursor()
-            cur.execute(query)
-            result = cur.fetchmany()
-            cur.close()
-        else:
-            raise OperationFailedConnectionIsNotActive()
-
-        return result
+    def execute_query_returns_all(self, *params, query: str) -> Sequence[Any]:
+        return self.__execute_query(
+            query=query, *params,
+            fetch_processor=lambda cur: cur.fetchall()
+        )
 
     # -----------------------------------------------------------------------------------
     def deconstruct_database_and_components(self) -> None:

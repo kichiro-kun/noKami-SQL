@@ -6,11 +6,11 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # =======================================================================================
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Sequence
 
 
 # _______________________________________________________________________________________
@@ -28,10 +28,10 @@ class QueryInterface(ABC):
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def execute_query_returns_all(self, *params, query: str) -> Tuple[str, ...]:
+    def execute_query_returns_all(self, *params, query: str) -> Sequence:
         ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Tuple[str, ...]:
+    def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Sequence:
         ...

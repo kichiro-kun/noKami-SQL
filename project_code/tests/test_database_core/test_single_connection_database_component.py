@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.10.1'
+__version__ = '0.11.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -27,7 +27,6 @@ from dbms_interaction.transaction_manager_component.transaction_manager \
 from query_core.query_interface_component.query_interface import QueryInterface
 
 from shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
-from shared.types.dbms_interaction import CursorInterfaceType
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
@@ -319,14 +318,12 @@ class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    # Учесть интерфейс методов официального коннектора-курсора
-
     def test_execute_query_no_returns_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
-        cursor: CursorInterfaceType = UM.MagicMock()
+        cursor = UM.MagicMock()
 
         query: str = GeneratingToolKit.generate_random_string()
         params: Tuple[str, ...] = (
@@ -348,7 +345,7 @@ class TestComponentPositive(BaseTestComponent):
         # Check
         conn_manager.get_connection.assert_called_once()  # type:ignore
         conn_adapter.get_cursor.assert_called_once()
-        cursor.execute.assert_called_once_with(query, *params)
+        cursor.execute.assert_called_once_with(query=query, *params)
         cursor.close.assert_called_once()
 
         # Post-Check
@@ -356,16 +353,20 @@ class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    # Учесть интерфейс методов официального коннектора-курсора
     def test_execute_query_returns_one_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
-        cursor: CursorInterfaceType = UM.MagicMock()
+        cursor = UM.MagicMock()
         expected_result: str = GeneratingToolKit.generate_random_string()
 
         query: str = GeneratingToolKit.generate_random_string()
+        params: Tuple[str, ...] = (
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string()
+        )
 
         # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
@@ -382,12 +383,12 @@ class TestComponentPositive(BaseTestComponent):
             mock_fetchone.return_value = expected_result
 
             # Operate
-            op_result = instance.execute_query_returns_one(query=query)
+            op_result = instance.execute_query_returns_one(query=query, *params)
 
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once_with(query)
+            cursor.execute.assert_called_once_with(query=query, *params)
             cursor.fetchone.assert_called_once()
             cursor.close.assert_called_once()
 
@@ -399,15 +400,87 @@ class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    # Учесть интерфейс методов официального коннектора-курсора
+    def test_execute_query_returns_many_behavior_when_connection_is_active(self) -> None:
+        from random import randint
+
+        # Build
+        instance = self.get_instance_of_tested_cls()
+        conn_manager = self.get_instance_of_single_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor = UM.MagicMock()
+
+        # Prepare expected data
+        returns_count: int = randint(a=3, b=5)
+        generate_count: int = randint(a=6, b=10)
+
+        generated_data: Tuple[str, ...] = tuple(
+            GeneratingToolKit.generate_random_string()
+            for i in range(generate_count)
+        )
+
+        query: str = GeneratingToolKit.generate_random_string()
+        params: Tuple[str, ...] = (
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string()
+        )
+
+        # Prepare instance
+        instance.set_new_connection_manager(new_manager=conn_manager)
+
+        # Prepare mock
+        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
+        conn_adapter.get_cursor.return_value = cursor
+
+        op_result = None
+
+        # Prepare check context
+        with UM.patch.object(target=cursor, attribute='fetchmany') as mock_fetchmany:
+            # Prepare mock
+            mock_fetchmany.return_value = generated_data[:returns_count]
+
+            # Operate
+            op_result = \
+                instance.execute_query_returns_many(query=query,
+                                                    returns_count=returns_count,
+                                                    *params)
+
+            # Check
+            conn_manager.get_connection.assert_called_once()  # type:ignore
+            conn_adapter.get_cursor.assert_called_once()
+            cursor.execute.assert_called_once_with(query=query, *params)
+            cursor.fetchmany.assert_called_once_with(count=returns_count)
+            cursor.close.assert_called_once()
+
+        # Prepare post-check cycle
+        count: int = 0
+        for member in op_result:
+            # Post-Check
+            self.assertIn(
+                member=member,
+                container=generated_data
+            )
+            count += 1
+        else:
+            self.assertTrue(
+                expr=(count == returns_count)
+            )
+
+    # -----------------------------------------------------------------------------------
+    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     def test_execute_query_returns_all_behavior_when_connection_is_active(self) -> None:
         # Build
         instance = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
-        cursor: CursorInterfaceType = UM.MagicMock()
+        cursor = UM.MagicMock()
 
         query: str = GeneratingToolKit.generate_random_string()
+        params: Tuple[str, ...] = (
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string(),
+            GeneratingToolKit.generate_random_string()
+        )
 
         # Prepare expected data
         expected_result: Tuple[str, ...] = tuple(
@@ -430,81 +503,20 @@ class TestComponentPositive(BaseTestComponent):
             mock_fetchall.return_value = expected_result
 
             # Operate
-            op_result = instance.execute_query_returns_all(query=query)
+            op_result = instance.execute_query_returns_all(query=query, *params)
 
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
             conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once_with(query)
+            cursor.execute.assert_called_once_with(query=query, *params)
             cursor.fetchall.assert_called_once()
             cursor.close.assert_called_once()
 
         # Post-Check
-        self.assertTupleEqual(
-            tuple1=op_result,
-            tuple2=expected_result
+        self.assertSequenceEqual(
+            seq1=op_result,
+            seq2=expected_result
         )
-
-    # -----------------------------------------------------------------------------------
-    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    # Учесть интерфейс методов официального коннектора-курсора
-    def test_execute_query_returns_many_behavior_when_connection_is_active(self) -> None:
-        from random import randint
-
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        conn_adapter = UM.MagicMock()
-        cursor: CursorInterfaceType = UM.MagicMock()
-
-        # Prepare expected data
-        returns_count: int = randint(a=3, b=5)
-        generate_count: int = randint(a=6, b=10)
-
-        generated_data: Tuple[str, ...] = tuple(
-            GeneratingToolKit.generate_random_string()
-            for i in range(generate_count)
-        )
-
-        query: str = GeneratingToolKit.generate_random_string()
-
-        # Prepare instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock
-        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
-        conn_adapter.get_cursor.return_value = cursor
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=cursor, attribute='fetchmany') as mock_fetchmany:
-            # Prepare mock
-            mock_fetchmany.return_value = generated_data[:returns_count]
-
-            # Operate
-            op_result = \
-                instance.execute_query_returns_many(query=query,
-                                                    returns_count=returns_count)
-
-            # Check
-            conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once()
-            cursor.execute.assert_called_once_with(query)
-            cursor.fetchmany.assert_called_once()
-            cursor.close.assert_called_once()
-
-        # Prepare post-check cycle
-        count: int = 0
-        for member in op_result:
-            # Post-Check
-            self.assertIn(
-                member=member,
-                container=generated_data
-            )
-            count += 1
-        else:
-            self.assertTrue(expr=(count == returns_count))
 
 
 # _______________________________________________________________________________________

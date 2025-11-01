@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from abc import ABCMeta, abstractmethod
@@ -63,7 +63,8 @@ class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
 
         Args:
             query_param_placeholder (str): Строка, обозначающая плейсхолдер параметров в SQL-запросах.
-                                           По умолчанию `''`.
+                                           По умолчанию передаётся аргумент`''`.
+                                           В случае значения по умолчанию задаётся константой из конфигурации проекта.
 
         Raises:
             InvalidArgumentTypeError: Если `query_param_placeholder` не строка.

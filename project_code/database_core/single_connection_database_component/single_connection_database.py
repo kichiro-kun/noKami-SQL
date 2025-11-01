@@ -6,11 +6,11 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.10.0'
+__version__ = '0.11.0'
 
 # =======================================================================================
 from abc import ABCMeta
-from typing import Any, Sequence, Dict, Optional, Tuple, Callable
+from typing import Any, Sequence, Dict, Optional, Callable
 
 from database_core.abstract_database_component.database import DataBase
 from query_core.query_interface_component.query_interface import QueryInterface
@@ -56,7 +56,9 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
             expected_type=Dict,
             arg_name='new_config'
         )
+
         self._config: Dict[str, Any] = new_config
+        self._perform_connection_manager.set_new_config(new_config=new_config)
 
     # -----------------------------------------------------------------------------------
     def set_new_connection_manager(self, new_manager: SingleConnectionManager) -> None:
@@ -92,8 +94,8 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         transaction_manager.query_param_placeholder = new_placeholder
 
     # -----------------------------------------------------------------------------------
-    def __execute_query(self, *params, query: str,
-                        fetch_processor: Optional[Callable[[CursorInterface], Any]] = None) -> Any:
+    def __execute_query(self, *params, query_string: str,
+                        fetch_processor: Optional[Callable[[CursorInterface], Any]] = None) -> Sequence:
         conn_manager: SingleConnectionManager = self._perform_connection_manager
 
         conn_is_active: bool = conn_manager.check_connection_status()
@@ -102,7 +104,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
             fetched_data = []
 
             cur: CursorInterface = adapter.get_cursor()
-            cur.execute(query=query, *params)
+            cur.execute(query=query_string, *params)
 
             if fetch_processor:
                 fetched_data: Sequence = fetch_processor(cur)
@@ -111,31 +113,35 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
             if fetched_data:
                 return fetched_data
+            else:
+                return tuple()
         else:
             raise OperationFailedConnectionIsNotActive()
 
     # -----------------------------------------------------------------------------------
     def execute_query_no_returns(self, *params, query: str) -> None:
-        self.__execute_query(query=query, *params)
+        self.__execute_query(query_string=query, *params)
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_one(self, *params, query: str) -> str:
-        return self.__execute_query(
-            query=query, *params,
+        result_data: Sequence[str] = self.__execute_query(
+            query_string=query, *params,
             fetch_processor=lambda cur: cur.fetchone()
         )
+
+        return result_data[0]
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_many(self, *params, query: str, returns_count: int = 0) -> Sequence[Any]:
         return self.__execute_query(
-            query=query, *params,
+            query_string=query, *params,
             fetch_processor=lambda cur: cur.fetchmany(count=returns_count)
         )
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_all(self, *params, query: str) -> Sequence[Any]:
         return self.__execute_query(
-            query=query, *params,
+            query_string=query, *params,
             fetch_processor=lambda cur: cur.fetchall()
         )
 

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.11.0'
+__version__ = '0.12.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -202,17 +202,25 @@ class TestComponentPositive(BaseTestComponent):
                 keys=self._config_keys
         )
 
-        # Operate
-        instance.set_new_connection_config(new_config=connection_config)
+        # Prepare test context
+        with UM.patch.object(target=instance, attribute='_perform_connection_manager',
+                             autospec=True) as mock_connection_manager:
+            # Operate
+            instance.set_new_connection_config(new_config=connection_config)
 
-        # Extract
-        value = instance._config
+            # Extract
+            value = instance._config
 
-        # Check
-        self.assertIs(
-            expr1=value,
-            expr2=connection_config
-        )
+            # Check
+            self.assertIs(
+                expr1=value,
+                expr2=connection_config
+            )
+
+            # Post-Check
+            mock_connection_manager.set_new_config.assert_called_once_with(
+                new_config=connection_config
+            )
 
     # -----------------------------------------------------------------------------------
     def test_configuration_fields_are_independent_between_instances(self) -> None:
@@ -359,7 +367,7 @@ class TestComponentPositive(BaseTestComponent):
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
         cursor = UM.MagicMock()
-        expected_result: str = GeneratingToolKit.generate_random_string()
+        expected_result: Tuple[str] = (GeneratingToolKit.generate_random_string(),)
 
         query: str = GeneratingToolKit.generate_random_string()
         params: Tuple[str, ...] = (
@@ -395,7 +403,7 @@ class TestComponentPositive(BaseTestComponent):
         # Post-Check
         self.assertEqual(
             first=op_result,
-            second=expected_result
+            second=expected_result[0]
         )
 
     # -----------------------------------------------------------------------------------

@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # =======================================================================================
 from typing import Any
@@ -45,7 +45,7 @@ def print_result(title: str, data: Any, expected: Any = 'Operation Successful') 
 if __name__ != '__main__':
     # Затянутое создание главенствующего объекта, желательно упростить
     # Не выполнено
-    # --------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
     database = SingleConnectionDataBase()
 
     try:
@@ -81,8 +81,8 @@ if __name__ != '__main__':
         data=data,
         expected=True
     )
-    # --------------------------------------------------------------
 
+# ---------------------------------------------------------------------------------------
     database.set_new_connection_manager(
         new_manager=single_connection_manager
     )
@@ -95,6 +95,7 @@ if __name__ != '__main__':
         data=data
     )
 
+# ---------------------------------------------------------------------------------------
     data = database.execute_query_returns_one(
         query="SELECT DATABASE();"
     )
@@ -104,6 +105,7 @@ if __name__ != '__main__':
         expected=None
     )
 
+# ---------------------------------------------------------------------------------------
     database.set_new_connection_config(
         new_config=CONFIG_2
     )
@@ -115,4 +117,26 @@ if __name__ != '__main__':
         title='New active DataBase by config',
         data=data,
         expected='prototype_db_2'
+    )
+
+# ---------------------------------------------------------------------------------------
+    table_name = "test_table"
+    query = f"""
+    CREATE TABLE {table_name} (
+        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        title VARCHAR(30),
+        description VARCHAR(50),
+        cost INTEGER
+    );
+    """
+
+    database.execute_query_no_returns(query=query)
+
+    data = database.execute_query_returns_one(
+        query='SHOW TABLES;'
+    )
+    print_result(
+        title='Try create table',
+        data=data,
+        expected=f'{table_name}'
     )

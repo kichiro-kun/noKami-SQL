@@ -19,7 +19,7 @@ from dbms_interaction.adapters_component.connection.abstract.connection_interfac
     import ConnectionInterface
 from dbms_interaction.adapters_component.cursor.abstract.cursor_interface\
     import CursorInterface
-from dbms_interaction.single_connection_manager_component.single_connection_manager \
+from dbms_interaction.single_connection_manager_component.single_connection_manager\
     import SingleConnectionManager, NoSingleConnectionManager
 from dbms_interaction.transaction_manager_component.transaction_manager\
     import TransactionManager, NoTransactionManager

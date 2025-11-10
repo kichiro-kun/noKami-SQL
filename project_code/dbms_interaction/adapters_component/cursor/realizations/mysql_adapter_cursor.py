@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from typing import Any, Sequence
@@ -33,7 +33,7 @@ class MySQLAdapterCursor(CursorInterface):
     def execute(self, *params: Sequence[Any], query: str) -> None:
         cur: MySQLCursor = self.___adaptee
 
-        cur.execute(operation=query, *params)
+        cur.execute(operation=query, params=params)
 
     # -----------------------------------------------------------------------------------
     def executemany(self, query: str, data: Sequence[Sequence[Any]]) -> None:

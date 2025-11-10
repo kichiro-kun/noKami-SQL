@@ -87,7 +87,7 @@ class MySQLAdapterConnection(ConnectionInterface):
             return False
 
         connector.close()
-
+        
         return True
 
     # -----------------------------------------------------------------------------------

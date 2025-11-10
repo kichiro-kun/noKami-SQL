@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -90,7 +90,9 @@ class TestMySQLAdapterPositive(BaseTestCase):
         expected_cursor: UM.MagicMock = self._current_cursor
 
         expected_query: str = GeneratingToolKit.generate_random_string()
-        expected_params: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
+        expected_params: Tuple[Any] = tuple(
+            GeneratingToolKit.generate_list_of_basic_python_types()
+        )
 
         # Prepare instance
         instance = self.get_instance_of_tested_cls(
@@ -106,7 +108,7 @@ class TestMySQLAdapterPositive(BaseTestCase):
         # Check
         expected_cursor.execute.assert_called_with(
             operation=expected_query,
-            *expected_params
+            params=expected_params
         )
 
     # -----------------------------------------------------------------------------------

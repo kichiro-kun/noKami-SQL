@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # =======================================================================================
 import unittest
@@ -33,6 +33,13 @@ MYSQL_IS_ACTIVE: bool = True  # MySQL server is on?
 # _______________________________________________________________________________________
 @unittest.skipIf(condition=(MYSQL_IS_ACTIVE is False), reason='MySQL server is off!')
 class TestMySQLBoundaryPositive(BaseTestCaseMySQL):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        cls._expected_query_placeholder = '%s'
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
         super().setUp()
@@ -292,7 +299,7 @@ class TestMySQLBoundaryPositive(BaseTestCaseMySQL):
     def test_cursor_method_execute_with_params(self) -> None:
         # Build
         conn = self.get_connection()
-        sql_query: str = f'SELECT * FROM {self.table_name} WHERE id=%s;'
+        sql_query: str = f'SELECT * FROM {self.table_name} WHERE id={self._expected_query_placeholder};'
         query_params: Tuple = (
             1,
         )

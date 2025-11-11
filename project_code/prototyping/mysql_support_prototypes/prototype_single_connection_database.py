@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 # =======================================================================================
 from typing import Any
@@ -139,4 +139,23 @@ if __name__ != '__main__':
         title='Try create table',
         data=data,
         expected=f'{table_name}'
+    )
+
+# ---------------------------------------------------------------------------------------
+    query = f"""
+    INSERT INTO {table_name} (title, description, cost) VALUES (?, ?, ?);
+    """
+    values = ('Blueberry', 'Smallest and sugar', 100)
+    database.execute_query_no_returns(
+        query=query,
+        *values
+    )
+
+    data = database.execute_query_returns_one(
+        query=f'SELECT * FROM {table_name};'
+    )
+    print_result(
+        title='Insert values by custom query placeholder',
+        data=data,
+        expected=f'(1, {', '.join(str(value) for value in values)})'
     )

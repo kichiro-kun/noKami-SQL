@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -18,8 +18,6 @@ from typing import Any, List, Sequence, Tuple
 
 from mysql.connector import MySQLConnection
 
-from dbms_interaction.adapters_component.cursor.realizations \
-    import mysql_adapter_cursor as tested_module
 from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor \
     import MySQLAdapterCursor as tested_cls
 from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
@@ -28,9 +26,17 @@ from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
 
+from shared.constants.configuration import MYSQL_QUERY_PLACEHOLDER
+
 
 # _______________________________________________________________________________________
 class TestMySQLAdapterPositive(BaseTestCase):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls._default_query_placeholder = MYSQL_QUERY_PLACEHOLDER
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
         super().setUp()
@@ -72,6 +78,19 @@ class TestMySQLAdapterPositive(BaseTestCase):
 
     # -----------------------------------------------------------------------------------
     def test_constructor_behavior(self) -> None:
+        # Build
+        expected_connection: UM.MagicMock = self._current_connection
+
+        # Operate
+        instance = self.get_instance_of_tested_cls(
+            connector=expected_connection
+        )
+
+        # Check
+        expected_connection.cursor.assert_called_once()
+
+    # -----------------------------------------------------------------------------------
+    def test_constructor_behavior_when_not_pass_special_placeholder(self) -> None:
         # Build
         expected_connection: UM.MagicMock = self._current_connection
 
@@ -265,4 +284,100 @@ class TestMySQLAdapterPositive(BaseTestCase):
         self.assertEqual(
             first=op_result,
             second=fetched_data
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_method_replace_query_placeholder_behavior_calls(self) -> None:
+        # Build
+        conn: UM.MagicMock = self._current_connection
+        expected_cursor: UM.MagicMock = self._current_cursor
+
+        # Prepare data
+        raw_query: str = GeneratingToolKit.generate_random_string()
+        expected_placeholder: str = GeneratingToolKit.generate_random_string(length=2)
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls(
+            connector=conn, special_placeholder=expected_placeholder
+        )
+
+        # Prepare test context
+        with UM.patch.object(target=instance,
+                             attribute='_replace_query_placeholder',
+                             autospec=True) as mock_method__replace_query_placeholder:
+            # Prepare data
+            expected_query: str = GeneratingToolKit.generate_random_string()
+
+            # Post check
+            self.assertNotEqual(
+                first=raw_query,
+                second=expected_query,
+                msg='Failed! Test data is incorrect!'
+            )
+
+            # Prepare mock
+            mock_method__replace_query_placeholder.return_value = expected_query
+
+            # Operate
+            instance.execute(query=raw_query)
+
+            # Check
+            mock_method__replace_query_placeholder.assert_called_once_with(
+                query=raw_query
+            )
+
+            # Post-check
+            expected_cursor.execute.assert_called_once_with(
+                operation=expected_query,
+                params=()
+            )
+
+    # -----------------------------------------------------------------------------------
+    def test_method_replace_query_placeholder_behavior(self) -> None:
+        # Build
+        conn: UM.MagicMock = self._current_connection
+        expected_cursor: UM.MagicMock = self._current_cursor
+        special_placeholder = '?'
+        expected_placeholder = '%s'
+        query_string_base: str = 'INSERT INTO berry (title) VALUES '
+
+        # Prepare data
+        raw_query: str = query_string_base + f'({special_placeholder})'
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls(
+            connector=conn,
+            special_placeholder=special_placeholder
+        )
+
+        # Prepare data
+        expected_query: str = query_string_base + f'({expected_placeholder})'
+
+        # Operate
+        instance.execute(query=raw_query)
+
+        # Check
+        expected_cursor.execute.assert_called_once_with(
+            operation=expected_query,
+            params=()
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_method_get_default_placeholder_behavior(self) -> None:
+        # Build
+        conn: UM.MagicMock = self._current_connection
+        expected_placeholder: str = self._default_query_placeholder
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls(
+            connector=conn
+        )
+
+        # Operate & Extract
+        actual_placeholder = instance.get_default_placeholder()
+
+        # Check
+        self.assertEqual(
+            first=actual_placeholder,
+            second=expected_placeholder
         )

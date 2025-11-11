@@ -11,11 +11,11 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.12.0'
+__version__ = '0.12.1'
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Sequence, Tuple, Any
 
 import database_core.single_connection_database_component.single_connection_database as tested_module
 from database_core.single_connection_database_component.single_connection_database import SingleConnectionDataBase as tested_cls
@@ -328,7 +328,7 @@ class TestComponentPositive(BaseTestComponent):
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     def test_execute_query_no_returns_behavior_when_connection_is_active(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
         cursor = UM.MagicMock()
@@ -352,7 +352,9 @@ class TestComponentPositive(BaseTestComponent):
 
         # Check
         conn_manager.get_connection.assert_called_once()  # type:ignore
-        conn_adapter.get_cursor.assert_called_once()
+        conn_adapter.get_cursor.assert_called_once_with(
+            special_placeholder=instance.query_param_placeholder
+        )
         cursor.execute.assert_called_once_with(query=query, *params)
         cursor.close.assert_called_once()
 
@@ -363,7 +365,7 @@ class TestComponentPositive(BaseTestComponent):
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     def test_execute_query_returns_one_behavior_when_connection_is_active(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
         cursor = UM.MagicMock()
@@ -391,11 +393,13 @@ class TestComponentPositive(BaseTestComponent):
             mock_fetchone.return_value = expected_result
 
             # Operate
-            op_result = instance.execute_query_returns_one(query=query, *params)
+            op_result: Sequence = instance.execute_query_returns_one(query=query, *params)
 
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once()
+            conn_adapter.get_cursor.assert_called_once_with(
+                special_placeholder=instance.query_param_placeholder
+            )
             cursor.execute.assert_called_once_with(query=query, *params)
             cursor.fetchone.assert_called_once()
             cursor.close.assert_called_once()
@@ -403,7 +407,7 @@ class TestComponentPositive(BaseTestComponent):
         # Post-Check
         self.assertEqual(
             first=op_result,
-            second=expected_result[0]
+            second=expected_result
         )
 
     # -----------------------------------------------------------------------------------
@@ -412,7 +416,7 @@ class TestComponentPositive(BaseTestComponent):
         from random import randint
 
         # Build
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
         cursor = UM.MagicMock()
@@ -455,7 +459,9 @@ class TestComponentPositive(BaseTestComponent):
 
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once()
+            conn_adapter.get_cursor.assert_called_once_with(
+                special_placeholder=instance.query_param_placeholder
+            )
             cursor.execute.assert_called_once_with(query=query, *params)
             cursor.fetchmany.assert_called_once_with(count=returns_count)
             cursor.close.assert_called_once()
@@ -478,7 +484,7 @@ class TestComponentPositive(BaseTestComponent):
     # Провести рефакторинг, для избавления от дублирования и нагромаждений...
     def test_execute_query_returns_all_behavior_when_connection_is_active(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.get_instance_of_tested_cls()
         conn_manager = self.get_instance_of_single_connection_manager()
         conn_adapter = UM.MagicMock()
         cursor = UM.MagicMock()
@@ -515,7 +521,9 @@ class TestComponentPositive(BaseTestComponent):
 
             # Check
             conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once()
+            conn_adapter.get_cursor.assert_called_once_with(
+                special_placeholder=instance.query_param_placeholder
+            )
             cursor.execute.assert_called_once_with(query=query, *params)
             cursor.fetchall.assert_called_once()
             cursor.close.assert_called_once()

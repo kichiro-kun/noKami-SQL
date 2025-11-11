@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 
 # =======================================================================================
@@ -55,14 +55,22 @@ class MySQLAdapterConnection(ConnectionInterface):
         return True
 
     # -----------------------------------------------------------------------------------
-    def get_cursor(self) -> MySQLAdapterCursor:
+    def get_cursor(self, special_placeholder: str = '') -> MySQLAdapterCursor:
         connector: MySQLConnection = self.__adaptee
 
         connector_is_connected: bool = self.is_active()
         if connector_is_connected is False:
             raise OperationFailedConnectionIsNotActive()
 
-        cur = MySQLAdapterCursor(connector=connector)
+        if special_placeholder == '':
+            cur = MySQLAdapterCursor(
+                connector=connector
+            )
+        else:
+            cur = MySQLAdapterCursor(
+                connector=connector,
+                special_placeholder=special_placeholder
+            )
 
         return cur
 
@@ -87,7 +95,7 @@ class MySQLAdapterConnection(ConnectionInterface):
             return False
 
         connector.close()
-        
+
         return True
 
     # -----------------------------------------------------------------------------------

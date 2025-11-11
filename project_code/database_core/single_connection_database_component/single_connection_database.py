@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.11.0'
+__version__ = '0.12.0'
 
 # =======================================================================================
 from abc import ABCMeta
@@ -103,7 +103,9 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
             adapter: ConnectionInterface = conn_manager.get_connection()
             fetched_data = []
 
-            cur: CursorInterface = adapter.get_cursor()
+            cur: CursorInterface = adapter.get_cursor(
+                special_placeholder=self.query_param_placeholder
+            )
             cur.execute(query=query_string, *params)
 
             if fetch_processor:
@@ -123,13 +125,13 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         self.__execute_query(query_string=query, *params)
 
     # -----------------------------------------------------------------------------------
-    def execute_query_returns_one(self, *params, query: str) -> str:
+    def execute_query_returns_one(self, *params, query: str) -> Sequence:
         result_data: Sequence[str] = self.__execute_query(
             query_string=query, *params,
             fetch_processor=lambda cur: cur.fetchone()
         )
 
-        return result_data[0]
+        return result_data
 
     # -----------------------------------------------------------------------------------
     def execute_query_returns_many(self, *params, query: str, returns_count: int = 0) -> Sequence[Any]:

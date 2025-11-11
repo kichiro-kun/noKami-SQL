@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -274,6 +274,33 @@ class TestMySQLAdapterPositive(BaseConnectionTestCase):
             self.assertIs(
                 expr1=actual_cur,
                 expr2=expected_cur
+            )
+
+    # -----------------------------------------------------------------------------------
+    def test_get_cursor_behavior_pass_placeholder_value(self) -> None:
+        # Build
+        connector: UM.MagicMock = self._connector
+        placeholder: str = GeneratingToolKit.generate_random_string()
+
+        # Prepare instance
+        instance = self.get_instance_of_tested_cls(
+            connector=connector
+        )
+
+        # Prepare test context
+        with UM.patch.object(target=tested_module,
+                             attribute='MySQLAdapterCursor',
+                             autospec=True) as mock_cursor_adapter:
+
+            # Operate
+            instance.get_cursor(
+                special_placeholder=placeholder
+            )
+
+            # Check
+            mock_cursor_adapter.assert_called_once_with(
+                connector=connector,
+                special_placeholder=placeholder
             )
 
     # -----------------------------------------------------------------------------------

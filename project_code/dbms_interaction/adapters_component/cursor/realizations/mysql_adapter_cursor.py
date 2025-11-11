@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 # ========================================================================================
 from typing import Any, Sequence
@@ -21,33 +21,43 @@ from mysql.connector.cursor import MySQLCursor
 from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
     import CursorInterface
 
+from shared.constants.configuration import MYSQL_QUERY_PLACEHOLDER
+
 
 # _______________________________________________________________________________________
 class MySQLAdapterCursor(CursorInterface):
 
     # -----------------------------------------------------------------------------------
-    def __init__(self, connector: MySQLConnection) -> None:
-        self.___adaptee: MySQLCursor = connector.cursor()
+    def __init__(self, connector: MySQLConnection, special_placeholder: str = '') -> None:
+        self.__adaptee: MySQLCursor = connector.cursor()
+        self.__special_placeholder: str = special_placeholder
 
     # -----------------------------------------------------------------------------------
     def execute(self, *params: Sequence[Any], query: str) -> None:
-        cur: MySQLCursor = self.___adaptee
+        cur: MySQLCursor = self.__adaptee
 
-        cur.execute(operation=query, params=params)
+        query = self._replace_query_placeholder(
+            query=query
+        )
+
+        cur.execute(
+            operation=query,
+            params=params
+        )
 
     # -----------------------------------------------------------------------------------
     def executemany(self, query: str, data: Sequence[Sequence[Any]]) -> None:
-        cur: MySQLCursor = self.___adaptee
+        cur: MySQLCursor = self.__adaptee
 
         cur.executemany(operation=query, seq_params=data)
 
     # -----------------------------------------------------------------------------------
     def close(self) -> None:
-        self.___adaptee.close()
+        self.__adaptee.close()
 
     # -----------------------------------------------------------------------------------
     def fetchone(self) -> Any:
-        cur: MySQLCursor = self.___adaptee
+        cur: MySQLCursor = self.__adaptee
 
         result = cur.fetchone()
 
@@ -55,7 +65,7 @@ class MySQLAdapterCursor(CursorInterface):
 
     # -----------------------------------------------------------------------------------
     def fetchmany(self, count: int = 1) -> Sequence:
-        cur: MySQLCursor = self.___adaptee
+        cur: MySQLCursor = self.__adaptee
 
         result = cur.fetchmany(size=count)
 
@@ -63,8 +73,28 @@ class MySQLAdapterCursor(CursorInterface):
 
     # -----------------------------------------------------------------------------------
     def fetchall(self) -> Sequence:
-        cur: MySQLCursor = self.___adaptee
+        cur: MySQLCursor = self.__adaptee
 
         result = cur.fetchall()
 
         return result
+
+    # -----------------------------------------------------------------------------------
+    def get_default_placeholder(self) -> str:
+        return MYSQL_QUERY_PLACEHOLDER
+
+    # -----------------------------------------------------------------------------------
+    def _replace_query_placeholder(self, query: str) -> str:
+        special_placeholder: str = self.__special_placeholder
+
+        if special_placeholder == '':
+            return query
+
+        required_placeholder: str = self.get_default_placeholder()
+
+        final_query: str = query.replace(
+            special_placeholder,
+            required_placeholder
+        )
+
+        return final_query

@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 # =======================================================================================
 from abc import abstractmethod, ABC
@@ -31,7 +31,7 @@ class ConnectionInterface(ABC):
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def get_cursor(self) -> CursorInterface: ...
+    def get_cursor(self, special_placeholder: str = '') -> CursorInterface: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod

@@ -10,12 +10,12 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.0.0'
+__version__ = '0.1.0'
 
 # =======================================================================================
 from unittest import TestCase
 
-from shared.constants import DEFAULT_QUERY_PLACEHOLDER
+from shared.constants import *
 
 
 # _______________________________________________________________________________________
@@ -28,6 +28,20 @@ class TestComponentPositive(TestCase):
 
         # Extract
         actual_placeholder = DEFAULT_QUERY_PLACEHOLDER
+
+        # Check
+        self.assertEqual(
+            first=actual_placeholder,
+            second=expected_placeholder
+        )
+
+    # -----------------------------------------------------------------------------------
+    def test_is_expected_mysql_query_placeholder(self) -> None:
+        # Build
+        expected_placeholder = '%s'
+
+        # Extract
+        actual_placeholder = MYSQL_QUERY_PLACEHOLDER
 
         # Check
         self.assertEqual(

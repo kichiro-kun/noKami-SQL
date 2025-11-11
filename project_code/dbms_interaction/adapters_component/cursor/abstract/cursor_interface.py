@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 # =======================================================================================
 from abc import ABC, abstractmethod
@@ -46,3 +46,11 @@ class CursorInterface(ABC, Generic[RowType]):
     # -----------------------------------------------------------------------------------
     @abstractmethod
     def fetchall(self) -> Sequence[RowType]: ...
+
+    # -----------------------------------------------------------------------------------
+    @abstractmethod
+    def _replace_query_placeholder(self, query: str) -> str: ...
+
+    # -----------------------------------------------------------------------------------
+    @abstractmethod
+    def get_default_placeholder(self) -> str: ...

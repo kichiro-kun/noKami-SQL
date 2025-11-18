@@ -44,13 +44,7 @@
           <span class="label label-info"><a href='84bf07aa19de609fdbeed0f550addcb6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>Python Support</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='b86cbc3fa36970843bdefe239ba26aff.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>API Architecture</a></span>
-        
-          <span>::</span>
-          <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
-        
-          <span>::</span>
-          <span class="label label-info"><a href='cee691f04f7cb7340ae589b0ac864a99.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Adapters Component</a></span>
+          <span class="label label-info"><a href='cb4ebde8f773234bdda24025a0e910a7.html'><span class='node-icon staruml-icon icon-UMLModel'></span>Class Diagrams</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='f2bea8ffb4e2a86be2fe4c3aef24fcbd.html'><span class='node-icon staruml-icon icon-UMLInterface'></span>CursorInterface</a></span>
@@ -189,31 +183,31 @@
           
           <tr>
             <td>public</td>
-            <td><a href="848cc9cc9bc2b7a7ffb06591fcb4b68e.html">fetchone()</a></td>
+            <td><a href="848cc9cc9bc2b7a7ffb06591fcb4b68e.html">fetchone(): RowType</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="168d42a4ed3ae4e11ea71ce38d3b4eb3.html">fetchmany()</a></td>
+            <td><a href="168d42a4ed3ae4e11ea71ce38d3b4eb3.html">fetchmany(count: int): Sequence[RowType]</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="f657ece422102d865911e95d1c8994de.html">fetchall()</a></td>
+            <td><a href="f657ece422102d865911e95d1c8994de.html">fetchall(): Sequence[RowType]</a></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>protected</td>
+            <td><a href="df9f738f855ab110efc2d1cd4a9ba092.html">replace_query_placeholder(query: str): str</a></td>
             <td></td>
           </tr>
           
           <tr>
             <td>public</td>
-            <td><a href="a0a39ea059936b49874c3a7a7d368d01.html">get_row_count(): int</a></td>
-            <td></td>
-          </tr>
-          
-          <tr>
-            <td>public</td>
-            <td><a href="55a8230c8e0ea3c30264f068d66d1575.html">get_last_row_id(): int</a></td>
+            <td><a href="05318eb5401bb626e8f4aeaa40399082.html">get_default_placeholder(): str</a></td>
             <td></td>
           </tr>
           
@@ -430,7 +424,7 @@
         
         <li><a href='1573ca15a58e28e5a7b80e252f50ba3e.html'><span class='node-icon staruml-icon icon-UMLInterfaceRealization'></span>(PostgreSQLAdapterCursor→CursorInterface)</a></li>
         
-        <li><a href='c85e8737ea10041d0d8b0cb20209f277.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionInterface—CursorInterface)</a></li>
+        <li><a href='572f38c9059adbd6ce7a9d4f0d6a7c8b.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionInterface—CursorInterface)</a></li>
         
     </ul>
 </section>

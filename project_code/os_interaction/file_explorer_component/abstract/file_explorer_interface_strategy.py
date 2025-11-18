@@ -22,33 +22,27 @@ class FileExplorerInterfaceStrategy(ABC):
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def create_file(self, path: str, file_name: str) -> bool:
-        ...
+    def create_file(self, path: str, file_name: str) -> bool: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def create_dir(self, path: str, dir_name: str) -> bool:
-        ...
+    def create_dir(self, path: str, dir_name: str) -> bool: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def check_path_is_exists(self, path: str) -> bool:
-        ...
+    def check_path_is_exists(self, path: str) -> bool: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def read_from_file(self, path: str) -> str:
-        ...
+    def read_from_file(self, path: str) -> str: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def overwrite_file(self, path: str, content: str) -> bool:
-        ...
+    def overwrite_file(self, path: str, content: str) -> bool: ...
 
     # -----------------------------------------------------------------------------------
     @abstractmethod
-    def append_to_file(self, path: str, content: str) -> bool:
-        ...
+    def append_to_file(self, path: str, content: str) -> bool: ...
 
 
 # _______________________________________________________________________________________

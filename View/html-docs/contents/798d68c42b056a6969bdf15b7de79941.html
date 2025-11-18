@@ -50,7 +50,7 @@
           <span class="label label-info"><a href='c9aec644df073e45075670a0eef3b6e6.html'><span class='node-icon staruml-icon icon-UMLPackage'></span>DBMS Interaction</a></span>
         
           <span>::</span>
-          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Connection Manager Component</a></span>
+          <span class="label label-info"><a href='e7e808e6f2985273e6010e0dc6d5a208.html'><span class='node-icon staruml-icon icon-UMLComponent'></span>Single Manager Component</a></span>
         
           <span>::</span>
           <span class="label label-info"><a href='798d68c42b056a6969bdf15b7de79941.html'><span class='node-icon staruml-icon icon-UMLClass'></span>SingleConnectionManager</a></span>
@@ -443,15 +443,17 @@
     <h3>Relationships</h3>
     <ul class="nav nav-list">
         
+        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
+        
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></li>
+        
         <li><a href='d94ce94f9251987ae7291cb1d84421b7.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(NoSingleConnectionManager→SingleConnectionManager)</a></li>
+        
+        <li><a href='2e49c32f851e1edcc5a768aea66f967c.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionInterface—SingleConnectionManager)</a></li>
         
         <li><a href='c311d73fd9030dbd73337227a3ec8574.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(MySQLAdapterConnection→SingleConnectionManager)</a></li>
         
         <li><a href='73a16499d24166f362c6bd365efa6aa0.html'><span class='node-icon staruml-icon icon-UMLGeneralization'></span>(PostgreSQLAdapterConnection→SingleConnectionManager)</a></li>
-        
-        <li><a href='8ad4c7758e7bf777c0fbcc7cf00be93a.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(ConnectionInterface—SingleConnectionManager)</a></li>
-        
-        <li><a href='12f284d3de38054cabd029c8396c24d4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
         
     </ul>
 </section>
@@ -466,7 +468,9 @@
     <h3>Owned Elements</h3>
     <ul class="nav nav-list">
         
-        <li><a href='12f284d3de38054cabd029c8396c24d4.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
+        <li><a href='efe9b315de5c5acb918f8f108a6d8ee9.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—SingleConnectionDataBase)</a></li>
+        
+        <li><a href='5384c882e0a10a58023c1bfe64b3a662.html'><span class='node-icon staruml-icon icon-UMLAssociation'></span>(SingleConnectionManager—ConnectionInterface)</a></li>
         
     </ul>
 </section>

@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 
 # ========================================================================================
@@ -52,12 +52,18 @@ class InspectingToolKit:
 
     # -----------------------------------------------------------------------------------
     @staticmethod
-    def check_all_methods_return_empty_data_for_null_object(obj: object,
-                                                            method_calls: List[MethodCall]) -> bool:
+    def check_all_methods_raise_expected_exception_for_null_object(obj: object,
+                                                                   method_calls: List[MethodCall],
+                                                                   exception_type: Type[Exception]) -> bool:
         for call in method_calls:
             method: Callable = getattr(obj, call.method_name)
-            result = method(*call.args, **call.kwargs)
-            if bool(result):
+            try:
+                method(*call.args, **call.kwargs)
+            except exception_type:
+                continue
+            except Exception:
+                return False
+            else:
                 return False
         else:
             return True

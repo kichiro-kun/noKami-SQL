@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.12.1'
+__version__ = '0.12.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -19,6 +19,7 @@ from typing import Dict, List, Sequence, Tuple, Any
 
 import database_core.single_connection_database_component.single_connection_database as tested_module
 from database_core.single_connection_database_component.single_connection_database import SingleConnectionDataBase as tested_cls
+
 from database_core.abstract_database_component.database import DataBase
 from dbms_interaction.single_connection_manager_component.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
@@ -240,14 +241,26 @@ class TestComponentPositive(BaseTestComponent):
                 keys=self._config_keys
         )
 
+        # Pre-Check
+        not_equals = zip(
+            (instance1, connection_manager1, transaction_manager1, config1),
+            (instance2, connection_manager2, transaction_manager2, config2)
+        )
+
+        for first, second in not_equals:
+            self.assertNotEqual(
+                first=first,
+                second=second
+            )
+
         # Operate
-        instance1.set_new_connection_config(new_config=config1)
         instance1.set_new_connection_manager(new_manager=connection_manager1)
         instance1.set_new_transaction_manager(new_manager=transaction_manager1)
+        instance1.set_new_connection_config(new_config=config1)
 
-        instance2.set_new_connection_config(new_config=config2)
         instance2.set_new_connection_manager(new_manager=connection_manager2)
         instance2.set_new_transaction_manager(new_manager=transaction_manager2)
+        instance2.set_new_connection_config(new_config=config2)
 
         # Extract
         actual_fields_instance1: Tuple[Any, ...] = (
@@ -298,9 +311,11 @@ class TestComponentPositive(BaseTestComponent):
         # Build
         instance = self.get_instance_of_tested_cls()
         transaction_manager = self.get_instance_of_transaction_manager()
+        connection_manager = self.get_instance_of_single_connection_manager()
         new_placeholder: str = GeneratingToolKit.generate_random_string()
 
         # Prepare instance
+        instance.set_new_connection_manager(new_manager=connection_manager)
         instance.set_new_transaction_manager(new_manager=transaction_manager)
 
         # Pre-Check

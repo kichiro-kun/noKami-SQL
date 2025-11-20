@@ -11,14 +11,14 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 
 # ========================================================================================
 import unittest as UT
+
 import string
-from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, NoReturn, Tuple
 
 from shared.exceptions import InvalidArgumentTypeError
 from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit, MethodCall
@@ -161,19 +161,26 @@ class TestInspectingToolKit(UT.TestCase):
         self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_check_null_object_methods_returns_empty_data(self) -> None:
+    # Refactor
+    def test_check_null_object_methods_raise_expected_exception(self) -> None:
+        # Pre-Build
+        class SpecialException(Exception):
+            pass
+
+        special_exception = SpecialException
+
         class StubClass:
-            def empty(self):
-                return []
+            def empty(self) -> NoReturn:
+                raise special_exception
 
-            def none(self):
-                return None
+            def none(self) -> NoReturn:
+                raise special_exception
 
-            def zero(self):
-                return 0
+            def zero(self) -> NoReturn:
+                raise special_exception
 
-            def nonempty(self):
-                return [1]
+            def nonempty(self) -> NoReturn:
+                raise special_exception
 
         # Build
         obj = StubClass()
@@ -182,23 +189,98 @@ class TestInspectingToolKit(UT.TestCase):
         calls: List[MethodCall] = [
             MethodCall(method_name='empty'),
             MethodCall(method_name='none'),
-            MethodCall(method_name='zero')
+            MethodCall(method_name='zero'),
+            MethodCall(method_name='nonempty')
         ]
 
         # Check
         self.assertTrue(
-            expr=InspectingToolKit.check_all_methods_return_empty_data_for_null_object(
-                obj=obj, method_calls=calls
+            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
+                obj=obj, method_calls=calls, exception_type=special_exception
             )
         )
 
-        # Prepare addition data
-        calls_with_nonempty: List[MethodCall] = calls + [MethodCall(method_name='nonempty')]
+    # -----------------------------------------------------------------------------------
+    # Refactor
+    def test_check_null_object_methods_raise_expected_exception_behavior_when_incorrect_exception(self) -> None:
+        # Pre-Build
+        class SpecialException(Exception):
+            pass
 
-        # Addition Check
+        class IncorrectException(Exception):
+            pass
+
+        special_exception = SpecialException
+        incorrect_exception = IncorrectException
+
+        class StubClass:
+            def empty(self) -> NoReturn:
+                raise special_exception
+
+            def none(self) -> NoReturn:
+                raise incorrect_exception
+
+            def zero(self) -> NoReturn:
+                raise special_exception
+
+            def nonempty(self) -> NoReturn:
+                raise special_exception
+
+        # Build
+        obj = StubClass()
+
+        # Prepare data
+        calls: List[MethodCall] = [
+            MethodCall(method_name='empty'),
+            MethodCall(method_name='none'),
+            MethodCall(method_name='zero'),
+            MethodCall(method_name='nonempty')
+        ]
+
+        # Check
         self.assertFalse(
-            expr=InspectingToolKit.check_all_methods_return_empty_data_for_null_object(
-                obj=obj, method_calls=calls_with_nonempty
+            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
+                obj=obj, method_calls=calls, exception_type=special_exception
+            )
+        )
+
+    # -----------------------------------------------------------------------------------
+    # Refactor
+    def test_check_null_object_methods_raise_expected_exception_behavior_when_returns(self) -> None:
+        # Pre-Build
+        class SpecialException(Exception):
+            pass
+
+        special_exception = SpecialException
+
+        class StubClass:
+            def empty(self) -> NoReturn:
+                raise special_exception
+
+            def none(self) -> NoReturn:
+                raise special_exception
+
+            def zero(self) -> NoReturn:
+                raise special_exception
+
+            def nonempty(self) -> str:
+                return 'StrawBerry'
+
+        # Build
+        obj = StubClass()
+
+        # Prepare data
+        calls: List[MethodCall] = [
+            MethodCall(method_name='empty'),
+            MethodCall(method_name='none'),
+            MethodCall(method_name='zero'),
+            MethodCall(method_name='nonempty')
+        ]
+
+        # Check
+        self.assertFalse(
+            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
+                obj=obj, method_calls=calls, exception_type=special_exception
             )
         )
 

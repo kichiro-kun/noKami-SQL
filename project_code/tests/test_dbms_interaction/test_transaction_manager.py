@@ -11,12 +11,11 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # ========================================================================================
 from unittest import TestCase, mock as UM
-from typing import Tuple, Type, Dict, Any, List
-from abc import ABC
+from typing import Dict, Any, List
 
 import dbms_interaction.transaction_manager_component.transaction_manager as tested_module
 from dbms_interaction.transaction_manager_component.transaction_manager \
@@ -25,7 +24,7 @@ from dbms_interaction.transaction_manager_component.abstract.transaction_state_i
     import TransactionStateInterface
 from dbms_interaction.transaction_manager_component.states import *
 
-from shared.exceptions.common import InvalidArgumentTypeError
+from shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import *
@@ -345,9 +344,10 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
 
         # Check
         self.assertTrue(
-            expr=InspectingToolKit.check_all_methods_return_empty_data_for_null_object(
+            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
                 obj=instance,
-                method_calls=calls
+                method_calls=calls,
+                exception_type=IsNullObjectOperation
             )
         )
 

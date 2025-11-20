@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.8.1'
+__version__ = '0.8.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -23,63 +23,10 @@ from dbms_interaction.adapters_component.connection.abstract.connection_interfac
 
 from tests.test_dbms_interaction.common import *
 
-from shared.exceptions.common import InvalidArgumentTypeError
+from shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckAdapterStub(BaseTestCase[AdapterStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> AdapterStub:
-        return AdapterStub(**kwargs)
-
-    # -----------------------------------------------------------------------------------
-    def test_check_expected_inherit(self) -> None:
-        # Build
-        expected = ConnectionInterface
-
-        # Operate
-        instance = self.get_instance_of_tested_cls()
-
-        # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=expected
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_expected_contract(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-
-        method_calls: Dict[str, Dict[str, Any]] = {
-            'connect': {
-                'config': {'user': 'MeAndYou', 'password': 19659}
-            },
-            'reconnect': {},
-            'get_cursor': {},
-            'commit': {},
-            'close': {},
-            'is_active': {},
-            'ping': {}
-        }  # Param name & kwargs
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(method_name=name, kwargs=kwargs)
-            for name, kwargs in method_calls.items()
-        ]
-
-        # Operate
-        result: bool = \
-            InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
-                                                                                  method_calls=calls)
-
-        # Check
-        self.assertTrue(expr=result)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,9 +98,10 @@ class TestComponentPositive(BaseTestComponent):
 
         # Check
         self.assertTrue(
-            expr=InspectingToolKit.check_all_methods_return_empty_data_for_null_object(
+            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
                 obj=instance,
-                method_calls=calls
+                method_calls=calls,
+                exception_type=IsNullObjectOperation
             )
         )
 

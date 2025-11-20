@@ -11,10 +11,13 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 # ========================================================================================
 from abc import ABC, abstractmethod
+from typing import NoReturn
+
+from shared.exceptions.common import IsNullObjectOperation
 
 
 # _______________________________________________________________________________________
@@ -49,25 +52,25 @@ class FileExplorerInterfaceStrategy(ABC):
 class NoFileExplorer(FileExplorerInterfaceStrategy):
 
     # -----------------------------------------------------------------------------------
-    def create_file(self, path: str, file_name: str) -> bool:
-        return False
+    def create_file(self, path: str, file_name: str) -> NoReturn:
+        raise IsNullObjectOperation
 
     # -----------------------------------------------------------------------------------
-    def create_dir(self, path: str, dir_name: str) -> bool:
-        return False
+    def create_dir(self, path: str, dir_name: str) -> NoReturn:
+        raise IsNullObjectOperation
 
     # -----------------------------------------------------------------------------------
-    def check_path_is_exists(self, path: str) -> bool:
-        return False
+    def check_path_is_exists(self, path: str) -> NoReturn:
+        raise IsNullObjectOperation
 
     # -----------------------------------------------------------------------------------
-    def read_from_file(self, path: str) -> str:
-        return ""
+    def read_from_file(self, path: str) -> NoReturn:
+        raise IsNullObjectOperation
 
     # -----------------------------------------------------------------------------------
-    def overwrite_file(self, path: str, content: str) -> bool:
-        return False
+    def overwrite_file(self, path: str, content: str) -> NoReturn:
+        raise IsNullObjectOperation
 
     # -----------------------------------------------------------------------------------
-    def append_to_file(self, path: str, content: str) -> bool:
-        return False
+    def append_to_file(self, path: str, content: str) -> NoReturn:
+        raise IsNullObjectOperation

@@ -11,7 +11,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -30,43 +30,10 @@ from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class TestedClassStub(tested_class):
     def _read_log_entry(self, log_entry: LogEntryDTO) -> Dict[str, str]:
-        return dict()
+        pass
 
     def _flush_log_msg(self, data: Dict[str, str]) -> bool:
-        return False
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckStubClass(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub()
-
-    # -----------------------------------------------------------------------------------
-    def test_methods_returns(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(
-                method_name='_read_log_entry',
-                kwargs={'log_entry': None}
-            ),
-            MethodCall(
-                method_name='_flush_log_msg',
-                kwargs={'data': None}
-            )
-        ]
-
-        # Operate
-        result: bool = \
-            InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
-                                                                                  method_calls=calls)
-
-        # Check
-        self.assertTrue(expr=result)
+        pass
 
 
 # _______________________________________________________________________________________

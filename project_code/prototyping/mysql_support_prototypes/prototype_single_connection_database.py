@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 # =======================================================================================
 from typing import Any
@@ -19,7 +19,7 @@ from dbms_interaction.single_connection_manager_component.single_connection_mana
     import SingleConnectionManager
 from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection\
     import MySQLAdapterConnection
-from shared.exceptions.common import OperationFailedConnectionIsNotActive
+from shared.exceptions.common import IsNullObjectOperation
 
 
 CONFIG_1 = {
@@ -52,9 +52,9 @@ if __name__ != '__main__':
         database.execute_query_returns_all(
             query="SHOW DATABASES;"
         )
-    except OperationFailedConnectionIsNotActive:
+    except IsNullObjectOperation:
         print_result(
-            title='Check NoSingleManager raise exception',
+            title='Check raise exception, haven\'t connection manager',
             data=True,
             expected=True
         )

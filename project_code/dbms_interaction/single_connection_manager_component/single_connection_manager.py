@@ -10,14 +10,15 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.2'
+__version__ = '0.7.0'
 
 # =======================================================================================
-from typing import Any, Dict
+from typing import Any, Dict, NoReturn
 
 from dbms_interaction.adapters_component.connection.abstract.connection_interface \
     import ConnectionInterface
 
+from shared.exceptions.common import IsNullObjectOperation
 from shared.utils.toolkit import ToolKit
 
 
@@ -130,23 +131,23 @@ class NoSingleConnectionManager(SingleConnectionManager):
     def __init__(self) -> None:
         pass
 
-    def set_new_adapter(self, new_adapter: ConnectionInterface) -> bool:
-        return False
+    def set_new_adapter(self, new_adapter: ConnectionInterface) -> NoReturn:
+        raise IsNullObjectOperation
 
-    def set_new_config(self, new_config: Dict[str, Any]) -> bool:
-        return False
+    def set_new_config(self, new_config: Dict[str, Any]) -> NoReturn:
+        raise IsNullObjectOperation
 
-    def get_connection(self) -> ConnectionInterface:
-        return None
+    def get_connection(self) -> NoReturn:
+        raise IsNullObjectOperation
 
-    def initialize_new_connection(self) -> bool:
-        return False
+    def initialize_new_connection(self) -> NoReturn:
+        raise IsNullObjectOperation
 
-    def reinitialize_connection(self) -> bool:
-        return False
+    def reinitialize_connection(self) -> NoReturn:
+        raise IsNullObjectOperation
 
-    def check_connection_status(self) -> bool:
-        return False
+    def check_connection_status(self) -> NoReturn:
+        raise IsNullObjectOperation
 
     def __del__(self) -> None:
         pass

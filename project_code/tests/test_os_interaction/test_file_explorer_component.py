@@ -10,15 +10,15 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 # ========================================================================================
 from typing import Dict, List, Tuple
 
 from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
     import NoFileExplorer as tested_class
-from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
-    import FileExplorerInterfaceStrategy as tested_interface
+
+from shared.exceptions.common import IsNullObjectOperation
 
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import InspectingToolKit, MethodCall
@@ -83,8 +83,11 @@ class TestComponentPositive(BaseTestCase[tested_class]):
         ]
 
         # Operate
-        result: bool = InspectingToolKit.check_all_methods_return_empty_data_for_null_object(obj=instance,
-                                                                                             method_calls=calls)
+        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
+            obj=instance,
+            method_calls=calls,
+            exception_type=IsNullObjectOperation
+        )
 
         # Check
         self.assertTrue(expr=result)

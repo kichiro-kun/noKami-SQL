@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 # =======================================================================================
 from typing import Dict, Any
@@ -21,25 +21,25 @@ from dbms_interaction.adapters_component.connection.abstract.connection_interfac
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class AdapterStub(ConnectionInterface):
     def connect(self, config: Dict[str, Any]) -> bool:
-        return False
+        pass
 
     def reconnect(self) -> bool:
-        return False
+        pass
 
     def get_cursor(self) -> Any:
-        return None
+        pass
 
     def commit(self) -> bool:
-        return False
+        pass
 
     def close(self) -> bool:
-        return False
+        pass
 
     def is_active(self) -> bool:
-        return False
+        pass
 
     def ping(self) -> bool:
-        return False
+        pass
 
     def rollback(self) -> bool:
-        return False
+        pass

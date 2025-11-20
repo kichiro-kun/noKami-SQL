@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 # ========================================================================================
 from unittest import TestCase
@@ -32,7 +32,8 @@ class TestExceptionList(TestCase):
         cls.__exception_list: List[Type[Exception]] = [
             UnsupportedLogLevelError,
             InvalidArgumentTypeError,
-            OperationFailedConnectionIsNotActive
+            OperationFailedConnectionIsNotActive,
+            IsNullObjectOperation,
         ]
 
     # -----------------------------------------------------------------------------------

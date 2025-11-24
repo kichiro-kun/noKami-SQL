@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 # ========================================================================================
 from unittest import TestCase
@@ -58,10 +58,26 @@ class TestExceptionList(TestCase):
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_check_exception_returns_expected_default_message(self) -> None:
+    def test_check_exception_returns_expected_default_message_1(self) -> None:
         # Build
         exception = OperationFailedConnectionIsNotActive
         expected_msg: str = "Failure! Connection is not active!"
+
+        # Operate
+        try:
+            raise exception()
+        except Exception as actual_msg:
+            # Check
+            self.assertEqual(
+                first=str(actual_msg),
+                second=expected_msg
+            )
+
+    # -----------------------------------------------------------------------------------
+    def test_check_exception_returns_expected_default_message_2(self) -> None:
+        # Build
+        exception = IsNullObjectOperation
+        expected_msg: str = "It's NullObject operation! Please check your object's!"
 
         # Operate
         try:

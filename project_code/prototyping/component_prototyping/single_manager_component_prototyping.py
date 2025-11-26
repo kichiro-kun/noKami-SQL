@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from mysql.connector import MySQLConnection
@@ -38,6 +38,11 @@ def print_result(result: Any) -> None:
     print(f'\tResult: {result}')
 
 
+# ---------------------------------------------------------------------------------------
+def print_info_about_object(obj: Any) -> None:
+    print(f'\tObject Info: {obj.__dict__}')
+
+
 if __name__ != '__main__':
     print(
         '''---------------------------------------------------------------------------------------
@@ -59,13 +64,17 @@ Prototyping Single Manager Component
     )
 
     print_result(result=prototype_manager)
+    print_info_about_object(obj=prototype_manager)
+
     print_result(result=prototype_mysql_adapter)
+    print_info_about_object(obj=prototype_mysql_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Get current connection')
 
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Check current connection status')
@@ -80,6 +89,7 @@ Prototyping Single Manager Component
 
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Initialize new connection with old config')
@@ -88,6 +98,7 @@ Prototyping Single Manager Component
 
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Set up new config')
@@ -95,6 +106,7 @@ Prototyping Single Manager Component
     prototype_manager.set_new_config(new_config=CONFIG_2)
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Initialize new connection with new config')
@@ -103,6 +115,7 @@ Prototyping Single Manager Component
 
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Set up new adapter')
@@ -115,12 +128,14 @@ Prototyping Single Manager Component
 
     conn_adapter: ConnectionInterface = prototype_manager.get_connection()
     print_result(result=conn_adapter)
+    print_info_about_object(obj=conn_adapter)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Check NoSingleConnectionManager')
 
     prototype_manager = NoSingleConnectionManager()
     print_result(result=prototype_manager)
+    print_info_about_object(obj=prototype_manager)
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Check call NullObject method')

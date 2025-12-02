@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # ========================================================================================
 from typing import Any, Sequence
@@ -36,7 +36,7 @@ class MySQLAdapterCursor(CursorInterface):
     def execute(self, *params: Sequence[Any], query: str) -> None:
         cur: MySQLCursor = self.__adaptee
 
-        query = self._replace_query_placeholder(
+        query = self._replace_placeholder_to_dbms_default(
             query=query
         )
 
@@ -48,6 +48,10 @@ class MySQLAdapterCursor(CursorInterface):
     # -----------------------------------------------------------------------------------
     def executemany(self, query: str, data: Sequence[Sequence[Any]]) -> None:
         cur: MySQLCursor = self.__adaptee
+
+        query = self._replace_placeholder_to_dbms_default(
+            query=query
+        )
 
         cur.executemany(operation=query, seq_params=data)
 
@@ -84,7 +88,8 @@ class MySQLAdapterCursor(CursorInterface):
         return MYSQL_QUERY_PLACEHOLDER
 
     # -----------------------------------------------------------------------------------
-    def _replace_query_placeholder(self, query: str) -> str:
+    def _replace_placeholder_to_dbms_default(self, query: str) -> str:
+        # Замена кастомного плейсхолдера на по умолчанию для движка СУБД
         special_placeholder: str = self.__special_placeholder
 
         if special_placeholder == '':

@@ -6,7 +6,7 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # =======================================================================================
 from mysql.connector import MySQLConnection
@@ -16,9 +16,11 @@ from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_c
 from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor \
     import MySQLAdapterCursor
 
+from tests.utils.toolkit import GeneratingToolKit
+
 from prototyping.config import CONFIG_1, CONFIG_2
 
-from typing import Any, List
+from typing import Any, List, Tuple
 
 
 test_count = 0
@@ -92,6 +94,8 @@ Prototyping Adapter's Component ... [Cursor]
 ---------------------------------------------------------------------------------------'''
     )
 
+    BERRY_TABLE_NAME: str = 'berry_table'
+
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Create cursor object by existed connection')
 
@@ -114,7 +118,7 @@ Prototyping Adapter's Component ... [Cursor]
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Check execute & fetchall methods')
 
-    query_1 = 'CREATE TABLE berry_table (id INTEGER PRIMARY KEY AUTO_INCREMENT, title VARCHAR(30))'
+    query_1: str = f'CREATE TABLE {BERRY_TABLE_NAME} (id INTEGER PRIMARY KEY AUTO_INCREMENT, title VARCHAR(30))'
     query_2 = 'SHOW TABLES'
 
     prototype_cursor.execute(query=query_1)
@@ -124,8 +128,8 @@ Prototyping Adapter's Component ... [Cursor]
 
     # -----------------------------------------------------------------------------------
     new_test(msg_text='Check executemany and fetchmany methods')
-    query_1 = "INSERT INTO berry_table (title) VALUES (%s)"
-    query_2 = "SELECT * FROM berry_table"
+    query_1 = f"INSERT INTO {BERRY_TABLE_NAME} (title) VALUES (%s)"
+    query_2: str = f"SELECT * FROM {BERRY_TABLE_NAME}"
     berries: List = [('Strawberry',), ('Blueberry',), ('Banana?',)]
     fetch_count: int = len(berries)
 
@@ -137,4 +141,27 @@ Prototyping Adapter's Component ... [Cursor]
     prototype_cursor.execute(query=query_2)
 
     result = prototype_cursor.fetchmany(count=fetch_count)
+    print_result(result=result)
+
+    # -----------------------------------------------------------------------------------
+    new_test(msg_text='Check execute method with custom placeholder')
+
+    custom_placeholder = '$Q'
+    expected_record: Tuple = (GeneratingToolKit.generate_random_string(),)
+    query_1 = f"INSERT INTO {BERRY_TABLE_NAME} (title) VALUES ({custom_placeholder})"
+    query_2 = f"SELECT * FROM {BERRY_TABLE_NAME}"
+
+    prototype_cursor = prototype_adapter.get_cursor(
+        special_placeholder=custom_placeholder
+    )
+    print_result(result=prototype_cursor)
+    print_info_about_object(obj=prototype_cursor)
+
+    prototype_cursor.execute(
+        query=query_1,
+        *expected_record
+    )
+
+    prototype_cursor.execute(query=query_2)
+    result = prototype_cursor.fetchall()
     print_result(result=result)

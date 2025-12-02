@@ -10,7 +10,7 @@ __all__: list[str] = [
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 # ========================================================================================
 from unittest import mock as UM
@@ -77,19 +77,6 @@ class TestMySQLAdapterPositive(BaseTestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior(self) -> None:
-        # Build
-        expected_connection: UM.MagicMock = self._current_connection
-
-        # Operate
-        instance = self.get_instance_of_tested_cls(
-            connector=expected_connection
-        )
-
-        # Check
-        expected_connection.cursor.assert_called_once()
-
-    # -----------------------------------------------------------------------------------
     def test_constructor_behavior_when_not_pass_special_placeholder(self) -> None:
         # Build
         expected_connection: UM.MagicMock = self._current_connection
@@ -108,7 +95,7 @@ class TestMySQLAdapterPositive(BaseTestCase):
         conn: UM.MagicMock = self._current_connection
         expected_cursor: UM.MagicMock = self._current_cursor
 
-        expected_query: str = GeneratingToolKit.generate_random_string()
+        raw_query: str = GeneratingToolKit.generate_random_string()
         expected_params: Tuple[Any] = tuple(
             GeneratingToolKit.generate_list_of_basic_python_types()
         )
@@ -118,17 +105,32 @@ class TestMySQLAdapterPositive(BaseTestCase):
             connector=conn
         )
 
-        # Operate
-        instance.execute(
-            query=expected_query,
-            *expected_params
-        )
+        # Prepare test context
+        with UM.patch.object(target=instance,
+                             attribute='_replace_placeholder_to_dbms_default'
+                             ) as mock_method_replace_placeholder_to_dbms_default:
+            # Prepare data
+            expected_query: str = raw_query + '!'
 
-        # Check
-        expected_cursor.execute.assert_called_with(
-            operation=expected_query,
-            params=expected_params
-        )
+            # Prepare mock
+            mock_method_replace_placeholder_to_dbms_default.return_value = expected_query
+
+            # Operate
+            instance.execute(
+                query=raw_query,
+                *expected_params
+            )
+
+            # Pre-check
+            mock_method_replace_placeholder_to_dbms_default.assert_called_once_with(
+                query=raw_query
+            )
+
+            # Check
+            expected_cursor.execute.assert_called_with(
+                operation=expected_query,
+                params=expected_params
+            )
 
     # -----------------------------------------------------------------------------------
     def test_method_executemany_behavior(self) -> None:
@@ -136,7 +138,7 @@ class TestMySQLAdapterPositive(BaseTestCase):
         conn: UM.MagicMock = self._current_connection
         expected_cursor: UM.MagicMock = self._current_cursor
 
-        expected_query: str = GeneratingToolKit.generate_random_string()
+        raw_query: str = GeneratingToolKit.generate_random_string()
         expected_data: List[Any] = [
             tuple(GeneratingToolKit.generate_random_string() for _ in range(3))
             for _ in range(4)
@@ -147,17 +149,32 @@ class TestMySQLAdapterPositive(BaseTestCase):
             connector=conn
         )
 
-        # Operate
-        instance.executemany(
-            query=expected_query,
-            data=expected_data
-        )
+        # Prepare test context
+        with UM.patch.object(target=instance,
+                             attribute='_replace_placeholder_to_dbms_default'
+                             ) as mock_method_replace_placeholder_to_dbms_default:
+            # Prepare data
+            expected_query: str = raw_query + '!'
 
-        # Check
-        expected_cursor.executemany.assert_called_with(
-            operation=expected_query,
-            seq_params=expected_data
-        )
+            # Prepare mock
+            mock_method_replace_placeholder_to_dbms_default.return_value = expected_query
+
+            # Operate
+            instance.executemany(
+                query=raw_query,
+                data=expected_data
+            )
+
+            # Pre-check
+            mock_method_replace_placeholder_to_dbms_default.assert_called_with(
+                query=raw_query
+            )
+
+            # Check
+            expected_cursor.executemany.assert_called_with(
+                operation=expected_query,
+                seq_params=expected_data
+            )
 
     # -----------------------------------------------------------------------------------
     def test_method_close_behavior(self) -> None:
@@ -287,7 +304,7 @@ class TestMySQLAdapterPositive(BaseTestCase):
         )
 
     # -----------------------------------------------------------------------------------
-    def test_method_replace_query_placeholder_behavior_calls(self) -> None:
+    def test_method_replace_placeholder_to_dbms_default_behavior_calls(self) -> None:
         # Build
         conn: UM.MagicMock = self._current_connection
         expected_cursor: UM.MagicMock = self._current_cursor
@@ -303,8 +320,8 @@ class TestMySQLAdapterPositive(BaseTestCase):
 
         # Prepare test context
         with UM.patch.object(target=instance,
-                             attribute='_replace_query_placeholder',
-                             autospec=True) as mock_method__replace_query_placeholder:
+                             attribute='_replace_placeholder_to_dbms_default',
+                             autospec=True) as mock_method__replace_placeholder_to_dbms_default:
             # Prepare data
             expected_query: str = GeneratingToolKit.generate_random_string()
 
@@ -316,13 +333,13 @@ class TestMySQLAdapterPositive(BaseTestCase):
             )
 
             # Prepare mock
-            mock_method__replace_query_placeholder.return_value = expected_query
+            mock_method__replace_placeholder_to_dbms_default.return_value = expected_query
 
             # Operate
             instance.execute(query=raw_query)
 
             # Check
-            mock_method__replace_query_placeholder.assert_called_once_with(
+            mock_method__replace_placeholder_to_dbms_default.assert_called_once_with(
                 query=raw_query
             )
 
@@ -333,12 +350,12 @@ class TestMySQLAdapterPositive(BaseTestCase):
             )
 
     # -----------------------------------------------------------------------------------
-    def test_method_replace_query_placeholder_behavior(self) -> None:
+    def test_method_replace_placeholder_to_dbms_default_behavior(self) -> None:
         # Build
         conn: UM.MagicMock = self._current_connection
         expected_cursor: UM.MagicMock = self._current_cursor
         special_placeholder = '?'
-        expected_placeholder = '%s'
+        expected_placeholder: str = self._default_query_placeholder
         query_string_base: str = 'INSERT INTO berry (title) VALUES '
 
         # Prepare data

@@ -26,7 +26,7 @@ from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
 from tests.utils.base_test_case_cls import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
 
-from shared.constants.configuration import MYSQL_QUERY_PLACEHOLDER
+from shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
 
 
 # _______________________________________________________________________________________

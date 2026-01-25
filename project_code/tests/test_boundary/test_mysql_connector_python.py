@@ -17,17 +17,31 @@ __version__ = '0.2.1'
 import unittest
 from random import randint
 
-from tests.test_boundary.common import BaseTestCaseMySQL
-
 from mysql.connector import MySQLConnection
 from mysql.connector.errors import ProgrammingError, OperationalError, InterfaceError
 
+from tests.test_boundary.common import BaseTestCase
 from tests.utils.toolkit import GeneratingToolKit
+
+from tests.global_testing_config import DB_CONFIG
 
 from typing import Any, Dict, List, Tuple
 
 
 MYSQL_IS_ACTIVE: bool = True  # MySQL server is on?
+
+
+# _______________________________________________________________________________________
+class BaseTestCaseMySQL(BaseTestCase):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_connection(self) -> MySQLConnection:
+        return MySQLConnection(**DB_CONFIG)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def check_connection_should_be_connected(self, conn: MySQLConnection) -> None:
+        self.assertTrue(
+            expr=conn.is_connected()
+        )
 
 
 # _______________________________________________________________________________________
@@ -474,7 +488,7 @@ class TestMySQLBoundaryPositive(BaseTestCaseMySQL):
 
     # -----------------------------------------------------------------------------------
     def test_double_establishing_connection(self) -> None:
-        from tests.test_boundary.db_config import DB_CONFIG
+        from tests.global_testing_config import DB_CONFIG
 
         # Operate
         conn1 = MySQLConnection(**DB_CONFIG)

@@ -21,7 +21,7 @@ from mysql.connector.cursor import MySQLCursor
 from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
     import CursorInterface
 
-from shared.constants.configuration import MYSQL_QUERY_PLACEHOLDER
+from shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
 
 
 # _______________________________________________________________________________________

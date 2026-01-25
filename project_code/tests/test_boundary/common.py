@@ -17,30 +17,17 @@ from unittest import TestCase
 
 from mysql.connector import MySQLConnection
 
-from typing import Tuple
+from tests.global_testing_config import DB_CONFIG
 
-from tests.test_boundary.db_config import DB_CONFIG
+from typing import Tuple
 
 
 # _______________________________________________________________________________________
 class BaseTestCase(TestCase):
-    # Important data about Test Table
+    # Main Test Table infrastructure
     table_name: str = "test"
     expected_row_structure: Tuple = ('id', 'title', 'description', 'cost')
     expected_table_row_count: int = 15
 
-    # Helpful queries
+    # Useful queries
     QUERY_SELECT_ALL: str = f'SELECT * FROM {table_name};'
-
-
-# _______________________________________________________________________________________
-class BaseTestCaseMySQL(BaseTestCase):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_connection(self) -> MySQLConnection:
-        return MySQLConnection(**DB_CONFIG)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def check_connection_should_be_connected(self, conn: MySQLConnection) -> None:
-        self.assertTrue(
-            expr=conn.is_connected()
-        )

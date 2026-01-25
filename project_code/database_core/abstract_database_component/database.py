@@ -21,7 +21,7 @@ from _logging.logger_subject_component.logger_subject_interface import LoggerSub
 from _logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
 from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 
-from shared.constants.configuration import DEFAULT_QUERY_PLACEHOLDER
+from shared.constants.global_configuration import DEFAULT_QUERY_PLACEHOLDER
 from shared.utils.toolkit import ToolKit
 
 

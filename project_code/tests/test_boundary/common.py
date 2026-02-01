@@ -6,11 +6,11 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'BaseTestCaseMySQL'
+    'BaseTestCase'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # =======================================================================================
 from unittest import TestCase

@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Tuple
 from project_code.sql_core.connection.single_manager.single_connection_manager \
     import SingleConnectionManager as tested_cls
 
-from project_code.tests.test_dbms_interaction.common import *
+from project_code.tests.test_sql_core.test_dbms_interaction.common import *
 
 from project_code.shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 

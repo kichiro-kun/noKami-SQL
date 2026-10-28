@@ -1,292 +1,172 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestComponentPositive',
-    'TestComponentNegative'
+    'TestBaseLogger',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.5.2'
+__version__ = '0.6.0'
+
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Any, Dict, List, Tuple
+from unittest import TestCase
 
-import project_code._logging.base_logger_component.abstract.base_logger as tested_module
-from project_code._logging.base_logger_component.abstract.base_logger import BaseLogger as tested_class
-from project_code._logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO
+from project_code._logging.base_logger_component.abstract.base_logger import BaseLogger
+from project_code._logging.logger_config_component.abstract.logger_config_dto \
+    import LoggerConfigDTO, NoLoggerConfig
 from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
-from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy
+from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
+    import FileExplorerInterfaceStrategy, NoFileExplorer
+from project_code.shared.exceptions.common import InvalidArgumentTypeError
 
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
+from typing import Any, Dict, List
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class TestedClassStub(tested_class):
+class TestedClassStub(BaseLogger):
+    # -----------------------------------------------------------------------------------
     def _read_log_entry(self, log_entry: LogEntryDTO) -> Dict[str, str]:
-        pass
+        return {}
 
+    # -----------------------------------------------------------------------------------
     def _flush_log_msg(self, data: Dict[str, str]) -> bool:
-        pass
+        return True
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def create_mock_logger_config() -> UM.MagicMock:
-        return UM.MagicMock(spec=LoggerConfigDTO)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def create_mock_file_explorer() -> UM.MagicMock:
-        return UM.MagicMock(spec=FileExplorerInterfaceStrategy)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @staticmethod
-    def create_mock_log_entry() -> UM.MagicMock:
-        return UM.MagicMock(spec=LogEntryDTO)
+class TestBaseLogger(TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_logger_config_accepts_valid_config(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        mock_logger_config: UM.MagicMock = self.create_mock_logger_config()
-
-        # Operate & Check
-        instance.set_new_config(new_config=mock_logger_config)
+    def setUp(self) -> None:
+        super().setUp()
+        self.logger = TestedClassStub()
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_file_explorer_accepts_valid_file_explorer(self) -> None:
+    def test_set_new_config_accepts_valid_logger_config(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        mock_file_explorer: UM.MagicMock = self.create_mock_file_explorer()
+        mock_config = UM.MagicMock(spec=LoggerConfigDTO)
 
-        # Operate & Check
-        instance.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer)
+        # Operate
+        self.logger.set_new_config(new_config=mock_config)
+
+        # Check
+        self.assertIs(expr1=self.logger.logger_config, expr2=mock_config)
 
     # -----------------------------------------------------------------------------------
-    def test_logger_has_expected_public_configuration_fields(self) -> None:
+    def test_set_new_config_raises_invalid_type_error_for_invalid_types(self) -> None:
         # Build
-        expected_fields: Tuple[str, ...] = (
-            'logger_config', 'perform_file_explorer'
-        )
-        instance = self.get_instance_of_tested_cls()
+        invalid_values: List[Any] = [None, 123, "string", [], {}, True]
 
-        # Prepare test cycle
-        for field_name in expected_fields:
-            with self.subTest(pattern=field_name):
-                # Check
-                getattr(instance, field_name)
+        for invalid_value in invalid_values:
+            # Prepare check context
+            with self.subTest(invalid_value=invalid_value):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    self.logger.set_new_config(new_config=invalid_value)
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_perform_file_explorer_accepts_valid_file_explorer(self) -> None:
+        # Build
+        mock_explorer = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+
+        # Operate
+        self.logger.set_new_perform_file_explorer(new_file_explorer=mock_explorer)
+
+        # Check
+        self.assertIs(expr1=self.logger.perform_file_explorer, expr2=mock_explorer)
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_perform_file_explorer_raises_invalid_type_error_for_invalid_types(self) -> None:
+        # Build
+        invalid_values: List[Any] = [None, 123, "string", [], {}, True]
+
+        for invalid_value in invalid_values:
+            # Prepare check context
+            with self.subTest(invalid_value=invalid_value):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    self.logger.set_new_perform_file_explorer(new_file_explorer=invalid_value)
+
+    # -----------------------------------------------------------------------------------
+    def test_configuration_fields_are_isolated_between_instances(self) -> None:
+        # Build
+        logger1 = TestedClassStub()
+        logger2 = TestedClassStub()
+        mock_config1 = UM.MagicMock(spec=LoggerConfigDTO)
+        mock_config2 = UM.MagicMock(spec=LoggerConfigDTO)
+        mock_explorer1 = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+        mock_explorer2 = UM.MagicMock(spec=FileExplorerInterfaceStrategy)
+
+        # Operate
+        logger1.set_new_config(new_config=mock_config1)
+        logger1.set_new_perform_file_explorer(new_file_explorer=mock_explorer1)
+        logger2.set_new_config(new_config=mock_config2)
+        logger2.set_new_perform_file_explorer(new_file_explorer=mock_explorer2)
+
+        # Check
+        self.assertIs(expr1=logger1.logger_config, expr2=mock_config1)
+        self.assertIs(expr1=logger2.logger_config, expr2=mock_config2)
+        self.assertIsNot(expr1=logger1.logger_config, expr2=logger2.logger_config)
+
+        self.assertIs(expr1=logger1.perform_file_explorer, expr2=mock_explorer1)
+        self.assertIs(expr1=logger2.perform_file_explorer, expr2=mock_explorer2)
+        self.assertIsNot(expr1=logger1.perform_file_explorer, expr2=logger2.perform_file_explorer)
+
+    # -----------------------------------------------------------------------------------
+    def test_direct_assignment_to_configuration_fields_raises_attribute_error(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=AttributeError):
+            # Operate & Check
+            self.logger.logger_config = UM.MagicMock()  # type: ignore
+
+        # Prepare check context
+        with self.assertRaises(expected_exception=AttributeError):
+            # Operate & Check
+            self.logger.perform_file_explorer = UM.MagicMock()  # type: ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_logger_config_is_null_object_by_default(self) -> None:
+        # Build
+        logger = TestedClassStub()
+
+        # Check
+        self.assertIsInstance(obj=logger.logger_config, cls=NoLoggerConfig)
+
+    # -----------------------------------------------------------------------------------
+    def test_perform_file_explorer_is_null_object_by_default(self) -> None:
+        # Build
+        logger = TestedClassStub()
+
+        # Check
+        self.assertIsInstance(obj=logger.perform_file_explorer, cls=NoFileExplorer)
 
     # -----------------------------------------------------------------------------------
     @UM.patch.object(target=TestedClassStub, attribute='_read_log_entry', autospec=True)
     @UM.patch.object(target=TestedClassStub, attribute='_flush_log_msg', autospec=True)
     def test_process_log_msg_returns_true_when_flush_succeeds(self,
-                                                              mock_flush_log_msg: UM.MagicMock,
-                                                              mock_read_log_entry: UM.MagicMock) -> None:
+                                                              mock_flush: UM.MagicMock, mock_read: UM.MagicMock) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        expected_log_entry_data: Dict[str, str] = \
-            GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=('CupCake', 'Pie', 'Juice')
-        )
+        mock_log_entry = UM.MagicMock(spec=LogEntryDTO)
+        expected_data: Dict[str, str] = {'key1': 'value1', 'key2': 'value2'}
 
         # Prepare mock
-        mock_read_log_entry.return_value = expected_log_entry_data
-        mock_flush_log_msg.return_value = True
+        mock_read.return_value = expected_data
+        mock_flush.return_value = True
 
         # Operate
-        result: bool = instance.process_log_msg(log_entry=mock_log_entry)
+        result: bool = self.logger.process_log_msg(log_entry=mock_log_entry)
 
-        # Check
-        mock_read_log_entry.assert_called_once_with(instance, log_entry=mock_log_entry)
-        mock_flush_log_msg.assert_called_once_with(instance, data=expected_log_entry_data)
-
-        self.assertTrue(expr=InspectingToolKit.is_boolean_True(obj=result))
-
-    # -----------------------------------------------------------------------------------
-    def test_setters_update_public_configuration_fields_correctly(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        mock_config: UM.MagicMock = self.create_mock_logger_config()
-        mock_file_explorer: UM.MagicMock = self.create_mock_file_explorer()
-
-        # Operate
-        instance.set_new_config(new_config=mock_config)
-        instance.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer)
-
-        # Extract
-        actual_config = instance.logger_config
-        actual_file_explorer = instance.perform_file_explorer
-
-        # Check
-        self.assertIs(
-            expr1=actual_config,
-            expr2=mock_config
-        )
-        self.assertIs(
-            expr1=actual_file_explorer,
-            expr2=mock_file_explorer
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_configuration_fields_are_isolated_between_instances(self) -> None:
-        # Build
-        instance1 = self.get_instance_of_tested_cls()
-        instance2 = self.get_instance_of_tested_cls()
-        mock_config1: UM.MagicMock = self.create_mock_logger_config()
-        mock_config2: UM.MagicMock = self.create_mock_logger_config()
-        mock_file_explorer1: UM.MagicMock = self.create_mock_file_explorer()
-        mock_file_explorer2: UM.MagicMock = self.create_mock_file_explorer()
-
-        mock_config2.return_value = 10
-
-        # Operate
-        instance1.set_new_config(new_config=mock_config1)
-        instance1.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer1)
-
-        instance2.set_new_config(new_config=mock_config2)
-        instance2.set_new_perform_file_explorer(new_file_explorer=mock_file_explorer2)
-
-        # Extract
-        actual_fields_instance1: Tuple[Any, ...] = (
-            instance1.logger_config, instance1.perform_file_explorer
-        )
-        actual_fields_instance2: Tuple[Any, ...] = (
-            instance2.logger_config, instance2.perform_file_explorer
-        )
-
-        # Prepare check cycle
-        for instance1_field, instance2_field in zip(actual_fields_instance1,
-                                                    actual_fields_instance2):
-            with self.subTest(
-                pattern=(instance1_field, instance2_field)
-            ):
-                # Check
-                self.assertIsNot(
-                    expr1=instance1_field,
-                    expr2=instance2_field
-                )
-
-    # -----------------------------------------------------------------------------------
-    @UM.patch.object(target=tested_module, attribute='NoLoggerConfig', autospec=True)
-    @UM.patch.object(target=tested_module, attribute='NoFileExplorer', autospec=True)
-    def test_configuration_fields_are_null_objects_by_default(self,
-                                                              mock_file_explorer: UM.MagicMock,
-                                                              mock_logger_config: UM.MagicMock) -> None:
-        # Build
-        expected_data1 = 'I am a NullObject Logger Config!!!'
-        expected_data2 = 'I am a NullObject File Explorer!?!'
-
-        # Prepare mocks
-        mock_logger_config.return_value = expected_data1
-        mock_file_explorer.return_value = expected_data2
-
-        # Operate
-        instance = self.get_instance_of_tested_cls()
-
-        # Extract
-        actual_data1 = instance.logger_config
-        actual_data2 = instance.perform_file_explorer
-
-        # Check
-        self.assertIs(
-            expr1=actual_data1,
-            expr2=expected_data1
-        )
-        self.assertIs(
-            expr1=actual_data2,
-            expr2=expected_data2
-        )
-
-
-# _______________________________________________________________________________________
-class TestComponentNegative(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls.__invalid_types: List[Any] = \
-            GeneratingToolKit.generate_list_of_basic_python_types()
-
-    # -----------------------------------------------------------------------------------
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_logger_config_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        tested_method_name = 'set_new_config'
-        invalid_types: List[str] = self.__invalid_types
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(method_name=tested_method_name,
-                       args=(invalid_type,)) for invalid_type in invalid_types
-        ]
-
-        # Operate
-        result: bool = \
-            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
-                                                                                          method_calls=calls)
-
-        # Check
-        self.assertTrue(expr=result)
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_file_explorer_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        tested_method_name = 'set_new_perform_file_explorer'
-        invalid_types: List[str] = self.__invalid_types
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(method_name=tested_method_name,
-                       args=(invalid_type,)) for invalid_type in invalid_types
-        ]
-
-        # Operate
-        result: bool = \
-            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
-                                                                                          method_calls=calls)
-
-        # Check
-        self.assertTrue(expr=result)
-
-    # -----------------------------------------------------------------------------------
-    def test_process_log_msg_raise_exception_for_invalid_types(self) -> None:
-        # Build
-        tested_method_name = 'process_log_msg'
-        invalid_types: List[str] = self.__invalid_types
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(method_name=tested_method_name,
-                       args=(invalid_type,)) for invalid_type in invalid_types
-        ]
-
-        # Operate
-        result: bool = \
-            InspectingToolKit.check_all_methods_raise_expected_exception_on_invalid_types(obj=instance,
-                                                                                          method_calls=calls)
+        # PreCheck
+        mock_read.assert_called_once_with(self.logger, log_entry=mock_log_entry)
+        mock_flush.assert_called_once_with(self.logger, data=expected_data)
 
         # Check
         self.assertTrue(expr=result)
@@ -295,38 +175,33 @@ class TestComponentNegative(BaseTestCase[TestedClassStub]):
     @UM.patch.object(target=TestedClassStub, attribute='_read_log_entry', autospec=True)
     @UM.patch.object(target=TestedClassStub, attribute='_flush_log_msg', autospec=True)
     def test_process_log_msg_returns_false_when_flush_fails(self,
-                                                            mock_flush_log_msg: UM.MagicMock,
-                                                            mock_read_log_entry: UM.MagicMock) -> None:
+                                                            mock_flush: UM.MagicMock, mock_read: UM.MagicMock) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        mock_log_entry: UM.MagicMock = TestComponentPositive.create_mock_log_entry()
-        expected_log_entry_data: Dict[str, str] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=('Banana', 'Strawberry', 'Blueberry')
-        )
+        mock_log_entry = UM.MagicMock(spec=LogEntryDTO)
+        expected_data: Dict[str, str] = {'key1': 'value1', 'key2': 'value2'}
 
         # Prepare mock
-        mock_read_log_entry.return_value = expected_log_entry_data
-        mock_flush_log_msg.return_value = False
+        mock_read.return_value = expected_data
+        mock_flush.return_value = False
 
         # Operate
-        result: bool = instance.process_log_msg(log_entry=mock_log_entry)
+        result: bool = self.logger.process_log_msg(log_entry=mock_log_entry)
+
+        # PreCheck
+        mock_read.assert_called_once_with(self.logger, log_entry=mock_log_entry)
+        mock_flush.assert_called_once_with(self.logger, data=expected_data)
 
         # Check
-        mock_read_log_entry.assert_called_once_with(instance, log_entry=mock_log_entry)
-        mock_flush_log_msg.assert_called_once_with(instance, data=expected_log_entry_data)
-        self.assertTrue(expr=InspectingToolKit.is_boolean_False(obj=result))
+        self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_direct_assignment_to_configuration_fields_raises_AttributeError(self) -> None:
+    def test_process_log_msg_raises_invalid_type_error_for_invalid_types(self) -> None:
         # Build
-        expected_fields: Tuple[str, ...] = (
-            'logger_config', 'perform_file_explorer'
-        )
-        instance = self.get_instance_of_tested_cls()
+        invalid_values: List[Any] = [None, 123, "string", [], {}, True]
 
-        # Prepare test cycle
-        for field_name in expected_fields:
-            with self.subTest(pattern=field_name):
-                with self.assertRaises(expected_exception=AttributeError):
+        for invalid_value in invalid_values:
+            # Prepare check context
+            with self.subTest(invalid_value=invalid_value):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
                     # Operate & Check
-                    setattr(instance, field_name, 'IWantChangeThisField')
+                    self.logger.process_log_msg(log_entry=invalid_value)

@@ -1,93 +1,96 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestComponentPositive',
+    'TestFileExplorerInterfaceStrategyContract',
+    'TestNoFileExplorer'
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.2.2'
+__version__ = '0.3.0'
 
 # ========================================================================================
-from typing import Dict, List, Tuple
+from unittest import TestCase
+from abc import ABC
 
-from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
-    import NoFileExplorer as tested_class
-
+from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import (
+    NoFileExplorer, FileExplorerInterfaceStrategy
+)
 from project_code.shared.exceptions.common import IsNullObjectOperation
-
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import InspectingToolKit, MethodCall
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[tested_class]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls.available_methods: Tuple[str, ...] = (
-            'create_file', 'create_dir', 'read_from_file',
-            'check_path_is_exists', 'overwrite_file', 'append_to_file',
-        )
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_class:
-        return tested_class(**kwargs)
+class TestFileExplorerInterfaceStrategyContract(TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_check_null_object(self) -> None:
-        # Build
-        instance: tested_class = self.get_instance_of_tested_cls()
-        methods: Tuple[str, ...] = self.available_methods
+    def test_interface_should_be_abstract_and_not_instantiable(self) -> None:
+        # Operate & Check
+        with self.assertRaises(expected_exception=TypeError):
+            FileExplorerInterfaceStrategy()  # type: ignore
 
-        placeholders: Dict[str, str] = {
-            'path': 'path/to/file',
-            'file_name': 'filename.txt',
-            'dir_name': 'dirname',
-            'content': 'little text!'
-        }
+    # -----------------------------------------------------------------------------------
+    def test_interface_should_inherit_from_abc(self) -> None:
+        # Operate & Check
+        self.assertTrue(expr=issubclass(FileExplorerInterfaceStrategy, ABC))
 
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(
-                method_name=methods[0],
-                args=(placeholders['path'], placeholders['file_name'])
-            ),
-            MethodCall(
-                method_name=methods[1],
-                args=(placeholders['path'], placeholders['dir_name'])
-            ),
-            MethodCall(
-                method_name=methods[2],
-                args=(placeholders['path'],)
-            ),
-            MethodCall(
-                method_name=methods[3],
-                args=(placeholders['path'],)
-            ),
-            MethodCall(
-                method_name=methods[4],
-                args=(placeholders['path'], placeholders['content'])
-            ),
-            MethodCall(
-                method_name=methods[5],
-                args=(placeholders['path'], placeholders['content'])
-            ),
-        ]
 
-        # Operate
-        result: bool = InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
-            obj=instance,
-            method_calls=calls,
-            exception_type=IsNullObjectOperation
-        )
+# _______________________________________________________________________________________
+class TestNoFileExplorer(TestCase):
 
-        # Check
-        self.assertTrue(expr=result)
+    def setUp(self) -> None:
+        super().setUp()
+        self.explorer = NoFileExplorer()
+
+        # Prepare mocks
+        self.mock_path = "/mock/path"
+        self.mock_file_name = "mock_file.txt"
+        self.mock_dir_name = "mock_dir"
+        self.mock_content = "mock content"
+
+    # -----------------------------------------------------------------------------------
+    def test_create_file_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.create_file(path=self.mock_path, file_name=self.mock_file_name)
+
+    # -----------------------------------------------------------------------------------
+    def test_create_dir_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.create_dir(path=self.mock_path, dir_name=self.mock_dir_name)
+
+    # -----------------------------------------------------------------------------------
+    def test_check_path_is_exists_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.check_path_is_exists(path=self.mock_path)
+
+    # -----------------------------------------------------------------------------------
+    def test_read_from_file_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.read_from_file(path=self.mock_path)
+
+    # -----------------------------------------------------------------------------------
+    def test_overwrite_file_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.overwrite_file(path=self.mock_path, content=self.mock_content)
+
+    # -----------------------------------------------------------------------------------
+    def test_append_to_file_should_raise_is_null_object_operation(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=IsNullObjectOperation):
+            # Operate & Check
+            self.explorer.append_to_file(path=self.mock_path, content=self.mock_content)

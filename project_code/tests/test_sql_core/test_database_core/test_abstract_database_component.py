@@ -1,276 +1,234 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestComponentPositive',
-    'TestComponentNegative',
+    'TestSQLDataBase',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.6.0'
+__version__ = '0.7.0'
+
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Any, List, Tuple
+from unittest import TestCase
 
-import project_code.sql_core.database.abstract.database as tested_module
-from project_code.sql_core.database.abstract.database import SQLDataBase as tested_class
+from project_code.sql_core.database.abstract.database import SQLDataBase
 from project_code.shared.exceptions.common import InvalidArgumentTypeError
 from project_code._logging.log_entry_component.log_entry_factory import LogEntryFactory
-from project_code._logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
 from project_code._logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
 from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code.shared.constants.global_configuration import DEFAULT_QUERY_PLACEHOLDER
 
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
+from typing import Any, List
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class TestedClassStub(tested_class):
+class TestedClassStub(SQLDataBase):
+    # -----------------------------------------------------------------------------------
     def deconstruct_database_and_components(self) -> None:
         pass
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[TestedClassStub]):
-
+class TestSQLDataBase(TestCase):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        # Patch LogEntryFactory in tested_module for all tests
-        cls.patcher_factory = UM.patch.object(
-            target=tested_module, attribute='LogEntryFactory', autospec=True
-        )
-        cls.mock_factory: UM.MagicMock = cls.patcher_factory.start()
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def tearDownClass(cls) -> None:
-        super().tearDownClass()
-        cls.patcher_factory.stop()
+    def setUp(self) -> None:
+        super().setUp()
+        self.database = TestedClassStub()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
-    def create_mock_log_entry() -> UM.MagicMock:
-        mock_log_entry: UM.MagicMock = UM.MagicMock(spec=LogEntryDTO)
-        return mock_log_entry
+    def _create_mock_observer() -> UM.MagicMock:
+        return UM.MagicMock(spec=LoggerObserverInterface)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
-    def create_mock_observer() -> UM.MagicMock:
-        mock_observer: UM.MagicMock = UM.MagicMock(spec=LoggerObserverInterface)
-        return mock_observer
+    def _create_mock_log_entry() -> UM.MagicMock:
+        return UM.MagicMock(spec=LogEntryDTO)
 
     # -----------------------------------------------------------------------------------
-    def test_default_query_param_placeholder_is_expected(self) -> None:
-        # Prepare test context
-        with UM.patch.object(target=tested_module,
-                             attribute='DEFAULT_QUERY_PLACEHOLDER') as mock_default_placeholder:
-            # 2Operate
-            instance = self.get_instance_of_tested_cls()
+    def test_default_query_param_placeholder_uses_global_configuration(self) -> None:
+        # Build
+        database = TestedClassStub()
 
-            # Extract
-            actual_placeholder: str = instance.query_param_placeholder
-
-            # Check
-            self.assertEqual(
-                first=actual_placeholder,
-                second=mock_default_placeholder
-            )
+        # Check
+        self.assertEqual(first=database.query_param_placeholder, second=DEFAULT_QUERY_PLACEHOLDER)
 
     # -----------------------------------------------------------------------------------
     def test_custom_query_param_placeholder_is_set_correctly(self) -> None:
         # Build
-        expected_placeholders = '&*()^%$#@!'
-
-        # Prepare test circle
-        for expected_placeholder in expected_placeholders:
-            with self.subTest(pattern=expected_placeholder):
-                # Operate
-                instance = self.get_instance_of_tested_cls(
-                    query_param_placeholder=expected_placeholder
-                )
-
-                # Extract
-                actual_placeholder: str = instance.query_param_placeholder
-
-                # Check
-                self.assertEqual(
-                    first=actual_placeholder,
-                    second=expected_placeholder
-                )
-
-    # -----------------------------------------------------------------------------------
-    def test_change_query_param_placeholder_behavior_when_pass_arg(self) -> None:
-        # Build
-        new_expected_placeholder = GeneratingToolKit.generate_random_string()
-        instance = self.get_instance_of_tested_cls()
-
-        # PreCheck
-        self.assertNotEqual(
-            first=instance.query_param_placeholder,
-            second=new_expected_placeholder
-        )
+        expected_placeholder = '%s'
 
         # Operate
-        instance.change_query_param_placeholder(new_placeholder=new_expected_placeholder)
-
-        # Extract
-        actual_placeholder = instance.query_param_placeholder
+        database = TestedClassStub(query_param_placeholder=expected_placeholder)
 
         # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=new_expected_placeholder
-        )
+        self.assertEqual(first=database.query_param_placeholder, second=expected_placeholder)
 
     # -----------------------------------------------------------------------------------
-    def test_change_query_param_placeholder_behavior_when_not_pass_arg(self) -> None:
+    def test_change_query_param_placeholder_updates_value(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
+        new_placeholder = '?'
 
-        # Prepare test context
-        with UM.patch.object(target=tested_module,
-                             attribute='DEFAULT_QUERY_PLACEHOLDER') as mock_default_placeholder:
-            # Operate
-            instance.change_query_param_placeholder()
+        # Operate
+        self.database.change_query_param_placeholder(new_placeholder=new_placeholder)
 
-            # Extract
-            actual_placeholder = instance.query_param_placeholder
+        # Check
+        self.assertEqual(first=self.database.query_param_placeholder, second=new_placeholder)
 
-            # Check
-            self.assertEqual(
-                first=actual_placeholder,
-                second=mock_default_placeholder
-            )
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_resets_to_default_when_empty_string(self) -> None:
+        # Build
+        self.database.change_query_param_placeholder(new_placeholder='%s')
+
+        # Operate
+        self.database.change_query_param_placeholder(new_placeholder='')
+
+        # Check
+        self.assertEqual(first=self.database.query_param_placeholder, second=DEFAULT_QUERY_PLACEHOLDER)
+
+    # -----------------------------------------------------------------------------------
+    def test_query_param_placeholder_raises_invalid_argument_type_error_for_non_string(self) -> None:
+        # Build
+        invalid_values: List[Any] = [10, -10, 0.1, -0.1, True, False, ['?', '*']]
+
+        for invalid_value in invalid_values:
+            # Prepare check context
+            with self.subTest(invalid_value=invalid_value):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    TestedClassStub(query_param_placeholder=invalid_value)  # type: ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_change_query_param_placeholder_raises_invalid_argument_type_error_for_non_string(self) -> None:
+        # Build
+        invalid_values: List[Any] = [10, -10, 0.1, -0.1, True, False, ['?', '*']]
+
+        for invalid_value in invalid_values:
+            # Prepare check context
+            with self.subTest(invalid_value=invalid_value):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    self.database.change_query_param_placeholder(new_placeholder=invalid_value)  # type: ignore
+
+    # -----------------------------------------------------------------------------------
+    def test_sql_data_base_is_abstract_and_cannot_be_instantiated(self) -> None:
+        # Prepare check context
+        with self.assertRaises(expected_exception=TypeError):
+            # Operate & Check
+            SQLDataBase()  # type: ignore
 
     # -----------------------------------------------------------------------------------
     def test_deconstruct_database_and_components_called_on_delete(self) -> None:
-        # Build
-        expected_method_name = 'deconstruct_database_and_components'
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare mock
+        # Prepare check context
         with UM.patch.object(
-            target=instance, attribute=expected_method_name, autospec=True
+                target=TestedClassStub,
+                attribute='deconstruct_database_and_components',
+                autospec=True
         ) as mock_method:
+            # Build
+            database = TestedClassStub()
+
             # Operate
-            instance.__del__()
+            database.__del__()
 
             # Check
             mock_method.assert_called_once()
 
     # -----------------------------------------------------------------------------------
-    def test_log_entry_factory_is_singleton_shared_across_instances(self) -> None:
+    def test_log_entry_factory_is_shared_class_attribute(self) -> None:
+        # Build
+        database1 = TestedClassStub()
+        database2 = TestedClassStub()
+
+        # Check
+        self.assertIsInstance(obj=database1.log_entry_factory, cls=LogEntryFactory)
+        self.assertIsInstance(obj=database2.log_entry_factory, cls=LogEntryFactory)
+        self.assertIs(expr1=database1.log_entry_factory, expr2=database2.log_entry_factory)
+        self.assertIs(expr1=database1.log_entry_factory, expr2=SQLDataBase.log_entry_factory)
+
+    # -----------------------------------------------------------------------------------
+    def test_register_logger_observer_returns_true_for_valid_observer(self) -> None:
+        # Build
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+
         # Operate
-        instance1 = self.get_instance_of_tested_cls()
-        instance2 = self.get_instance_of_tested_cls()
-
-        # Extract
-        factory1: LogEntryFactory = instance1.log_entry_factory
-        factory2: LogEntryFactory = instance2.log_entry_factory
-
-        # Pre-Check
-        self.assertIsInstance(
-            obj=factory1,
-            cls=LogEntryFactory
-        )
-        self.assertIsInstance(
-            obj=factory2,
-            cls=LogEntryFactory
-        )
+        result: bool = self.database.register_logger_observer(new_observer=mock_observer)
 
         # Check
-        self.assertIs(
-            expr1=factory1,
-            expr2=factory2
-        )
+        self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_all_abstract_methods_from_logger_subject_interface_are_implemented(self) -> None:
+    def test_register_logger_observer_returns_false_for_invalid_observer_types(self) -> None:
         # Build
-        expected_methods: frozenset[str] = LoggerSubjectInterface.__abstractmethods__
+        invalid_observers: List[Any] = [None, 123, "string", [], {}, True]
 
-        # Prepare test cycle
-        for expected_method in expected_methods:
-            with self.subTest(pattern=expected_method):
+        for invalid_observer in invalid_observers:
+            # Prepare check context
+            with self.subTest(invalid_observer=invalid_observer):
+                # Operate
+                result: bool = self.database.register_logger_observer(new_observer=invalid_observer)  # type: ignore
+
                 # Check
-                self.assertIn(
-                    member=expected_method,
-                    container=tested_class.__dict__
-                )
+                self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_register_logger_observer_returns_True_for_valid_observer(self) -> None:
+    def test_register_logger_observer_returns_false_for_duplicate_observer(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = self.get_instance_of_tested_cls()
+        mock_observer: UM.MagicMock = self._create_mock_observer()
 
-        # Operate & Extract
-        result: bool = instance.register_logger_observer(new_observer=mock_observer)
+        # Operate
+        result1: bool = self.database.register_logger_observer(new_observer=mock_observer)
+        result2: bool = self.database.register_logger_observer(new_observer=mock_observer)
 
         # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=result)
-        )
+        self.assertTrue(expr=result1)
+        self.assertFalse(expr=result2)
 
     # -----------------------------------------------------------------------------------
-    def test_notify_logger_observers_returns_True_when_observers_exist(self) -> None:
+    def test_notify_logger_observers_returns_true_when_observers_exist(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = self.create_mock_observer()
-        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = self.get_instance_of_tested_cls()
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Prepare
-        instance.register_logger_observer(new_observer=mock_observer)
+        self.database.register_logger_observer(new_observer=mock_observer)
 
-        # Operate & Extract
-        result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
+        # Operate
+        result: bool = self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=result)
-        )
+        self.assertTrue(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_remove_logger_observer_returns_True_when_observer_removed(self) -> None:
+    def test_notify_logger_observers_returns_false_when_no_observers_registered(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = self.create_mock_observer()
-        instance = self.get_instance_of_tested_cls()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Prepare
-        instance.register_logger_observer(new_observer=mock_observer)
-
-        # Operate & Extract
-        result: bool = instance.remove_logger_observer(removable_observer=mock_observer)
+        # Operate
+        result: bool = self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=result)
-        )
+        self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
     def test_notify_logger_observers_calls_update_on_all_registered_observers(self) -> None:
-        mock_observer1: UM.MagicMock = self.create_mock_observer()
-        mock_observer2: UM.MagicMock = self.create_mock_observer()
-        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = self.get_instance_of_tested_cls()
+        # Build
+        mock_observer1: UM.MagicMock = self._create_mock_observer()
+        mock_observer2: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Prepare
-        instance1.register_logger_observer(new_observer=mock_observer1)
-        instance1.register_logger_observer(new_observer=mock_observer2)
+        self.database.register_logger_observer(new_observer=mock_observer1)
+        self.database.register_logger_observer(new_observer=mock_observer2)
 
         # Operate
-        instance1.notify_logger_observers(log_entry=mock_log_entry)
+        self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
         mock_observer1.update.assert_called_once_with(log_entry=mock_log_entry)
@@ -279,253 +237,105 @@ class TestComponentPositive(BaseTestCase[TestedClassStub]):
     # -----------------------------------------------------------------------------------
     def test_observers_are_isolated_between_different_database_instances(self) -> None:
         # Build
-        mock_observer1: UM.MagicMock = self.create_mock_observer()
-        mock_observer2: UM.MagicMock = self.create_mock_observer()
-        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance1 = self.get_instance_of_tested_cls()
-        instance2 = self.get_instance_of_tested_cls()
+        mock_observer1: UM.MagicMock = self._create_mock_observer()
+        mock_observer2: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Prepare
-        register_observer1_result: bool = instance1.register_logger_observer(new_observer=mock_observer1)
-        register_observer2_result: bool = instance2.register_logger_observer(new_observer=mock_observer2)
+        database1 = TestedClassStub()
+        database2 = TestedClassStub()
 
-        # Pre-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=register_observer1_result)
-        )
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=register_observer2_result)
-        )
+        # Prepare instances
+        database1.register_logger_observer(new_observer=mock_observer1)
+        database2.register_logger_observer(new_observer=mock_observer2)
 
         # Operate
-        notify_result1: bool = instance1.notify_logger_observers(log_entry=mock_log_entry)
-
-        # Pre-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=notify_result1)
-        )
+        database1.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
         mock_observer1.update.assert_called_once_with(log_entry=mock_log_entry)
         mock_observer2.update.assert_not_called()
 
-        # Operate
-        notify_result2: bool = instance2.notify_logger_observers(log_entry=mock_log_entry)
+    # -----------------------------------------------------------------------------------
+    def test_remove_logger_observer_returns_true_when_observer_removed(self) -> None:
+        # Build
+        mock_observer: UM.MagicMock = self._create_mock_observer()
 
-        # Pre-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=notify_result2)
-        )
+        self.database.register_logger_observer(new_observer=mock_observer)
+
+        # Operate
+        result: bool = self.database.remove_logger_observer(removable_observer=mock_observer)
 
         # Check
-        mock_observer2.update.assert_called_once_with(log_entry=mock_log_entry)
+        self.assertTrue(expr=result)
+
+    # -----------------------------------------------------------------------------------
+    def test_remove_logger_observer_returns_false_when_observer_not_registered(self) -> None:
+        # Build
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+
+        # Operate
+        result: bool = self.database.remove_logger_observer(removable_observer=mock_observer)
+
+        # Check
+        self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
     def test_removed_observer_is_not_notified(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = self.create_mock_observer()
-        prepared_mock_observer: UM.MagicMock = self.create_mock_observer()
-        mock_log_entry: UM.MagicMock = self.create_mock_log_entry()
-        instance = self.get_instance_of_tested_cls()
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Prepare
-        instance.register_logger_observer(new_observer=prepared_mock_observer)
-        instance.register_logger_observer(new_observer=mock_observer)
+        self.database.register_logger_observer(new_observer=mock_observer)
+        self.database.remove_logger_observer(removable_observer=mock_observer)
 
-        # Operate & Extract pre-check data
-        remove_result: bool = instance.remove_logger_observer(removable_observer=mock_observer)
-        notify_result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
-
-        # Pre-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=remove_result)
-        )
-
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=notify_result)
-        )
+        # Operate
+        self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
         mock_observer.update.assert_not_called()
 
     # -----------------------------------------------------------------------------------
-    def test_register_notify_remove_observer_flow_behaves_as_expected(self) -> None:
+    def test_register_observer_then_notify_calls_update(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = self.create_mock_observer()
-        mock_log_entry_1: UM.MagicMock = self.create_mock_log_entry()
-        mock_log_entry_2: UM.MagicMock = self.create_mock_log_entry()
-        mock_log_entry_3: UM.MagicMock = self.create_mock_log_entry()
-        instance = self.get_instance_of_tested_cls()
-
-        # Operate & Extract
-        register_result: bool = instance.register_logger_observer(
-            new_observer=mock_observer
-        )
-        repeat_register_observer_result: bool = instance.register_logger_observer(
-            new_observer=mock_observer
-        )
-        notify_result: bool = instance.notify_logger_observers(
-            log_entry=mock_log_entry_1
-        )
-        second_notify_result: bool = instance.notify_logger_observers(
-            log_entry=mock_log_entry_2
-        )
-        remove_result: bool = instance.remove_logger_observer(
-            removable_observer=mock_observer
-        )
-        after_remove_notify_result: bool = instance.notify_logger_observers(
-            log_entry=mock_log_entry_3
-        )
-        remove_removable_observer_result: bool = instance.remove_logger_observer(
-            removable_observer=mock_observer
-        )
-
-        # Prepare
-        expected_true: List[bool] = [
-            register_result, notify_result, second_notify_result, remove_result
-        ]
-        expected_false: List[bool] = [
-            after_remove_notify_result, remove_removable_observer_result, repeat_register_observer_result
-        ]
-
-        # Prepare check cycle
-        for result in expected_true:
-            # Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_True(obj=result)
-            )
-
-        for result in expected_false:
-            # Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_False(obj=result)
-            )
-
-
-# _______________________________________________________________________________________
-class TestComponentNegative(BaseTestCase[TestedClassStub]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> TestedClassStub:
-        return TestedClassStub(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        # Patch LogEntryFactory in tested_module for all tests
-        cls.patcher_factory = UM.patch.object(
-            target=tested_module, attribute=f'{LogEntryFactory.__name__}', autospec=True
-        )
-        cls.mock_factory: UM.MagicMock = cls.patcher_factory.start()
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def tearDownClass(cls) -> None:
-        super().tearDownClass()
-        cls.patcher_factory.stop()
-
-    # -----------------------------------------------------------------------------------
-    def test_query_param_placeholder_must_be_string(self) -> None:
-        # Build
-        invalid_placeholders: Tuple[Any, ...] = (
-            10, -10, 0.1, -0.1, True, False, ['?', '*']
-        )
-
-        # Prepare test cycle
-        for invalid_placeholder in invalid_placeholders:
-            # SubTest
-            with self.subTest(pattern=invalid_placeholder):
-                # Prepare check context
-                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
-                    # Operate
-                    TestedClassStub(query_param_placeholder=invalid_placeholder)
-
-    # -----------------------------------------------------------------------------------
-    def test_change_query_param_placeholder_behavior_when_arg_is_invalid_type(self) -> None:
-        # Build
-        invalid_placeholders: Tuple[Any, ...] = (
-            10, -10, 0.1, -0.1, True, False, ['?', '*']
-        )
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare test cycle
-        for invalid_placeholder in invalid_placeholders:
-            # SubTest
-            with self.subTest(pattern=invalid_placeholder):
-                # Prepare check context
-                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
-                    # Operate
-                    instance.change_query_param_placeholder(new_placeholder=invalid_placeholder)
-
-    # -----------------------------------------------------------------------------------
-    def test_cannot_instantiate_abstract_database_directly_raises_TypeError(self) -> None:
-        # Operate & Check
-        with self.assertRaises(expected_exception=TypeError):
-            tested_class()  # type: ignore
-
-    # -----------------------------------------------------------------------------------
-    def test_register_logger_observer_returns_false_for_invalid_observer_types(self) -> None:
-        # Build
-        invalid_observers: List[Any] = \
-            GeneratingToolKit.generate_list_of_basic_python_types()
-        instance = self.get_instance_of_tested_cls()
-
-        # Prepare test cycle
-        for invalid_observer in invalid_observers:
-            with self.subTest(pattern=invalid_observer):
-                # Operate & Extract
-                result: bool = instance.register_logger_observer(
-                    new_observer=invalid_observer
-                )
-
-                # Check
-                self.assertTrue(
-                    expr=InspectingToolKit.is_boolean_False(obj=result)
-                )
-
-    # -----------------------------------------------------------------------------------
-    def test_register_logger_observer_returns_false_for_duplicate_observer(self) -> None:
-        # Build
-        mock_observer: UM.MagicMock = TestComponentPositive.create_mock_observer()
-        instance = self.get_instance_of_tested_cls()
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
         # Operate
-        result1: bool = instance.register_logger_observer(new_observer=mock_observer)
-        result2: bool = instance.register_logger_observer(new_observer=mock_observer)
+        self.database.register_logger_observer(new_observer=mock_observer)
+        self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=result1)
-        )
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=result2)
-        )
+        mock_observer.update.assert_called_once_with(log_entry=mock_log_entry)
 
     # -----------------------------------------------------------------------------------
-    def test_notify_logger_observers_returns_false_when_no_observers_registered(self) -> None:
-       # Build
-        mock_log_entry: UM.MagicMock = TestComponentPositive.create_mock_log_entry()
-        instance = self.get_instance_of_tested_cls()
-
-        # Operate & Extract
-        result: bool = instance.notify_logger_observers(log_entry=mock_log_entry)
-
-        # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=result)
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_remove_logger_observer_returns_false_when_observer_not_registered(self) -> None:
+    def test_register_observer_then_remove_then_notify_does_not_call_update(self) -> None:
         # Build
-        mock_observer: UM.MagicMock = TestComponentPositive.create_mock_observer()
-        instance = self.get_instance_of_tested_cls()
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry: UM.MagicMock = self._create_mock_log_entry()
 
-        # Operate & Extract
-        result: bool = instance.remove_logger_observer(removable_observer=mock_observer)
+        self.database.register_logger_observer(new_observer=mock_observer)
+        self.database.remove_logger_observer(removable_observer=mock_observer)
+
+        # Operate
+        self.database.notify_logger_observers(log_entry=mock_log_entry)
 
         # Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=result)
-        )
+        mock_observer.update.assert_not_called()
+
+    # -----------------------------------------------------------------------------------
+    def test_multiple_notify_calls_trigger_multiple_updates(self) -> None:
+        # Build
+        mock_observer: UM.MagicMock = self._create_mock_observer()
+        mock_log_entry1: UM.MagicMock = self._create_mock_log_entry()
+        mock_log_entry2: UM.MagicMock = self._create_mock_log_entry()
+
+        self.database.register_logger_observer(new_observer=mock_observer)
+
+        # Operate
+        self.database.notify_logger_observers(log_entry=mock_log_entry1)
+        self.database.notify_logger_observers(log_entry=mock_log_entry2)
+
+        # Check
+        self.assertEqual(first=mock_observer.update.call_count, second=2)
+        mock_observer.update.assert_any_call(log_entry=mock_log_entry1)
+        mock_observer.update.assert_any_call(log_entry=mock_log_entry2)

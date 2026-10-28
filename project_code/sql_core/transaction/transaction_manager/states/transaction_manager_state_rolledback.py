@@ -9,21 +9,21 @@ __author__ = 'kichiro-kun (Kei)'
 __version__ = '0.2.0'
 
 # =======================================================================================
-from dbms_interaction.transaction_manager_component.abstract.transaction_state_interface \
+from project_code.sql_core.transaction.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from dbms_interaction.transaction_manager_component.transaction_manager \
+    from project_code.sql_core.transaction.transaction_manager.transaction_manager \
         import TransactionManager
-    from dbms_interaction.transaction_manager_component.states.transaction_manager_state_rolledback \
-        import TransactionManagerStateRolledBack
-    from dbms_interaction.adapters_component.connection.abstract.connection_interface \
+    from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_initialized \
+        import TransactionManagerStateInitialized
+    from project_code.sql_core.adapters.connection.abstract.connection_interface \
         import ConnectionInterface
 
 
 # _______________________________________________________________________________________
-class TransactionManagerStateCommitted(TransactionStateInterface):
+class TransactionManagerStateRolledBack(TransactionStateInterface):
 
     # -----------------------------------------------------------------------------------
     def __init__(self, transaction_manager: 'TransactionManager') -> None:
@@ -31,7 +31,13 @@ class TransactionManagerStateCommitted(TransactionStateInterface):
 
     # -----------------------------------------------------------------------------------
     def begin(self) -> None:
-        return
+        next_state: 'TransactionManagerStateInitialized' = self.root.initialized_state
+
+        # Set next state
+        self.root.set_state(new_state=next_state)
+
+        # Delegate operation to next state
+        self.root.begin()
 
     # -----------------------------------------------------------------------------------
     def execute_in_active_transaction(self, *params, query: str) -> None:
@@ -39,16 +45,10 @@ class TransactionManagerStateCommitted(TransactionStateInterface):
 
     # -----------------------------------------------------------------------------------
     def commit(self) -> None:
-        conn: 'ConnectionInterface' = self.root.active_connection
-
-        cur = conn.commit()
+        return
 
     # -----------------------------------------------------------------------------------
     def rollback(self) -> None:
-        next_state: 'TransactionManagerStateRolledBack' = self.root.rolledback_state
+        conn: 'ConnectionInterface' = self.root.active_connection
 
-        # Set next state
-        self.root.set_state(new_state=next_state)
-
-        # Delegate operation to next state
-        self.root.rollback()
+        conn.rollback()

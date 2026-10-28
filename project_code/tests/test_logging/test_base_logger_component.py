@@ -17,14 +17,14 @@ __version__ = '0.5.2'
 from unittest import mock as UM
 from typing import Any, Dict, List, Tuple
 
-import _logging.base_logger_component.abstract.base_logger as tested_module
-from _logging.base_logger_component.abstract.base_logger import BaseLogger as tested_class
-from _logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
-from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy
+import project_code._logging.base_logger_component.abstract.base_logger as tested_module
+from project_code._logging.base_logger_component.abstract.base_logger import BaseLogger as tested_class
+from project_code._logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

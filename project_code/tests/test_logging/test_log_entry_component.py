@@ -18,13 +18,13 @@ from unittest import mock as UM
 from typing import Any, Dict, Tuple
 from datetime import datetime
 
-import _logging.log_entry_component.log_entry_factory as tested_module
-from _logging.log_entry_component.log_entry_factory import LogEntryFactory as tested_cls
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
-from shared.exceptions._logging import UnsupportedLogLevelError
+import project_code._logging.log_entry_component.log_entry_factory as tested_module
+from project_code._logging.log_entry_component.log_entry_factory import LogEntryFactory as tested_cls
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code.shared.exceptions._logging import UnsupportedLogLevelError
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
 
 
 # _______________________________________________________________________________________

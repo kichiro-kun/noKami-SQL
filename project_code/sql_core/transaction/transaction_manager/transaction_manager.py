@@ -12,14 +12,14 @@ __version__ = '0.5.0'
 from enum import Enum
 from typing import NoReturn
 
-from dbms_interaction.transaction_manager_component.abstract.transaction_state_interface \
+from project_code.sql_core.transaction.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
-from dbms_interaction.transaction_manager_component.states import *
+from project_code.sql_core.transaction.transaction_manager.states import *
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
+from project_code.sql_core.adapters.connection.abstract.connection_interface import ConnectionInterface
 
-from shared.utils.toolkit import ToolKit
-from shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
+from project_code.shared.utils.toolkit import ToolKit
+from project_code.shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

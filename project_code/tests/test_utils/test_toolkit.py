@@ -20,8 +20,8 @@ import unittest as UT
 import string
 from typing import Any, Dict, List, NoReturn, Tuple
 
-from shared.exceptions import InvalidArgumentTypeError
-from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit, MethodCall
+from project_code.shared.exceptions import InvalidArgumentTypeError
+from project_code.tests.utils.toolkit import InspectingToolKit, GeneratingToolKit, MethodCall
 
 
 # _______________________________________________________________________________________

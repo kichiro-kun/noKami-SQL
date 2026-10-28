@@ -15,13 +15,13 @@ __version__ = '0.2.2'
 # ========================================================================================
 from typing import Dict, List, Tuple
 
-from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
+from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy \
     import NoFileExplorer as tested_class
 
-from shared.exceptions.common import IsNullObjectOperation
+from project_code.shared.exceptions.common import IsNullObjectOperation
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import InspectingToolKit, MethodCall
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import InspectingToolKit, MethodCall
 
 
 # _______________________________________________________________________________________

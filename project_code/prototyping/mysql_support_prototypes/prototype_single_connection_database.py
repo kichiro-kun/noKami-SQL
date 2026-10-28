@@ -12,14 +12,14 @@ __version__ = '0.1.3'
 from typing import Any
 from mysql.connector import MySQLConnection
 
-from database_core.single_connection_database_component.single_connection_database\
-    import SingleConnectionDataBase
+from project_code.sql_core.database.single.single_connection_database\
+    import SQLSingleConnectionDatabase
 
-from dbms_interaction.single_connection_manager_component.single_connection_manager\
+from project_code.sql_core.connection.single_manager.single_connection_manager\
     import SingleConnectionManager
-from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection\
+from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection\
     import MySQLAdapterConnection
-from shared.exceptions.common import IsNullObjectOperation
+from project_code.shared.exceptions.common import IsNullObjectOperation
 
 
 CONFIG_1 = {
@@ -51,7 +51,7 @@ Connection & Cursor
 
     # ---------------------------------------------------------------------------------------
     # Инициализация представления базы данных
-    database = SingleConnectionDataBase()
+    database = SQLSingleConnectionDatabase()
 
     try:
         database.execute_query_returns_all(

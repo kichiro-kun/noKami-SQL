@@ -16,9 +16,9 @@ __version__ = '0.2.2'
 from unittest import TestCase
 from typing import List, Type
 
-from shared.exceptions import *
+from project_code.shared.exceptions import *
 
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
 
 # _______________________________________________________________________________________

@@ -11,12 +11,12 @@ __version__ = '0.3.0'
 # =======================================================================================
 from unittest import TestCase, mock as UM
 
-from dbms_interaction.transaction_manager_component.transaction_manager import TransactionManager
-from dbms_interaction.transaction_manager_component.states import *
+from project_code.sql_core.transaction.transaction_manager.transaction_manager import TransactionManager
+from project_code.sql_core.transaction.transaction_manager.states import *
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
+from project_code.sql_core.adapters.connection.abstract.connection_interface import ConnectionInterface
 
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
 from typing import Tuple, Any
 

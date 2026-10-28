@@ -18,13 +18,13 @@ from typing import Any, Dict
 
 from mysql.connector import MySQLConnection
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface\
+from project_code.sql_core.adapters.connection.abstract.connection_interface\
     import ConnectionInterface
 
-from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor\
+from project_code.sql_core.adapters.cursor.realizations.mysql_adapter_cursor\
     import MySQLAdapterCursor
 
-from shared.exceptions.common import OperationFailedConnectionIsNotActive
+from project_code.shared.exceptions.common import OperationFailedConnectionIsNotActive
 
 
 # _______________________________________________________________________________________

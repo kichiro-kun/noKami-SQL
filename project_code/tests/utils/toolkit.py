@@ -20,7 +20,7 @@ import random
 import string
 from typing import Callable, Dict, Iterable, LiteralString, Tuple, NamedTuple, Any, List, Type
 
-from shared.exceptions import InvalidArgumentTypeError
+from project_code.shared.exceptions import InvalidArgumentTypeError
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,7 +100,7 @@ class GeneratingToolKit:
         return final_dict
 
     # -----------------------------------------------------------------------------------
-    # Сделать возможность исключения определённого типа (предположительно нескольких элементов)
+    # TODO: Возможность допускать некоторые стандартные значения (исключать из проверки)
     @staticmethod
     def generate_list_of_basic_python_types(include_special_values: Iterable[Any] = ()) -> List[Any]:
         # Generate simple values

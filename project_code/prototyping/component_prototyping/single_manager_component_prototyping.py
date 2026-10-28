@@ -11,14 +11,14 @@ __version__ = '0.2.0'
 # =======================================================================================
 from mysql.connector import MySQLConnection
 
-from dbms_interaction.single_connection_manager_component.single_connection_manager \
+from project_code.sql_core.connection.single_manager.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
-from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection \
+from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection \
     import MySQLAdapterConnection
 
-from prototyping.config import CONFIG_1, CONFIG_2
+from project_code.prototyping.config import CONFIG_1, CONFIG_2
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface \
+from project_code.sql_core.adapters.connection.abstract.connection_interface \
     import ConnectionInterface
 from typing import Any
 

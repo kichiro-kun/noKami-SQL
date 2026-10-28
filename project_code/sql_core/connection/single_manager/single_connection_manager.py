@@ -15,11 +15,11 @@ __version__ = '0.7.0'
 # =======================================================================================
 from typing import Any, Dict, NoReturn
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface \
+from project_code.sql_core.adapters.connection.abstract.connection_interface \
     import ConnectionInterface
 
-from shared.exceptions.common import IsNullObjectOperation
-from shared.utils.toolkit import ToolKit
+from project_code.shared.exceptions.common import IsNullObjectOperation
+from project_code.shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________

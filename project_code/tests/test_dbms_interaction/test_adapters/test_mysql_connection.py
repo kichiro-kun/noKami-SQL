@@ -17,12 +17,12 @@ __version__ = '0.7.0'
 from unittest import mock as UM
 from typing import Tuple, Dict, Any
 
-from dbms_interaction.adapters_component.connection.realizations import mysql_adapter_connection as tested_module
-from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection import MySQLAdapterConnection as connection_adapter
-from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
+from project_code.sql_core.adapters.connection.realizations import mysql_adapter_connection as tested_module
+from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection import MySQLAdapterConnection as connection_adapter
+from project_code.sql_core.adapters.connection.abstract.connection_interface import ConnectionInterface
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import InspectingToolKit, GeneratingToolKit
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import InspectingToolKit, GeneratingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -367,7 +367,7 @@ class TestMySQLAdapterNegative(BaseConnectionTestCase):
 
     # -----------------------------------------------------------------------------------
     def test_get_cursor_behavior_when_connection_is_not_exists(self) -> None:
-        from shared.exceptions.common import OperationFailedConnectionIsNotActive
+        from project_code.shared.exceptions.common import OperationFailedConnectionIsNotActive
 
         # Build
         connector: UM.MagicMock = self._connector

@@ -17,15 +17,15 @@ __version__ = '0.8.2'
 from unittest import mock as UM
 from typing import Any, Dict, List, Tuple
 
-from dbms_interaction.single_connection_manager_component.single_connection_manager \
+from project_code.sql_core.connection.single_manager.single_connection_manager \
     import SingleConnectionManager as tested_cls
 
-from tests.test_dbms_interaction.common import *
+from project_code.tests.test_dbms_interaction.common import *
 
-from shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
+from project_code.shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit, MethodCall
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,7 +70,7 @@ class TestComponentPositive(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
     def test_null_object_realization(self) -> None:
-        from dbms_interaction.single_connection_manager_component.single_connection_manager import NoSingleConnectionManager
+        from project_code.sql_core.connection.single_manager.single_connection_manager import NoSingleConnectionManager
 
         # Build
         method_calls: Dict[str, Dict[str, Any]] = {

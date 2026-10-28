@@ -18,15 +18,15 @@ from typing import Any, List, Sequence, Tuple
 
 from mysql.connector import MySQLConnection
 
-from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor \
+from project_code.sql_core.adapters.cursor.realizations.mysql_adapter_cursor \
     import MySQLAdapterCursor as tested_cls
-from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
+from project_code.sql_core.adapters.cursor.abstract.cursor_interface \
     import CursorInterface
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
-from shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
+from project_code.shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
 
 
 # _______________________________________________________________________________________

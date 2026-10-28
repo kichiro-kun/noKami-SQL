@@ -12,25 +12,25 @@ __version__ = '0.12.0'
 from abc import ABCMeta
 from typing import Any, Sequence, Dict, Optional, Callable
 
-from database_core.abstract_database_component.database import DataBase
-from query_core.query_interface_component.query_interface import QueryInterface
+from project_code.sql_core.database.abstract.database import SQLDataBase
+from project_code.sql_core.query.query_interface import SQLQueryInterface
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface\
+from project_code.sql_core.adapters.connection.abstract.connection_interface\
     import ConnectionInterface
-from dbms_interaction.adapters_component.cursor.abstract.cursor_interface\
+from project_code.sql_core.adapters.cursor.abstract.cursor_interface\
     import CursorInterface
-from dbms_interaction.single_connection_manager_component.single_connection_manager\
+from project_code.sql_core.connection.single_manager.single_connection_manager\
     import SingleConnectionManager, NoSingleConnectionManager
-from dbms_interaction.transaction_manager_component.transaction_manager\
+from project_code.sql_core.transaction.transaction_manager.transaction_manager\
     import TransactionManager, NoTransactionManager
 
-from shared.exceptions.common import OperationFailedConnectionIsNotActive
+from project_code.shared.exceptions.common import OperationFailedConnectionIsNotActive
 
-from shared.utils.toolkit import ToolKit
+from project_code.shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________
-class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
+class SQLSingleConnectionDatabase(SQLDataBase, SQLQueryInterface, metaclass=ABCMeta):
 
     # -----------------------------------------------------------------------------------
     def __init__(self, query_param_placeholder: str = '') -> None:
@@ -41,9 +41,9 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
         )
 
         if query_param_placeholder == '':
-            DataBase.__init__(self=self)
+            SQLDataBase.__init__(self=self)
         else:
-            DataBase.__init__(self=self, query_param_placeholder=query_param_placeholder)
+            SQLDataBase.__init__(self=self, query_param_placeholder=query_param_placeholder)
 
         self._perform_connection_manager = NoSingleConnectionManager()
         self._transaction_manager = NoTransactionManager()
@@ -88,7 +88,7 @@ class SingleConnectionDataBase(DataBase, QueryInterface, metaclass=ABCMeta):
 
     # -----------------------------------------------------------------------------------
     def change_query_param_placeholder(self, new_placeholder: str = '') -> None:
-        DataBase.change_query_param_placeholder(self=self, new_placeholder=new_placeholder)
+        SQLDataBase.change_query_param_placeholder(self=self, new_placeholder=new_placeholder)
         transaction_manager: TransactionManager = self._transaction_manager
 
         transaction_manager.query_param_placeholder = new_placeholder

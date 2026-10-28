@@ -18,10 +18,10 @@ from typing import Any, Sequence
 from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursor
 
-from dbms_interaction.adapters_component.cursor.abstract.cursor_interface \
+from project_code.sql_core.adapters.cursor.abstract.cursor_interface \
     import CursorInterface
 
-from shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
+from project_code.shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
 
 
 # _______________________________________________________________________________________

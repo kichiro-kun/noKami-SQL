@@ -16,7 +16,7 @@ __version__ = '0.6.0'
 from abc import abstractmethod, ABC
 from typing import Any, Dict
 
-from dbms_interaction.adapters_component.cursor.abstract.cursor_interface import CursorInterface
+from project_code.sql_core.adapters.cursor.abstract.cursor_interface import CursorInterface
 
 
 # _______________________________________________________________________________________

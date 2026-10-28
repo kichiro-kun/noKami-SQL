@@ -15,7 +15,7 @@ __version__ = '0.1.0'
 # =======================================================================================
 from typing import Type
 
-from shared.exceptions import InvalidArgumentTypeError
+from project_code.shared.exceptions import InvalidArgumentTypeError
 
 
 # _______________________________________________________________________________________

@@ -17,20 +17,20 @@ __version__ = '0.12.2'
 from unittest import mock as UM
 from typing import Dict, List, Sequence, Tuple, Any
 
-import database_core.single_connection_database_component.single_connection_database as tested_module
-from database_core.single_connection_database_component.single_connection_database import SingleConnectionDataBase as tested_cls
+import project_code.sql_core.database.single.single_connection_database as tested_module
+from project_code.sql_core.database.single.single_connection_database import SQLSingleConnectionDatabase as tested_cls
 
-from database_core.abstract_database_component.database import DataBase
-from dbms_interaction.single_connection_manager_component.single_connection_manager \
+from project_code.sql_core.database.abstract.database import SQLDataBase
+from project_code.sql_core.connection.single_manager.single_connection_manager \
     import SingleConnectionManager, NoSingleConnectionManager
-from dbms_interaction.transaction_manager_component.transaction_manager \
+from project_code.sql_core.transaction.transaction_manager.transaction_manager \
     import TransactionManager, NoTransactionManager
-from query_core.query_interface_component.query_interface import QueryInterface
+from project_code.sql_core.query.query_interface import SQLQueryInterface
 
-from shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
+from project_code.shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -91,7 +91,7 @@ class TestComponentPositive(BaseTestComponent):
         # Check
         self.assertIsInstance(
             obj=instance,
-            cls=DataBase
+            cls=SQLDataBase
         )
 
     # -----------------------------------------------------------------------------------
@@ -636,7 +636,7 @@ class TestComponentNegative(BaseTestComponent):
 
         # Prepare additional data
         execute_query_methods: List[str] = [
-            method_name for method_name in QueryInterface.__abstractmethods__
+            method_name for method_name in SQLQueryInterface.__abstractmethods__
             if 'execute_query' in method_name
         ]
         execute_methods_count: int = len(execute_query_methods)

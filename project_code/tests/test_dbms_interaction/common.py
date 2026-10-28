@@ -15,7 +15,7 @@ __version__ = '0.1.2'
 # =======================================================================================
 from typing import Dict, Any
 
-from dbms_interaction.adapters_component.connection.abstract.connection_interface import ConnectionInterface
+from project_code.sql_core.adapters.connection.abstract.connection_interface import ConnectionInterface
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

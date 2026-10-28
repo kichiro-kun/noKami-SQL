@@ -20,10 +20,10 @@ from random import randint
 from mysql.connector import MySQLConnection
 from mysql.connector.errors import ProgrammingError, OperationalError, InterfaceError
 
-from tests.test_boundary.common import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.test_boundary.common import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
-from tests.global_testing_config import DB_CONFIG
+from project_code.tests.global_testing_config import DB_CONFIG
 
 from typing import Any, Dict, List, Tuple
 
@@ -488,7 +488,7 @@ class TestMySQLBoundaryPositive(BaseTestCaseMySQL):
 
     # -----------------------------------------------------------------------------------
     def test_double_establishing_connection(self) -> None:
-        from tests.global_testing_config import DB_CONFIG
+        from project_code.tests.global_testing_config import DB_CONFIG
 
         # Operate
         conn1 = MySQLConnection(**DB_CONFIG)

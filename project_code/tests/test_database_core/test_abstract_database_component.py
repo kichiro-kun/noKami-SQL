@@ -17,16 +17,16 @@ __version__ = '0.6.0'
 from unittest import mock as UM
 from typing import Any, List, Tuple
 
-import database_core.abstract_database_component.database as tested_module
-from database_core.abstract_database_component.database import DataBase as tested_class
-from shared.exceptions.common import InvalidArgumentTypeError
-from _logging.log_entry_component.log_entry_factory import LogEntryFactory
-from _logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
-from _logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+import project_code.sql_core.database.abstract.database as tested_module
+from project_code.sql_core.database.abstract.database import SQLDataBase as tested_class
+from project_code.shared.exceptions.common import InvalidArgumentTypeError
+from project_code._logging.log_entry_component.log_entry_factory import LogEntryFactory
+from project_code._logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
+from project_code._logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import GeneratingToolKit, InspectingToolKit
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

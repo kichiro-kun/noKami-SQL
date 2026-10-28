@@ -12,9 +12,9 @@ __version__ = '0.3.1'
 from typing import Type
 from datetime import datetime
 
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
-from _logging.log_entry_component.types.log_entry_types import *
-from shared.exceptions._logging import UnsupportedLogLevelError
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code._logging.log_entry_component.types.log_entry_types import *
+from project_code.shared.exceptions._logging import UnsupportedLogLevelError
 
 
 # _______________________________________________________________________________________

@@ -17,7 +17,7 @@ __version__ = '0.3.0'
 from abc import ABC, abstractmethod
 from typing import NoReturn
 
-from shared.exceptions.common import IsNullObjectOperation
+from project_code.shared.exceptions.common import IsNullObjectOperation
 
 
 # _______________________________________________________________________________________

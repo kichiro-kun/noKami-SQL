@@ -11,14 +11,14 @@ __version__ = '0.2.0'
 # =======================================================================================
 from mysql.connector import MySQLConnection
 
-from dbms_interaction.adapters_component.connection.realizations.mysql_adapter_connection \
+from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection \
     import MySQLAdapterConnection
-from dbms_interaction.adapters_component.cursor.realizations.mysql_adapter_cursor \
+from project_code.sql_core.adapters.cursor.realizations.mysql_adapter_cursor \
     import MySQLAdapterCursor
 
-from tests.utils.toolkit import GeneratingToolKit
+from project_code.tests.utils.toolkit import GeneratingToolKit
 
-from prototyping.config import CONFIG_1, CONFIG_2
+from project_code.prototyping.config import CONFIG_1, CONFIG_2
 
 from typing import Any, List, Tuple
 

@@ -15,7 +15,7 @@ __version__ = '0.1.0'
 # =======================================================================================
 from unittest import TestCase
 
-from shared.constants import *
+from project_code.shared.constants import *
 
 
 # _______________________________________________________________________________________

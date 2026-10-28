@@ -17,17 +17,17 @@ __version__ = '0.4.1'
 from unittest import TestCase, mock as UM
 from typing import Dict, Any, List
 
-import dbms_interaction.transaction_manager_component.transaction_manager as tested_module
-from dbms_interaction.transaction_manager_component.transaction_manager \
+import project_code.sql_core.transaction.transaction_manager.transaction_manager as tested_module
+from project_code.sql_core.transaction.transaction_manager.transaction_manager \
     import NoTransactionManager, IsolationLevel, TransactionManager as tested_cls
-from dbms_interaction.transaction_manager_component.abstract.transaction_state_interface \
+from project_code.sql_core.transaction.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
-from dbms_interaction.transaction_manager_component.states import *
+from project_code.sql_core.transaction.transaction_manager.states import *
 
-from shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
+from project_code.shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
-from tests.utils.base_test_case_cls import BaseTestCase
-from tests.utils.toolkit import *
+from project_code.tests.utils.base_test_case_cls import BaseTestCase
+from project_code.tests.utils.toolkit import *
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

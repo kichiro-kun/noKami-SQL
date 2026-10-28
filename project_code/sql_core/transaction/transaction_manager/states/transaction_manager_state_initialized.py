@@ -9,16 +9,16 @@ __author__ = 'kichiro-kun (Kei)'
 __version__ = '0.3.0'
 
 # =======================================================================================
-from dbms_interaction.transaction_manager_component.abstract.transaction_state_interface \
+from project_code.sql_core.transaction.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from dbms_interaction.transaction_manager_component.transaction_manager \
+    from project_code.sql_core.transaction.transaction_manager.transaction_manager \
         import TransactionManager
-    from dbms_interaction.transaction_manager_component.states.transaction_manager_state_active \
+    from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_active \
         import TransactionManagerStateActive
-    from dbms_interaction.adapters_component.connection.abstract.connection_interface \
+    from project_code.sql_core.adapters.connection.abstract.connection_interface \
         import ConnectionInterface
 
 

@@ -16,11 +16,11 @@ __version__ = '0.4.0'
 from abc import ABCMeta, abstractmethod
 from typing import Dict
 
-from _logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO, NoLoggerConfig
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
-from os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy, NoFileExplorer
+from project_code._logging.logger_config_component.abstract.logger_config_dto import LoggerConfigDTO, NoLoggerConfig
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code.os_interaction.file_explorer_component.abstract.file_explorer_interface_strategy import FileExplorerInterfaceStrategy, NoFileExplorer
 
-from shared.utils.toolkit import ToolKit
+from project_code.shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________

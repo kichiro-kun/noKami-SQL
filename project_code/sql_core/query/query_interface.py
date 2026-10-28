@@ -5,7 +5,7 @@
 """
 Интерфейс выполнения SQL запросов.
 
-Этот модуль содержит абстрактный базовый класс `QueryInterface`, который
+Этот модуль содержит абстрактный базовый класс `SQLQueryInterface`, который
 определяет контракт для выполнения SQL запросов с различными сценариями
 возврата данных. Интерфейс используется компонентами уровня работы с
 базой данных и инкапсулирует логику взаимодействия с курсором и
@@ -18,13 +18,13 @@
     * запросы, возвращающие ограниченное число записей.
 
 
-Реализации `QueryInterface` должны обеспечивать:
+Реализации `SQLQueryInterface` должны обеспечивать:
     * безопасную подстановку параметров запроса;
     * корректное получение результата от курсора;
     * единообразный формат возвращаемых значений для каждого метода.
 
 Пример использования (псевдокод):
-    >>> class MyQueryInterface(QueryInterface):
+    >>> class MySQLQueryInterface(SQLQueryInterface):
     ...     def execute_query_no_returns(self, *params, query: str) -> None:
     ...         ...
     ...     def execute_query_returns_one(self, *params, query: str) -> Sequence:
@@ -34,7 +34,7 @@
     ...     def execute_query_returns_many(self, *params, query: str, returns_count: int) -> Sequence:
     ...         ...
     ...
-    >>> query_interface = MyQueryInterface()
+    >>> query_interface = MySQLQueryInterface()
     >>> query = 'INSERT INTO users (name, email) VALUES (?, ?)'
     >>> values = ('Kei', 'kei@example.com')
     >>> query_interface.execute_query_no_returns(query=query, *values)
@@ -49,7 +49,7 @@ from typing import Sequence
 
 
 # _______________________________________________________________________________________
-class QueryInterface(ABC):
+class SQLQueryInterface(ABC):
     """
     Абстрактный интерфейс для выполнения SQL запросов.
 

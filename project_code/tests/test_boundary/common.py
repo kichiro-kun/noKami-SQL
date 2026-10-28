@@ -17,7 +17,7 @@ from unittest import TestCase
 
 from mysql.connector import MySQLConnection
 
-from tests.global_testing_config import DB_CONFIG
+from project_code.tests.global_testing_config import DB_CONFIG
 
 from typing import Tuple
 

@@ -13,7 +13,7 @@ __version__ = '0.1.2'
 # ========================================================================================
 from abc import ABC, abstractmethod
 
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 
 
 # _______________________________________________________________________________________

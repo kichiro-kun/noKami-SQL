@@ -45,7 +45,7 @@
 """
 
 __all__: list[str] = [
-    'DataBase',
+    'SQLDataBase',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
@@ -55,17 +55,17 @@ __version__ = '0.2.2'
 from abc import ABCMeta, abstractmethod
 from typing import List
 
-from _logging.log_entry_component.log_entry_factory import LogEntryFactory
-from _logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
-from _logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
-from _logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
+from project_code._logging.log_entry_component.log_entry_factory import LogEntryFactory
+from project_code._logging.logger_subject_component.logger_subject_interface import LoggerSubjectInterface
+from project_code._logging.logger_subject_component.logger_observer_interface import LoggerObserverInterface
+from project_code._logging.log_entry_component.abstract.log_entry_dto import LogEntryDTO
 
-from shared.constants.global_configuration import DEFAULT_QUERY_PLACEHOLDER
-from shared.utils.toolkit import ToolKit
+from project_code.shared.constants.global_configuration import DEFAULT_QUERY_PLACEHOLDER
+from project_code.shared.utils.toolkit import ToolKit
 
 
 # _______________________________________________________________________________________
-class DataBase(LoggerSubjectInterface, metaclass=ABCMeta):
+class SQLDataBase(LoggerSubjectInterface, metaclass=ABCMeta):
     """
     Абстрактный базовый класс для работы с базой данных и логированием.
 

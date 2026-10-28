@@ -15,7 +15,7 @@ __version__ = '0.1.0'
 # =======================================================================================
 from unittest import TestCase
 
-from shared.utils.toolkit import ToolKit as tested_cls
+from project_code.shared.utils.toolkit import ToolKit as tested_cls
 
 
 # _______________________________________________________________________________________
@@ -38,7 +38,7 @@ class TestComponentPositive(TestCase):
 
     # -----------------------------------------------------------------------------------
     def test_incorrect_instance_raise_exception(self) -> None:
-        from shared.exceptions import InvalidArgumentTypeError
+        from project_code.shared.exceptions import InvalidArgumentTypeError
 
         # Build
         class MyClass:

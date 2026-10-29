@@ -1,265 +1,232 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestComponentPositive',
-    'TestComponentNegative',
+    'TestIsolationLevelEnum',
+    'TestTransactionStates',
+    'TestTransactionManagerInitialization',
+    'TestTransactionManagerStateDelegation',
+    'TestTransactionManagerIsolationLevel',
+    'TestNoTransactionManager',
+    'TestTransactionManagerValidation',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.1'
+__version__ = '0.5.0'
+
 
 # ========================================================================================
-from unittest import TestCase, mock as UM
-from typing import Dict, Any, List
+from unittest import mock as UM
+from unittest import TestCase
 
 import project_code.sql_core.transaction.transaction_manager.transaction_manager as tested_module
 from project_code.sql_core.transaction.transaction_manager.transaction_manager \
-    import NoTransactionManager, IsolationLevel, TransactionManager as tested_cls
+    import TransactionManager as tested_cls, NoTransactionManager, IsolationLevel
+
 from project_code.sql_core.transaction.transaction_manager.abstract.transaction_state_interface \
     import TransactionStateInterface
-from project_code.sql_core.transaction.transaction_manager.states import *
-
+from project_code.sql_core.transaction.transaction_manager.states import (
+    TransactionManagerStateInitialized,
+    TransactionManagerStateActive,
+    TransactionManagerStateCommitted,
+    TransactionManagerStateRolledBack,
+)
 from project_code.shared.exceptions.common import InvalidArgumentTypeError, IsNullObjectOperation
 
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import *
+from typing import Dict, List, Tuple, Any
+
+
+EXPECTED_ISOLATION_LEVELS: Dict[str, int] = {
+    'READ_UNCOMMITTED': 1,
+    'READ_COMMITTED': 2,
+    'REPEATABLE_READ': 3,
+    'SERIALIZABLE': 4,
+}
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class CheckIsolationLevelEnumeration(TestCase):
-
-    # -----------------------------------------------------------------------------------
-    def test_check_attributes(self) -> None:
-        # Build
-        expected_data: Dict[str, int] = {
-            'READ_UNCOMMITTED': 1,
-            'READ_COMMITTED': 2,
-            'REPEATABLE_READ': 3,
-            'SERIALIZABLE': 4
-        }
-        tested_cls = IsolationLevel
-
-        # Prepare test cycle
-        for attr_name, attr_value in expected_data.items():
-            # Prepare check context
-            with self.subTest(pattern=attr_name):
-                # Extract
-                attr = getattr(tested_cls, attr_name)
-
-                # Check
-                self.assertEqual(
-                    first=attr.name,
-                    second=attr_name
-                )
-                self.assertEqual(
-                    first=attr.value,
-                    second=attr_value
-                )
-
-
-# _______________________________________________________________________________________
-class TestState(TestCase):
+class BaseTransactionManagerTest(TestCase):
+    INVALID_TYPES: List[Any] = [
+        None, 123, "string", [], {}, True, False, 0.1, -1,
+        ['list'], ('tuple',), {'dict': 'value'}
+    ]
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls.__initialized_state = TransactionManagerStateInitialized
-        cls.__active_state = TransactionManagerStateActive
-        cls.__committed_state = TransactionManagerStateCommitted
-        cls.__rolledback_state = TransactionManagerStateRolledBack
-
-    # -----------------------------------------------------------------------------------
-    def test_state_interface_is_realized(self) -> None:
-        # Build
-        expected_state_interface = TransactionStateInterface
-        mock_transaction_manager = UM.MagicMock(spec=tested_cls)
-        states: list = [
-            self.__initialized_state,
-            self.__active_state,
-            self.__committed_state,
-            self.__rolledback_state
-        ]
-
-        # Prepare test cycle
-        for state in states:
-            # Prepare check context
-            with self.subTest(pattern=state.__name__):
-                # Operate
-                state_obj = state(transaction_manager=mock_transaction_manager)
-
-                # Check
-                self.assertIsInstance(
-                    obj=state_obj,
-                    cls=expected_state_interface
-                )
-
-
-# _______________________________________________________________________________________
-class TestComponentPositive(BaseTestCase[tested_cls]):
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        cls._transaction_state_initialized_patcher = UM.patch.object(
-            target=tested_module, attribute='TransactionManagerStateInitialized'
+        cls._state_initialized_patcher: UM._patch_pass_arg = UM.patch.object(
+            target=tested_module,
+            attribute='TransactionManagerStateInitialized'
         )
-        cls._transaction_state_active_patcher = UM.patch.object(
-            target=tested_module, attribute='TransactionManagerStateActive', autospec=True
+        cls._state_active_patcher: UM._patch_pass_arg = UM.patch.object(
+            target=tested_module,
+            attribute='TransactionManagerStateActive',
+            autospec=True
         )
-        cls._transaction_state_committed_patcher = UM.patch.object(
-            target=tested_module, attribute='TransactionManagerStateCommitted', autospec=True
+        cls._state_committed_patcher: UM._patch_pass_arg = UM.patch.object(
+            target=tested_module,
+            attribute='TransactionManagerStateCommitted',
+            autospec=True
         )
-        cls._transaction_state_rolledback_patcher = UM.patch.object(
-            target=tested_module, attribute='TransactionManagerStateRolledBack', autospec=True
+        cls._state_rolledback_patcher: UM._patch_pass_arg = UM.patch.object(
+            target=tested_module,
+            attribute='TransactionManagerStateRolledBack',
+            autospec=True
         )
 
-        cls.mock_state_initialized: UM.MagicMock = \
-            cls._transaction_state_initialized_patcher.start()
-        cls.mock_state_active: UM.MagicMock = \
-            cls._transaction_state_active_patcher.start()
-        cls.mock_state_committed: UM.MagicMock = \
-            cls._transaction_state_committed_patcher.start()
-        cls.mock_state_rolledback: UM.MagicMock = \
-            cls._transaction_state_rolledback_patcher.start()
+        cls.mock_state_initialized: UM.MagicMock = cls._state_initialized_patcher.start()
+        cls.mock_state_active: UM.MagicMock = cls._state_active_patcher.start()
+        cls.mock_state_committed: UM.MagicMock = cls._state_committed_patcher.start()
+        cls.mock_state_rolledback: UM.MagicMock = cls._state_rolledback_patcher.start()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def tearDownClass(cls) -> None:
         super().tearDownClass()
 
-        cls._transaction_state_initialized_patcher.stop()
-        cls._transaction_state_active_patcher.stop()
-        cls._transaction_state_committed_patcher.stop()
-        cls._transaction_state_rolledback_patcher.stop()
+        cls._state_initialized_patcher.stop()
+        cls._state_active_patcher.stop()
+        cls._state_committed_patcher.stop()
+        cls._state_rolledback_patcher.stop()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+    def create_instance(self, **kwargs) -> tested_cls:
         return tested_cls(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_mock_instance_of_transaction_manager_state(self) -> TransactionStateInterface:
+    def create_mock_state(self) -> TransactionStateInterface:
         return UM.MagicMock(spec=TransactionStateInterface)
 
-    # -----------------------------------------------------------------------------------
-    def test_apply_isolation_level_behavior(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        new_level = IsolationLevel.READ_COMMITTED
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def configure_state_mocks(
+        self,
+        initialized: UM.MagicMock = None,  # type: ignore
+        active: UM.MagicMock = None,  # type: ignore
+        committed: UM.MagicMock = None,  # type: ignore
+        rolledback: UM.MagicMock = None  # type: ignore
+    ) -> None:
+        if initialized is not None:
+            self.mock_state_initialized.return_value = initialized
+        if active is not None:
+            self.mock_state_active.return_value = active
+        if committed is not None:
+            self.mock_state_committed.return_value = committed
+        if rolledback is not None:
+            self.mock_state_rolledback.return_value = rolledback
 
-        # Operate
-        instance.apply_isolation_level(new_level=new_level)
 
-        # Extract
-        actual_level = instance.isolation_level
-
-        # Check
-        self.assertIs(
-            expr1=actual_level,
-            expr2=new_level
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_apply_isolation_level_behavior_when_level_is_not_defined(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        expected_exception = InvalidArgumentTypeError
-        mock_level = UM.MagicMock(spec=IsolationLevel.READ_COMMITTED)
-
-        # Prepare mock
-        mock_level.name = GeneratingToolKit.generate_random_string()
-
-        # Prepare check context
-        with self.assertRaises(expected_exception=expected_exception):
-            # Operate
-            instance.apply_isolation_level(new_level=mock_level)
+# _______________________________________________________________________________________
+class TestIsolationLevelEnum(TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_apply_isolation_level_behavior_when_arg_is_invalid_type(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        expected_exception = InvalidArgumentTypeError
-        invalid_types = GeneratingToolKit.generate_list_of_basic_python_types()
-
-        # Prepare test cycle
-        for invalid_type in invalid_types:
+    def test_isolation_level_has_expected_attributes(self) -> None:
+        for attr_name, attr_value in EXPECTED_ISOLATION_LEVELS.items():
             # Prepare check context
-            with self.assertRaises(expected_exception=expected_exception):
-                # Operate
-                instance.apply_isolation_level(new_level=invalid_type)
+            with self.subTest(attribute=attr_name):
+                # Extract
+                attr = getattr(IsolationLevel, attr_name)
+
+                # Check
+                self.assertEqual(first=attr.name, second=attr_name)
+                self.assertEqual(first=attr.value, second=attr_value)
+
+
+# _______________________________________________________________________________________
+class TestTransactionStates(TestCase):
 
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior(self) -> None:
-        # Prepare mock
-        expected_initialized_state, expected_active_state, \
-            expected_committed_state, expected_rolledback_state = tuple(UM.MagicMock() for _ in range(4))
+    def test_all_states_implement_transaction_state_interface(self) -> None:
+        # Build
+        states: List = [
+            TransactionManagerStateInitialized,
+            TransactionManagerStateActive,
+            TransactionManagerStateCommitted,
+            TransactionManagerStateRolledBack,
+        ]
+        mock_manager = UM.MagicMock(spec=tested_cls)
 
-        self.mock_state_initialized.return_value = expected_initialized_state
-        self.mock_state_active.return_value = expected_active_state
-        self.mock_state_committed.return_value = expected_committed_state
-        self.mock_state_rolledback.return_value = expected_rolledback_state
+        for state_cls in states:
+            # Prepare check context
+            with self.subTest(state=state_cls.__name__):
+                # Build
+                state_obj = state_cls(transaction_manager=mock_manager)
+
+                # Check
+                self.assertIsInstance(obj=state_obj, cls=TransactionStateInterface)
+
+
+# _______________________________________________________________________________________
+class TestTransactionManagerInitialization(BaseTransactionManagerTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_constructor_creates_all_four_states(self) -> None:
+        # Build
+        expected_states: Tuple[UM.MagicMock, ...] = tuple(UM.MagicMock() for _ in range(4))
+        self.configure_state_mocks(*expected_states)
 
         # Operate
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.create_instance()
 
         # Check
-        self.assertEqual(
-            first=instance.initialized_state,
-            second=expected_initialized_state
-        )
-        self.assertEqual(
-            first=instance.active_state,
-            second=expected_active_state
-        )
-        self.assertEqual(
-            first=instance.committed_state,
-            second=expected_committed_state
-        )
-        self.assertEqual(
-            first=instance.rolledback_state,
-            second=expected_rolledback_state
-        )
+        self.assertIs(expr1=instance.initialized_state, expr2=expected_states[0])
+        self.assertIs(expr1=instance.active_state, expr2=expected_states[1])
+        self.assertIs(expr1=instance.committed_state, expr2=expected_states[2])
+        self.assertIs(expr1=instance.rolledback_state, expr2=expected_states[3])
 
-        # Post-Check
+    # -----------------------------------------------------------------------------------
+    def test_constructor_initializes_states_with_self_reference(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        # Check
         self.mock_state_initialized.assert_called_with(transaction_manager=instance)
         self.mock_state_active.assert_called_with(transaction_manager=instance)
         self.mock_state_committed.assert_called_with(transaction_manager=instance)
         self.mock_state_rolledback.assert_called_with(transaction_manager=instance)
 
     # -----------------------------------------------------------------------------------
-    def test_use_state_interface(self) -> None:
+    def test_instance_implements_transaction_state_interface(self) -> None:
         # Build
-        expected_state_interface = TransactionStateInterface
+        instance: tested_cls = self.create_instance()
 
-        # Operate
-        instance = self.get_instance_of_tested_cls()
-
-        # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=expected_state_interface
-        )
+        # CHeck
+        self.assertIsInstance(obj=instance, cls=TransactionStateInterface)
 
     # -----------------------------------------------------------------------------------
-    def test_state_interface_delegation_behavior(self) -> None:
+    def test_default_state_is_initialized(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        expected_state = self.get_mock_instance_of_transaction_manager_state()
+        expected_state_obj = UM.MagicMock()
+        self.mock_state_initialized.return_value = expected_state_obj
 
-        # Prepare instance
+        # Operate
+        instance: tested_cls = self.create_instance()
+        instance.begin()
+
+        # Check
+        expected_state_obj.begin.assert_called_once()
+
+
+# _______________________________________________________________________________________
+class TestTransactionManagerStateDelegation(BaseTransactionManagerTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_all_operations_delegate_to_current_state(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        expected_state: TransactionStateInterface = self.create_mock_state()
         instance.set_state(new_state=expected_state)
 
         # Operate
         instance.begin()
-        instance.execute_in_active_transaction(query='')
+        instance.execute_in_active_transaction(query='SELECT 1')
         instance.commit()
         instance.rollback()
 
@@ -270,111 +237,110 @@ class TestComponentPositive(BaseTestCase[tested_cls]):
         expected_state.rollback.assert_called_once()  # type: ignore
 
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_default_state_is_initialized(self) -> None:
+    def test_set_state_replaces_current_state(self) -> None:
         # Build
-        expected_state_obj = UM.MagicMock()
-        expected_state = self.mock_state_initialized
-
-        # Prepare mock
-        expected_state.return_value = expected_state_obj
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls()
+        default_state_obj = UM.MagicMock()
+        self.mock_state_initialized.return_value = default_state_obj
 
         # Operate
+        instance: tested_cls = self.create_instance()
         instance.begin()
 
         # Check
-        expected_state_obj.begin.assert_called_once()
-
-    # -----------------------------------------------------------------------------------
-    def test_set_state_behavior(self) -> None:
-        # Build
-        default_state = self.mock_state_initialized
-
-        expected_default_state_obj = UM.MagicMock()
-        new_state_obj = self.get_mock_instance_of_transaction_manager_state()
-
-        # Prepare mock
-        default_state.return_value = expected_default_state_obj
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls()
-
-        # Pre-Operate
-        instance.begin()
-
-        # Pre-Check
-        expected_default_state_obj.begin.assert_called_once()
-        new_state_obj.begin.assert_not_called()  # type:ignore
+        default_state_obj.begin.assert_called_once()
 
         # Operate
-        instance.set_state(new_state=new_state_obj)
+        new_state: TransactionStateInterface = self.create_mock_state()
+        instance.set_state(new_state=new_state)
 
         # Check
         instance.begin()
-        new_state_obj.begin.assert_called_once()  # type:ignore
-
-    # -----------------------------------------------------------------------------------
-    def test_null_object_realization(self) -> None:
-        # Build
-        method_calls: Dict[str, Dict[str, Any]] = {
-            'apply_isolation_level': {
-                'new_level': None
-            },
-            'set_state': {
-                'new_state': None
-            },
-            'begin': {},
-            'execute_in_active_transaction': {
-                'query': GeneratingToolKit.generate_random_string()
-            },
-            'commit': {},
-            'rollback': {}
-        }  # Param name & kwargs
-
-        # Prepare data
-        calls: List[MethodCall] = [
-            MethodCall(method_name=name, kwargs=kwargs)
-            for name, kwargs in method_calls.items()
-        ]
-
-        # Operate
-        instance = NoTransactionManager()
-
-        # Check
-        self.assertTrue(
-            expr=InspectingToolKit.check_all_methods_raise_expected_exception_for_null_object(
-                obj=instance,
-                method_calls=calls,
-                exception_type=IsNullObjectOperation
-            )
-        )
+        new_state.begin.assert_called_once()  # type: ignore
 
 
 # _______________________________________________________________________________________
-class TestComponentNegative(BaseTestCase[tested_cls]):
+class TestTransactionManagerIsolationLevel(BaseTransactionManagerTest):
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
-        return tested_cls(**kwargs)
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def test_set_state_behavior_when_pass_invalid_types(self) -> None:
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_assigns_level(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        invalid_types = GeneratingToolKit.generate_list_of_basic_python_types()
-        expected_exception = InvalidArgumentTypeError
+        instance: tested_cls = self.create_instance()
+        new_level: IsolationLevel = IsolationLevel.READ_COMMITTED
+
+        # Operate
+        instance.apply_isolation_level(new_level=new_level)
+
+        # Check
+        self.assertIs(expr1=instance.isolation_level, expr2=new_level)
+
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_raises_for_unknown_level_name(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        mock_level = UM.MagicMock(spec=IsolationLevel.READ_COMMITTED)
+        mock_level.name = 'NON_EXISTENT_LEVEL'
+
+        # Prepare check context
+        with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+            # Operate & Check
+            instance.apply_isolation_level(new_level=mock_level)
+
+    # -----------------------------------------------------------------------------------
+    def test_apply_isolation_level_raises_for_invalid_type(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        for invalid_type in self.INVALID_TYPES:
+            # Prepare check context
+            with self.subTest(invalid_type=invalid_type):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    instance.apply_isolation_level(new_level=invalid_type)
+
+
+# _______________________________________________________________________________________
+class TestNoTransactionManager(TestCase):
+    METHOD_CALLS: Dict[str, Dict[str, Any]] = {
+        'apply_isolation_level': {'new_level': None},
+        'set_state': {'new_state': None},
+        'begin': {},
+        'execute_in_active_transaction': {'query': 'SELECT 1'},
+        'commit': {},
+        'rollback': {},
+    }
+
+    # -----------------------------------------------------------------------------------
+    def test_all_methods_raise_null_object_exception(self) -> None:
+        # Build
+        instance = NoTransactionManager()
+
+        for method_name, kwargs in self.METHOD_CALLS.items():
+            # Prepare check context
+            with self.subTest(method=method_name):
+                with self.assertRaises(expected_exception=IsNullObjectOperation):
+                    # Extract
+                    method = getattr(instance, method_name)
+
+                    # Operate & Check
+                    method(**kwargs)
+
+
+# _______________________________________________________________________________________
+class TestTransactionManagerValidation(BaseTransactionManagerTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_set_state_raises_for_invalid_types(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
 
         class IncorrectType:
             pass
 
-        # Prepare test data
-        invalid_types.append(IncorrectType())
+        invalid_types: List = list(self.INVALID_TYPES) + [IncorrectType()]
 
-        # Prepare test cycle
         for invalid_type in invalid_types:
             # Prepare check context
-            with self.assertRaises(expected_exception=expected_exception):
-                # Operate & Check
-                instance.set_state(new_state=invalid_type)
+            with self.subTest(invalid_type=invalid_type):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    instance.set_state(new_state=invalid_type)

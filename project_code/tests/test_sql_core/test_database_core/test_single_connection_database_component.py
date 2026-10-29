@@ -1,55 +1,71 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestComponentPositive',
-    'TestComponentNegative',
+    'TestSQLSingleConnectionDatabaseInitialization',
+    'TestSQLSingleConnectionDatabaseSetters',
+    'TestSQLSingleConnectionDatabaseQueryExecution',
+    'TestSQLSingleConnectionDatabaseValidation',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.12.2'
+__version__ = '0.13.0'
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Dict, List, Sequence, Tuple, Any
+from unittest import TestCase
 
 import project_code.sql_core.database.single.single_connection_database as tested_module
 from project_code.sql_core.database.single.single_connection_database import SQLSingleConnectionDatabase as tested_cls
 
 from project_code.sql_core.database.abstract.database import SQLDataBase
 from project_code.sql_core.connection.single_manager.single_connection_manager \
-    import SingleConnectionManager, NoSingleConnectionManager
+    import NoSingleConnectionManager
 from project_code.sql_core.transaction.transaction_manager.transaction_manager \
-    import TransactionManager, NoTransactionManager
-from project_code.sql_core.query.query_interface import SQLQueryInterface
-
+    import NoTransactionManager
 from project_code.shared.exceptions.common import InvalidArgumentTypeError, OperationFailedConnectionIsNotActive
 
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import GeneratingToolKit
+from project_code.shared.constants.global_configuration import DEFAULT_QUERY_PLACEHOLDER
+
+from typing import Dict, List, Sequence, Tuple, Any, Optional
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class BaseTestComponent(BaseTestCase[tested_cls]):
+class BaseTestComponent(TestCase):
+    DEFAULT_PLACEHOLDER: str = DEFAULT_QUERY_PLACEHOLDER
+    CUSTOM_PLACEHOLDER: str = '#W'
+    TEST_QUERY: str = 'SELECT * FROM test'
+    TEST_CONFIG: Dict[str, Any] = {
+        'user': 'test_user',
+        'database': 'test_db',
+        'password': 'test_pass'
+    }
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls._config_keys: Tuple[str, ...] = (
-            'user', 'database', 'password'
-        )
+        cls._invalid_types: List[Any] = [
+            None, 123, "string", [], {}, True, False, 0.1, -1,
+            ['list'], ('tuple',), {'dict': 'value'}
+        ]
 
-        cls._transaction_manager_patcher = UM.patch.object(
-            target=tested_module, attribute='TransactionManager', new=UM.MagicMock
+        cls._transaction_manager_patcher: UM._patch = UM.patch.object(
+            target=tested_module,
+            attribute='TransactionManager',
+            new=UM.MagicMock
         )
-        cls._single_connection_manager_patcher = UM.patch.object(
-            target=tested_module, attribute='SingleConnectionManager', new=UM.MagicMock
+        cls._single_connection_manager_patcher: UM._patch = UM.patch.object(
+            target=tested_module,
+            attribute='SingleConnectionManager',
+            new=UM.MagicMock
         )
 
         cls.mock_transaction_manager: UM.MagicMock = cls._transaction_manager_patcher.start()
@@ -59,606 +75,533 @@ class BaseTestComponent(BaseTestCase[tested_cls]):
     @classmethod
     def tearDownClass(cls) -> None:
         super().tearDownClass()
-
         cls._transaction_manager_patcher.stop()
         cls._single_connection_manager_patcher.stop()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
+    def create_instance(self, **kwargs) -> tested_cls:
         return tested_cls(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_single_connection_manager(self, **kwargs) -> SingleConnectionManager:
-        instance: SingleConnectionManager = self.mock_single_connection_manager(**kwargs)
-
-        return instance
+    def create_mock_connection_manager(self, **kwargs) -> UM.MagicMock:
+        return self.mock_single_connection_manager(**kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_transaction_manager(self, **kwargs) -> TransactionManager:
-        instance: TransactionManager = self.mock_transaction_manager(**kwargs)
+    def create_mock_transaction_manager(self, **kwargs) -> UM.MagicMock:
+        return self.mock_transaction_manager(**kwargs)
 
-        return instance
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def setup_active_connection(
+        self,
+        instance: tested_cls,
+        fetchone_result: Optional[Any] = None,
+        fetchmany_result: Optional[Any] = None,
+        fetchall_result: Optional[Any] = None
+    ) -> Tuple[UM.MagicMock, UM.MagicMock, UM.MagicMock]:
+        """
+        Настройка моков для активного соединения.
+
+        Returns:
+            Tuple из (conn_manager, conn_adapter, cursor)
+        """
+        conn_manager: UM.MagicMock = self.create_mock_connection_manager()
+        conn_adapter = UM.MagicMock()
+        cursor = UM.MagicMock()
+
+        instance.set_new_connection_manager(new_manager=conn_manager)
+        conn_manager.check_connection_status.return_value = True
+        conn_manager.get_connection.return_value = conn_adapter
+        conn_adapter.get_cursor.return_value = cursor
+
+        if fetchone_result is not None:
+            cursor.fetchone.return_value = fetchone_result
+        if fetchmany_result is not None:
+            cursor.fetchmany.return_value = fetchmany_result
+        if fetchall_result is not None:
+            cursor.fetchall.return_value = fetchall_result
+
+        return conn_manager, conn_adapter, cursor
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def verify_query_execution(
+        self,
+        cursor: UM.MagicMock,
+        conn_adapter: UM.MagicMock,
+        expected_query: str,
+        expected_params: Tuple,
+        placeholder: str,
+        fetch_method: Optional[str] = None,
+        fetch_args: Optional[Tuple] = None,
+        fetch_kwargs: Optional[Dict[str, Any]] = None
+    ) -> None:
+        """
+        Проверка корректности выполнения запроса.
+
+        Args:
+            cursor: мок курсора
+            conn_adapter: мок адаптера соединения
+            expected_query: ожидаемая строка запроса
+            expected_params: ожидаемые позиционные параметры
+            placeholder: ожидаемый плейсхолдер
+            fetch_method: имя метода fetch (fetchone/fetchmany/fetchall)
+            fetch_args: позиционные аргументы для fetch-метода
+            fetch_kwargs: именованные аргументы для fetch-метода
+        """
+        conn_adapter.get_cursor.assert_called_once_with(
+            special_placeholder=placeholder
+        )
+        cursor.execute.assert_called_once_with(
+            query=expected_query,
+            *expected_params
+        )
+
+        if fetch_method:
+            fetch_call = getattr(cursor, fetch_method)
+            args: Tuple[Any, ...] = fetch_args or ()
+            kwargs: Dict[str, Any] = fetch_kwargs or {}
+            fetch_call.assert_called_once_with(*args, **kwargs)
+
+        cursor.close.assert_called_once()
 
 
 # _______________________________________________________________________________________
-class TestComponentPositive(BaseTestComponent):
+class TestSQLSingleConnectionDatabaseInitialization(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
-    def test_instance_inherits_from_DataBase(self) -> None:
+    def test_instance_inherits_from_SQLDataBase(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.create_instance()
 
         # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=SQLDataBase
-        )
+        self.assertIsInstance(obj=instance, cls=SQLDataBase)
 
     # -----------------------------------------------------------------------------------
-    def test_initialization_with_and_without_query_param_placeholder(self) -> None:
+    def test_initialization_with_custom_placeholder(self) -> None:
         # Build
-        custom_placeholder = '&'
-
-        # Operate with specifics placeholder
-        instance1 = self.get_instance_of_tested_cls(
-            query_param_placeholder=custom_placeholder
+        instance: tested_cls = self.create_instance(
+            query_param_placeholder=self.CUSTOM_PLACEHOLDER
         )
-
-        # Operate without placeholder
-        instance2 = self.get_instance_of_tested_cls()
-
-        # Extract placeholders value
-        value1: str = instance1.query_param_placeholder
-        value2: str = instance2.query_param_placeholder
-
-        # Check specific placeholder
-        self.assertEqual(
-            first=value1,
-            second=custom_placeholder
-        )
-
-        # Check without specific placeholder
-        self.assertIsInstance(
-            obj=value2,
-            cls=str
-        )
-        self.assertNotEqual(
-            first=value2,
-            second=custom_placeholder
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_set_new_transaction_manager_assigns_transaction_manager_correctly(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-        transaction_manager = self.get_instance_of_transaction_manager()
-        connection_manager = self.get_instance_of_single_connection_manager()
-        expected_query_param_placeholder: str = GeneratingToolKit.generate_random_string()
-
-        # Prepare instance
-        instance.change_query_param_placeholder(
-            new_placeholder=expected_query_param_placeholder
-        )
-        instance.set_new_connection_manager(new_manager=connection_manager)
-
-        # Build
-        expected_active_connection = UM.MagicMock()
-
-        # Prepare mock
-        connection_manager.get_connection.return_value = expected_active_connection  # type:ignore
-
-        # Pre-Check
-        self.assertNotEqual(
-            first=transaction_manager.active_connection,
-            second=expected_active_connection
-        )
-
-        # Operate
-        instance.set_new_transaction_manager(
-            new_manager=transaction_manager
-        )
-
-        # Extract
-        value = instance._transaction_manager
-        actual_manager_placeholder = transaction_manager.query_param_placeholder
 
         # Check
-        self.assertIs(
-            expr1=value,
-            expr2=transaction_manager
-        )
         self.assertEqual(
-            first=actual_manager_placeholder,
-            second=expected_query_param_placeholder
-        )
-        self.assertEqual(
-            first=transaction_manager.active_connection,
-            second=expected_active_connection
+            first=instance.query_param_placeholder,
+            second=self.CUSTOM_PLACEHOLDER
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_manager_assigns_connection_manager_correctly(self) -> None:
+    def test_initialization_without_placeholder_uses_default(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        connection_manager = self.get_instance_of_single_connection_manager()
+        instance: tested_cls = self.create_instance()
+
+        # Check
+        self.assertEqual(first=instance.query_param_placeholder, second=self.DEFAULT_PLACEHOLDER)
+
+    # -----------------------------------------------------------------------------------
+    def test_default_configuration_fields_have_expected_defaults(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        # Check
+        self.assertDictEqual(d1=instance._config, d2=dict())
+        self.assertIsInstance(obj=instance._perform_connection_manager, cls=NoSingleConnectionManager)
+        self.assertIsInstance(obj=instance._transaction_manager, cls=NoTransactionManager)
+
+
+# _______________________________________________________________________________________
+class TestSQLSingleConnectionDatabaseSetters(BaseTestComponent):
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_connection_manager_assigns_manager(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        connection_manager: UM.MagicMock = self.create_mock_connection_manager()
 
         # Operate
         instance.set_new_connection_manager(new_manager=connection_manager)
 
-        # Extract
-        value = instance._perform_connection_manager
-
         # Check
         self.assertIs(
-            expr1=value,
+            expr1=instance._perform_connection_manager,
             expr2=connection_manager
         )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_config_assigns_configuration_correctly(self) -> None:
+    def test_set_new_transaction_manager_assigns_manager_and_configures(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        connection_config: Dict[str, Any] = \
-            GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=self._config_keys
+        instance: tested_cls = self.create_instance()
+        transaction_manager: UM.MagicMock = self.create_mock_transaction_manager()
+        connection_manager: UM.MagicMock = self.create_mock_connection_manager()
+        expected_active_connection = UM.MagicMock()
+
+        # Prepare mock
+        connection_manager.get_connection.return_value = expected_active_connection
+
+        # Prepare instance
+        instance.change_query_param_placeholder(
+            new_placeholder=self.DEFAULT_PLACEHOLDER
+        )
+        instance.set_new_connection_manager(new_manager=connection_manager)
+
+        # Operate
+        instance.set_new_transaction_manager(new_manager=transaction_manager)
+
+        # Pre-check
+        self.assertIs(expr1=instance._transaction_manager, expr2=transaction_manager)
+
+        # Check
+        self.assertEqual(
+            first=transaction_manager.query_param_placeholder,
+            second=self.DEFAULT_PLACEHOLDER
+        )
+        self.assertEqual(
+            first=transaction_manager.active_connection,
+            second=expected_active_connection
         )
 
-        # Prepare test context
-        with UM.patch.object(target=instance, attribute='_perform_connection_manager',
-                             autospec=True) as mock_connection_manager:
-            # Operate
-            instance.set_new_connection_config(new_config=connection_config)
+    # -----------------------------------------------------------------------------------
+    def test_set_new_connection_config_assigns_config_and_updates_manager(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
 
-            # Extract
-            value = instance._config
+        # Prepare check context
+        with UM.patch.object(
+                target=instance,
+                attribute='_perform_connection_manager',
+                autospec=True
+        ) as mock_connection_manager:
+            # Operate
+            instance.set_new_connection_config(new_config=self.TEST_CONFIG)
 
             # Check
-            self.assertIs(
-                expr1=value,
-                expr2=connection_config
-            )
+            self.assertIs(expr1=instance._config, expr2=self.TEST_CONFIG)
 
             # Post-Check
             mock_connection_manager.set_new_config.assert_called_once_with(
-                new_config=connection_config
+                new_config=self.TEST_CONFIG
             )
 
     # -----------------------------------------------------------------------------------
     def test_configuration_fields_are_independent_between_instances(self) -> None:
         # Build
-        instance1 = self.get_instance_of_tested_cls()
-        instance2 = self.get_instance_of_tested_cls()
-        connection_manager1 = self.get_instance_of_single_connection_manager()
-        connection_manager2 = self.get_instance_of_single_connection_manager()
-        transaction_manager1 = self.get_instance_of_transaction_manager()
-        transaction_manager2 = self.get_instance_of_transaction_manager()
-        config1: Dict[str, Any] = \
-            GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=self._config_keys
-        )
-        config2: Dict[str, Any] = \
-            GeneratingToolKit.generate_dict_with_random_string_values(
-                keys=self._config_keys
-        )
+        instance1: tested_cls = self.create_instance()
+        instance2: tested_cls = self.create_instance()
 
-        # Pre-Check
-        not_equals = zip(
-            (instance1, connection_manager1, transaction_manager1, config1),
-            (instance2, connection_manager2, transaction_manager2, config2)
-        )
+        config1: Dict[str, str] = {'user': 'user1', 'database': 'db1', 'password': 'pass1'}
+        config2: Dict[str, str] = {'user': 'user2', 'database': 'db2', 'password': 'pass2'}
 
-        for first, second in not_equals:
-            self.assertNotEqual(
-                first=first,
-                second=second
-            )
+        # Prepare instance 1
+        instance1.set_new_connection_manager(
+            new_manager=self.create_mock_connection_manager()
+        )
+        instance1.set_new_transaction_manager(
+            new_manager=self.create_mock_transaction_manager()
+        )
 
         # Operate
-        instance1.set_new_connection_manager(new_manager=connection_manager1)
-        instance1.set_new_transaction_manager(new_manager=transaction_manager1)
         instance1.set_new_connection_config(new_config=config1)
 
-        instance2.set_new_connection_manager(new_manager=connection_manager2)
-        instance2.set_new_transaction_manager(new_manager=transaction_manager2)
+        # Prepare instance 2
+        instance2.set_new_connection_manager(
+            new_manager=self.create_mock_connection_manager()
+        )
+        instance2.set_new_transaction_manager(
+            new_manager=self.create_mock_transaction_manager()
+        )
+
+        # Operate
         instance2.set_new_connection_config(new_config=config2)
 
-        # Extract
-        actual_fields_instance1: Tuple[Any, ...] = (
-            instance1._config, instance1._perform_connection_manager, instance1._transaction_manager
-        )
-        actual_fields_instance2: Tuple[Any, ...] = (
-            instance2._config, instance2._perform_connection_manager, instance2._transaction_manager
-        )
-
-        # Prepare check cycle
-        for instance1_field, instance2_field in zip(actual_fields_instance1,
-                                                    actual_fields_instance2):
-            with self.subTest(
-                pattern=(instance1_field, instance2_field)
-            ):
-                # Check
-                self.assertIsNot(
-                    expr1=instance1_field,
-                    expr2=instance2_field
-                )
-
-    # -----------------------------------------------------------------------------------
-    def test_default_configuration_fields_have_expected_default_values(self) -> None:
-        # Build
-        instance = self.get_instance_of_tested_cls()
-
-        # Extract
-        conn_config = instance._config
-        conn_manager = instance._perform_connection_manager
-        transaction_manager = instance._transaction_manager
-
         # Check
-        self.assertDictEqual(
-            d1=conn_config,
-            d2=dict()
+        self.assertIsNot(
+            expr1=instance1._config,
+            expr2=instance2._config
         )
-        self.assertIsInstance(
-            obj=conn_manager,
-            cls=NoSingleConnectionManager
+        self.assertIsNot(
+            expr1=instance1._perform_connection_manager,
+            expr2=instance2._perform_connection_manager
         )
-        self.assertIsInstance(
-            obj=transaction_manager,
-            cls=NoTransactionManager
+        self.assertIsNot(
+            expr1=instance1._transaction_manager,
+            expr2=instance2._transaction_manager
         )
 
     # -----------------------------------------------------------------------------------
-    def test_change_query_param_placeholder_behavior(self) -> None:
+    def test_change_query_param_placeholder_updates_both_managers(self) -> None:
         # Build
-        instance = self.get_instance_of_tested_cls()
-        transaction_manager = self.get_instance_of_transaction_manager()
-        connection_manager = self.get_instance_of_single_connection_manager()
-        new_placeholder: str = GeneratingToolKit.generate_random_string()
+        instance: tested_cls = self.create_instance()
+        transaction_manager: UM.MagicMock = self.create_mock_transaction_manager()
+        connection_manager: UM.MagicMock = self.create_mock_connection_manager()
 
-        # Prepare instance
         instance.set_new_connection_manager(new_manager=connection_manager)
         instance.set_new_transaction_manager(new_manager=transaction_manager)
 
-        # Pre-Check
-        self.assertNotEqual(
-            first=transaction_manager.query_param_placeholder,
-            second=new_placeholder
-        )
-
         # Operate
-        instance.change_query_param_placeholder(new_placeholder=new_placeholder)
+        instance.change_query_param_placeholder(
+            new_placeholder=self.DEFAULT_PLACEHOLDER
+        )
 
         # Check
         self.assertEqual(
             first=transaction_manager.query_param_placeholder,
-            second=new_placeholder
+            second=self.DEFAULT_PLACEHOLDER
         )
-
-        # Post-Check
         self.assertEqual(
             first=instance.query_param_placeholder,
-            second=new_placeholder
-        )
-
-    # -----------------------------------------------------------------------------------
-    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    def test_execute_query_no_returns_behavior_when_connection_is_active(self) -> None:
-        # Build
-        instance: tested_cls = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        conn_adapter = UM.MagicMock()
-        cursor = UM.MagicMock()
-
-        query: str = GeneratingToolKit.generate_random_string()
-        params: Tuple[str, ...] = (
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock
-        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
-        conn_adapter.get_cursor.return_value = cursor
-
-        # Operate
-        op_result = instance.execute_query_no_returns(query=query, *params)
-
-        # Check
-        conn_manager.get_connection.assert_called_once()  # type:ignore
-        conn_adapter.get_cursor.assert_called_once_with(
-            special_placeholder=instance.query_param_placeholder
-        )
-        cursor.execute.assert_called_once_with(query=query, *params)
-        cursor.close.assert_called_once()
-
-        # Post-Check
-        self.assertIsNone(obj=op_result)
-
-    # -----------------------------------------------------------------------------------
-    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    def test_execute_query_returns_one_behavior_when_connection_is_active(self) -> None:
-        # Build
-        instance: tested_cls = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        conn_adapter = UM.MagicMock()
-        cursor = UM.MagicMock()
-        expected_result: Tuple[str] = (GeneratingToolKit.generate_random_string(),)
-
-        query: str = GeneratingToolKit.generate_random_string()
-        params: Tuple[str, ...] = (
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock
-        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
-        conn_adapter.get_cursor.return_value = cursor
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=cursor, attribute='fetchone') as mock_fetchone:
-            # Prepare mock
-            mock_fetchone.return_value = expected_result
-
-            # Operate
-            op_result: Sequence = instance.execute_query_returns_one(query=query, *params)
-
-            # Check
-            conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once_with(
-                special_placeholder=instance.query_param_placeholder
-            )
-            cursor.execute.assert_called_once_with(query=query, *params)
-            cursor.fetchone.assert_called_once()
-            cursor.close.assert_called_once()
-
-        # Post-Check
-        self.assertEqual(
-            first=op_result,
-            second=expected_result
-        )
-
-    # -----------------------------------------------------------------------------------
-    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    def test_execute_query_returns_many_behavior_when_connection_is_active(self) -> None:
-        from random import randint
-
-        # Build
-        instance: tested_cls = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        conn_adapter = UM.MagicMock()
-        cursor = UM.MagicMock()
-
-        # Prepare expected data
-        returns_count: int = randint(a=3, b=5)
-        generate_count: int = randint(a=6, b=10)
-
-        generated_data: Tuple[str, ...] = tuple(
-            GeneratingToolKit.generate_random_string()
-            for i in range(generate_count)
-        )
-
-        query: str = GeneratingToolKit.generate_random_string()
-        params: Tuple[str, ...] = (
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock
-        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
-        conn_adapter.get_cursor.return_value = cursor
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=cursor, attribute='fetchmany') as mock_fetchmany:
-            # Prepare mock
-            mock_fetchmany.return_value = generated_data[:returns_count]
-
-            # Operate
-            op_result = \
-                instance.execute_query_returns_many(query=query,
-                                                    returns_count=returns_count,
-                                                    *params)
-
-            # Check
-            conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once_with(
-                special_placeholder=instance.query_param_placeholder
-            )
-            cursor.execute.assert_called_once_with(query=query, *params)
-            cursor.fetchmany.assert_called_once_with(count=returns_count)
-            cursor.close.assert_called_once()
-
-        # Prepare post-check cycle
-        count: int = 0
-        for member in op_result:
-            # Post-Check
-            self.assertIn(
-                member=member,
-                container=generated_data
-            )
-            count += 1
-        else:
-            self.assertTrue(
-                expr=(count == returns_count)
-            )
-
-    # -----------------------------------------------------------------------------------
-    # Провести рефакторинг, для избавления от дублирования и нагромаждений...
-    def test_execute_query_returns_all_behavior_when_connection_is_active(self) -> None:
-        # Build
-        instance: tested_cls = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        conn_adapter = UM.MagicMock()
-        cursor = UM.MagicMock()
-
-        query: str = GeneratingToolKit.generate_random_string()
-        params: Tuple[str, ...] = (
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string(),
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare expected data
-        expected_result: Tuple[str, ...] = tuple(
-            GeneratingToolKit.generate_random_string()
-            for i in range(5)
-        )
-
-        # Prepare instance
-        instance.set_new_connection_manager(new_manager=conn_manager)
-
-        # Prepare mock
-        conn_manager.get_connection.return_value = conn_adapter  # type:ignore
-        conn_adapter.get_cursor.return_value = cursor
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=cursor, attribute='fetchall') as mock_fetchall:
-            # Prepare mock
-            mock_fetchall.return_value = expected_result
-
-            # Operate
-            op_result = instance.execute_query_returns_all(query=query, *params)
-
-            # Check
-            conn_manager.get_connection.assert_called_once()  # type:ignore
-            conn_adapter.get_cursor.assert_called_once_with(
-                special_placeholder=instance.query_param_placeholder
-            )
-            cursor.execute.assert_called_once_with(query=query, *params)
-            cursor.fetchall.assert_called_once()
-            cursor.close.assert_called_once()
-
-        # Post-Check
-        self.assertSequenceEqual(
-            seq1=op_result,
-            seq2=expected_result
+            second=self.DEFAULT_PLACEHOLDER
         )
 
 
 # _______________________________________________________________________________________
-class TestComponentNegative(BaseTestComponent):
+class TestSQLSingleConnectionDatabaseQueryExecution(BaseTestComponent):
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_connection_manager_raise_expected_exception_for_invalid_types(self) -> None:
+    def test_execute_query_no_returns_executes_and_closes_cursor(self) -> None:
         # Build
-        expected_exception = InvalidArgumentTypeError
-        invalid_managers: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.create_instance()
+        query = 'INSERT INTO test VALUES (?, ?)'
+        params = ('value1', 'value2')
 
-        # Prepare test cycle
-        for invalid_manager in invalid_managers:
-            with self.subTest(pattern=invalid_manager):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
+        conn_manager, conn_adapter, cursor = self.setup_active_connection(instance)
+
+        # Operate
+        result: None = instance.execute_query_no_returns(query=query, *params)
+
+        # Pre-Check
+        conn_manager.get_connection.assert_called_once()
+
+        # Check
+        self.verify_query_execution(
+            cursor=cursor,
+            conn_adapter=conn_adapter,
+            expected_query=query,
+            expected_params=params,
+            placeholder=instance.query_param_placeholder
+        )
+
+        # Post-Check
+        self.assertIsNone(obj=result)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_one_fetches_single_result(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        expected_result = ('value1', 'value2')
+        query = 'SELECT * FROM test WHERE id = ?'
+        params = ('1',)
+
+        conn_manager, conn_adapter, cursor = self.setup_active_connection(
+            instance,
+            fetchone_result=expected_result
+        )
+
+        # Operate
+        result: Sequence = instance.execute_query_returns_one(query=query, *params)
+
+        # Pre-Check
+        conn_manager.get_connection.assert_called_once()
+
+        # Check
+        self.verify_query_execution(
+            cursor=cursor,
+            conn_adapter=conn_adapter,
+            expected_query=query,
+            expected_params=params,
+            placeholder=instance.query_param_placeholder,
+            fetch_method='fetchone'
+        )
+
+        # Post-Check
+        self.assertEqual(first=result, second=expected_result)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_many_fetches_limited_results(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        returns_count = 3
+        expected_result = (('value1',), ('value2',), ('value3',))
+        query = 'SELECT * FROM test LIMIT ?'
+        params = ('5',)
+
+        conn_manager, conn_adapter, cursor = self.setup_active_connection(
+            instance,
+            fetchmany_result=expected_result
+        )
+
+        # Operate
+        result: Sequence = instance.execute_query_returns_many(
+            query=query,
+            returns_count=returns_count,
+            *params
+        )
+
+        # Pre-Check
+        conn_manager.get_connection.assert_called_once()
+
+        # Check
+        self.verify_query_execution(
+            cursor=cursor,
+            conn_adapter=conn_adapter,
+            expected_query=query,
+            expected_params=params,
+            placeholder=instance.query_param_placeholder,
+            fetch_method='fetchmany',
+            fetch_kwargs={'count': returns_count}
+        )
+
+        # Post-Check
+        self.assertSequenceEqual(seq1=result, seq2=expected_result)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_all_fetches_all_results(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        expected_result = (('value1',), ('value2',), ('value3',))
+        query = 'SELECT * FROM test'
+        params = ()
+
+        conn_manager, conn_adapter, cursor = self.setup_active_connection(
+            instance,
+            fetchall_result=expected_result
+        )
+
+        # Operate
+        result: Sequence = instance.execute_query_returns_all(query=query, *params)
+
+        # Pre-check
+        conn_manager.get_connection.assert_called_once()
+
+        # Check
+        self.verify_query_execution(
+            cursor=cursor,
+            conn_adapter=conn_adapter,
+            expected_query=query,
+            expected_params=params,
+            placeholder=instance.query_param_placeholder,
+            fetch_method='fetchall'
+        )
+
+        # Post-Check
+        self.assertSequenceEqual(seq1=result, seq2=expected_result)
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_query_returns_empty_tuple_when_no_data(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        query = 'SELECT * FROM test WHERE id = ?'
+        params = ('999',)
+
+        conn_manager, conn_adapter, cursor = self.setup_active_connection(
+            instance,
+            fetchone_result=None
+        )
+
+        # Operate
+        result: Sequence = instance.execute_query_returns_one(query=query, *params)
+
+        # Pre-Check
+        conn_manager.get_connection.assert_called_once()
+        cursor.execute.assert_called_once_with(query=query, *params)
+        cursor.fetchone.assert_called_once()
+        cursor.close.assert_called_once()
+
+        # Check
+        self.assertSequenceEqual(seq1=result, seq2=tuple())
+
+
+# _______________________________________________________________________________________
+class TestSQLSingleConnectionDatabaseValidation(BaseTestComponent):
+
+    # -----------------------------------------------------------------------------------
+    def test_set_new_connection_manager_raises_for_invalid_types(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        for invalid_manager in self._invalid_types:
+            # Prepare check context
+            with self.subTest(invalid_manager=invalid_manager):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
                     instance.set_new_connection_manager(
                         new_manager=invalid_manager
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_transaction_manager_raise_expected_exception_for_invalid_types(self) -> None:
+    def test_set_new_transaction_manager_raises_for_invalid_types(self) -> None:
         # Build
-        expected_exception = InvalidArgumentTypeError
-        invalid_managers: List[Any] = GeneratingToolKit.generate_list_of_basic_python_types()
-        instance = self.get_instance_of_tested_cls()
+        instance: tested_cls = self.create_instance()
 
-        # Prepare test cycle
-        for invalid_manager in invalid_managers:
-            with self.subTest(pattern=invalid_manager):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
+        for invalid_manager in self._invalid_types:
+            # Prepare check context
+            with self.subTest(invalid_manager=invalid_manager):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
                     instance.set_new_transaction_manager(
                         new_manager=invalid_manager
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_set_new_config_raise_expected_exception_for_invalid_types(self) -> None:
+    def test_set_new_connection_config_raises_for_invalid_types(self) -> None:
         # Build
-        expected_exception = InvalidArgumentTypeError
+        instance: tested_cls = self.create_instance()
         invalid_configs: Tuple[Any, ...] = (
-            'real_config', ['key1', 'value1', 'key2', 'value2'],
-            ('key1', 'value1', 'key2', 'value2')
+            'real_config',
+            ['key1', 'value1'],
+            ('key1', 'value1')
         )
-        instance = self.get_instance_of_tested_cls()
 
-        # Prepare test cycle
         for invalid_config in invalid_configs:
-            with self.subTest(pattern=invalid_config):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
+            # Prepare check context
+            with self.subTest(invalid_config=invalid_config):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
                     instance.set_new_connection_config(
                         new_config=invalid_config
                     )
 
     # -----------------------------------------------------------------------------------
-    def test_invalid_types_of_param_placeholder_raise_expected_exception_when_initialize(self) -> None:
+    def test_initialization_with_invalid_placeholder_raises_exception(self) -> None:
         # Build
-        expected_exception = InvalidArgumentTypeError
-        invalid_placeholders: Tuple[Any, ...] = (
-            5, False, True, 01.01, ['*'], set('&'), ('$',)
-        )
+        invalid_placeholders: Tuple[Any, ...] = (5, False, True, 1.0, ['*'], set('&'), ('$',))
 
-        # Prepare test cycle
         for invalid_placeholder in invalid_placeholders:
-            with self.subTest(pattern=invalid_placeholder):
-                # Check
-                with self.assertRaises(expected_exception=expected_exception):
-                    # Operate
-                    self.get_instance_of_tested_cls(query_param_placeholder=invalid_placeholder)
+            # Prepare check context
+            with self.subTest(invalid_placeholder=invalid_placeholder):
+                with self.assertRaises(expected_exception=InvalidArgumentTypeError):
+                    # Operate & Check
+                    self.create_instance(
+                        query_param_placeholder=invalid_placeholder
+                    )
 
     # -----------------------------------------------------------------------------------
-    def test_execute_query_methods_behavior_when_connection_is_not_active(self) -> None:
+    def test_execute_query_methods_raise_when_connection_inactive(self) -> None:
         # Build
-        expected_exception = OperationFailedConnectionIsNotActive
-        instance = self.get_instance_of_tested_cls()
-        conn_manager = self.get_instance_of_single_connection_manager()
-        query: str = GeneratingToolKit.generate_random_string()
+        instance: tested_cls = self.create_instance()
+        conn_manager: UM.MagicMock = self.create_mock_connection_manager()
+        query = 'SELECT * FROM test'
 
-        # Prepare instance
         instance.set_new_connection_manager(new_manager=conn_manager)
+        conn_manager.check_connection_status.return_value = False
 
-        # Prepare additional data
-        execute_query_methods: List[str] = [
-            method_name for method_name in SQLQueryInterface.__abstractmethods__
-            if 'execute_query' in method_name
+        execute_methods: List[str] = [
+            'execute_query_no_returns',
+            'execute_query_returns_one',
+            'execute_query_returns_many',
+            'execute_query_returns_all',
         ]
-        execute_methods_count: int = len(execute_query_methods)
 
-        # Prepare check context
-        with UM.patch.object(target=conn_manager,
-                             attribute='check_connection_status') as mock_method_check_connection_status:
-            # Prepare mock
-            mock_method_check_connection_status.return_value = False
+        for method_name in execute_methods:
+            # Prepare check context
+            with self.subTest(method_name=method_name):
+                with self.assertRaises(expected_exception=OperationFailedConnectionIsNotActive):
+                    # Extract
+                    method = getattr(instance, method_name)
 
-            # Prepare test cycle
-            for method_name in execute_query_methods:
-                with self.subTest(pattern=method_name):
-                    # Prepare post_check
-                    with self.assertRaises(expected_exception=expected_exception):
-                        execute_query_method = getattr(instance, method_name)
+                    # Operate & Check
+                    method(query=query)
 
-                        # Operate
-                        execute_query_method(query=query)
-
-            # Check
-            self.assertTrue(
-                expr=(mock_method_check_connection_status.call_count == execute_methods_count)
-            )
-            conn_manager.get_connection.assert_not_called()  # type:ignore
+        # Post-Check
+        self.assertEqual(
+            first=conn_manager.check_connection_status.call_count,
+            second=len(execute_methods)
+        )
+        conn_manager.get_connection.assert_not_called()

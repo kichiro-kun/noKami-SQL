@@ -23,10 +23,14 @@ from unittest import mock as UM
 from unittest import TestCase
 from contextlib import contextmanager
 
-from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_active import TransactionManagerStateActive
-from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_committed import TransactionManagerStateCommitted
-from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_initialized import TransactionManagerStateInitialized
-from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_rolledback import TransactionManagerStateRolledBack
+from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_active \
+    import TransactionManagerStateActive
+from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_committed \
+    import TransactionManagerStateCommitted
+from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_initialized \
+    import TransactionManagerStateInitialized
+from project_code.sql_core.transaction.transaction_manager.states.transaction_manager_state_rolledback \
+    import TransactionManagerStateRolledBack
 from project_code.sql_core.transaction.transaction_manager.transaction_manager \
     import TransactionManager as tested_cls
 from project_code.sql_core.adapters.connection.abstract.connection_interface \

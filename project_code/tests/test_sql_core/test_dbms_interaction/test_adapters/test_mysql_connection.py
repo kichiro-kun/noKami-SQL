@@ -6,438 +6,284 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestMySQLAdapterPositive',
-    'TestMySQLAdapterNegative',
+    'TestMySQLAdapterConnectionInitialization',
+    'TestMySQLAdapterConnectionLifecycle',
+    'TestMySQLAdapterConnectionCursor',
+    'TestMySQLAdapterConnectionTransaction',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Tuple, Dict, Any
+from unittest import TestCase
+from contextlib import contextmanager
 
-from project_code.sql_core.adapters.connection.realizations import mysql_adapter_connection as tested_module
-from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection import MySQLAdapterConnection as connection_adapter
-from project_code.sql_core.adapters.connection.abstract.connection_interface import ConnectionInterface
+import project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection as tested_module
+from project_code.sql_core.adapters.connection.realizations.mysql_adapter_connection \
+    import MySQLAdapterConnection as tested_cls
+from project_code.sql_core.adapters.connection.abstract.connection_interface \
+    import ConnectionInterface
+from project_code.shared.exceptions.common import OperationFailedConnectionIsNotActive
 
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import InspectingToolKit, GeneratingToolKit
+from typing import Any, Dict, Generator, Tuple
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class BaseConnectionTestCase(BaseTestCase[connection_adapter]):
+class BaseMySQLAdapterTest(TestCase):
+    TEST_CONFIG: Dict[str, Any] = {
+        'username': 'test_user',
+        'password': 'test_pass',
+        'database': 'test_db'
+    }
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls._config_keys: Tuple[str, ...] = (
-            'username', 'password', 'database'
+        cls._mysql_connector_patcher: UM._patch = UM.patch.object(
+            target=tested_module,
+            attribute='MySQLConnection',
+            new=UM.MagicMock
         )
-
-        cls._patcher_official_connector = UM.patch.object(
-            target=tested_module, attribute='MySQLConnection', new=UM.MagicMock
-        )
-        cls._mock_mysql_connector: UM.MagicMock = cls._patcher_official_connector.start()
+        cls.mock_mysql_connector: UM.MagicMock = cls._mysql_connector_patcher.start()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def tearDownClass(cls) -> None:
         super().tearDownClass()
-        cls._patcher_official_connector.stop()
+        cls._mysql_connector_patcher.stop()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
         super().setUp()
-
-        self._connector: UM.MagicMock = self.get_new_mock_connector()
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> connection_adapter:
-        return connection_adapter(**kwargs)
+        self.connector: UM.MagicMock = self.create_mock_connector()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_new_connection_config(self) -> Dict[str, Any]:
-        config: Dict[str, Any] = GeneratingToolKit.generate_dict_with_random_string_values(
-            keys=self._config_keys
-        )
-
-        return config
+    def create_instance(self, **kwargs) -> tested_cls:
+        connector = kwargs.pop('connector', self.connector)
+        return tested_cls(connector=connector, **kwargs)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_new_mock_connector(self) -> UM.MagicMock:
-        mock_connector: UM.MagicMock = self._mock_mysql_connector()
+    def create_mock_connector(self) -> UM.MagicMock:
+        return self.mock_mysql_connector()
 
-        return mock_connector
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @contextmanager
+    def patch_is_active(
+        self,
+        instance: tested_cls,
+        is_active: bool
+    ) -> Generator[UM.MagicMock | UM.AsyncMock, Any, None]:
+        with UM.patch.object(
+                target=instance,
+                attribute='is_active',
+                return_value=is_active
+        ) as mock_method:
+            yield mock_method
 
 
 # _______________________________________________________________________________________
-class TestMySQLAdapterPositive(BaseConnectionTestCase):
+class TestMySQLAdapterConnectionInitialization(BaseMySQLAdapterTest):
 
     # -----------------------------------------------------------------------------------
-    def test_check_expected_inherit(self) -> None:
+    def test_instance_implements_connection_interface(self) -> None:
         # Build
-        expected = ConnectionInterface
-
-        # Operate
-        instance = self.get_instance_of_tested_cls(
-            connector=self._connector
-        )
+        instance: tested_cls = self.create_instance()
 
         # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=expected
-        )
+        self.assertIsInstance(obj=instance, cls=ConnectionInterface)
 
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior(self) -> None:
-        # Operate
-        instance = self.get_instance_of_tested_cls(
-            connector=self._connector
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_connect_behavior(self) -> None:
+    def test_constructor_accepts_connector(self) -> None:
         # Build
-        config: Dict[str, Any] = self.get_new_connection_config()
-        connector: UM.MagicMock = self._connector
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Operate
-        op_result: bool = instance.connect(config=config)
+        instance: tested_cls = self.create_instance()
 
         # Check
-        connector.connect.assert_called_once_with(**config)
+        self.assertIsNotNone(obj=instance)
 
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterConnectionLifecycle(BaseMySQLAdapterTest):
 
     # -----------------------------------------------------------------------------------
-    def test_reconnect_behavior_when_connection_is_exists(self) -> None:
+    def test_connect_passes_config_to_connector(self) -> None:
         # Build
-        config: Dict[str, Any] = self.get_new_connection_config()
-        connector: UM.MagicMock = self._connector
+        instance: tested_cls = self.create_instance()
 
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
+        # Operate
+        result: bool = instance.connect(config=self.TEST_CONFIG)
 
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = True
+        # Pre-Check
+        self.assertTrue(expr=result)
 
-            # Pre-Operate
-            op_connect_result: bool = instance.connect(config=config)
+        # Check
+        self.connector.connect.assert_called_once_with(**self.TEST_CONFIG)
 
+    # -----------------------------------------------------------------------------------
+    def test_reconnect_calls_connector_reconnect_when_active(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        # Prepare operate context
+        with self.patch_is_active(instance, is_active=True):
             # Operate
-            op_reconnect_result: bool = instance.reconnect()
+            result: bool = instance.reconnect()
 
-            # Check
-            mock_method_is_active.assert_called_once()
-            connector.reconnect.assert_called_once()
-
-            # Post-Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_True(obj=op_connect_result)
-            )
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_True(obj=op_reconnect_result)
-            )
-
-    # -----------------------------------------------------------------------------------
-    def test_close_behavior_when_connection_is_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = True
-
-            # Operate
-            op_result: bool = instance.close()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            connector.close.assert_called_once()
-
-            # Post-Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_True(obj=op_result)
-            )
-
-    # -----------------------------------------------------------------------------------
-    # Метод is_connected считается устаревшим с 9.3.0
-    def test_is_active_behavior(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-        expected_answer: str = GeneratingToolKit.generate_random_string()
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Prepare mock
-        connector.is_connected.return_value = expected_answer
-
-        # Operate
-        actual_answer: bool = instance.is_active()
+        # Pre-Check
+        self.assertTrue(expr=result)
 
         # Check
-        self.assertEqual(
-            first=actual_answer,
-            second=expected_answer
-        )
+        self.connector.reconnect.assert_called_once()
 
     # -----------------------------------------------------------------------------------
-    def test_ping_behavior_when_not_raise_exception(self) -> None:
+    def test_reconnect_does_not_call_connector_when_inactive(self) -> None:
         # Build
-        connector: UM.MagicMock = self._connector
+        instance: tested_cls = self.create_instance()
 
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Operate
-        op_result: bool = instance.ping()
-
-        # Check
-        connector.ping.assert_called_once_with(reconnect=True)
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_ping_behavior_when_raise_exception(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Prepare mock
-        connector.ping.side_effect = Exception()
-
-        # Operate
-        op_result: bool = instance.ping()
-
-        # Check
-        connector.ping.assert_called_once_with(reconnect=True)
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_get_cursor_behavior_when_connection_is_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Prepare test context
-        with UM.patch.object(target=tested_module,
-                             attribute='MySQLAdapterCursor',
-                             autospec=True) as mock_cursor_adapter:
-            # Build
-            expected_cur = UM.MagicMock()
-
-            # Prepare-Mock
-            mock_cursor_adapter.return_value = expected_cur
-
+        # Prepare operate context
+        with self.patch_is_active(instance, is_active=False):
             # Operate
-            actual_cur = instance.get_cursor()
+            result: bool = instance.reconnect()
 
-            # Pre-Check
-            mock_cursor_adapter.assert_called_once_with(connector=connector)
-
-            # Check
-            self.assertIs(
-                expr1=actual_cur,
-                expr2=expected_cur
-            )
+        self.connector.reconnect.assert_not_called()
+        self.assertFalse(expr=result)
 
     # -----------------------------------------------------------------------------------
-    def test_get_cursor_behavior_pass_placeholder_value(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-        placeholder: str = GeneratingToolKit.generate_random_string()
+    # close
+    # -----------------------------------------------------------------------------------
 
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
+    # -----------------------------------------------------------------------------------
+    def test_close_calls_connector_close_when_active(self) -> None:
+        instance = self.create_instance()
 
-        # Prepare test context
-        with UM.patch.object(target=tested_module,
-                             attribute='MySQLAdapterCursor',
-                             autospec=True) as mock_cursor_adapter:
+        with self.patch_is_active(instance, is_active=True):
+            result = instance.close()
 
-            # Operate
-            instance.get_cursor(
-                special_placeholder=placeholder
-            )
+        self.connector.close.assert_called_once()
+        self.assertTrue(result)
 
-            # Check
-            mock_cursor_adapter.assert_called_once_with(
-                connector=connector,
+    # -----------------------------------------------------------------------------------
+    def test_close_does_not_call_connector_when_inactive(self) -> None:
+        instance = self.create_instance()
+
+        with self.patch_is_active(instance, is_active=False):
+            result = instance.close()
+
+        self.connector.close.assert_not_called()
+        self.assertFalse(result)
+
+    # -----------------------------------------------------------------------------------
+    # is_active
+    # -----------------------------------------------------------------------------------
+
+    # -----------------------------------------------------------------------------------
+    def test_is_active_delegates_to_connector_is_connected(self) -> None:
+        instance = self.create_instance()
+        expected = 'some_value'
+        self.connector.is_connected.return_value = expected
+
+        actual = instance.is_active()
+
+        self.connector.is_connected.assert_called_once()
+        self.assertEqual(actual, expected)
+
+    # -----------------------------------------------------------------------------------
+    # ping
+    # -----------------------------------------------------------------------------------
+
+    # -----------------------------------------------------------------------------------
+    def test_ping_calls_connector_ping_with_reconnect_true(self) -> None:
+        instance = self.create_instance()
+
+        result = instance.ping()
+
+        self.connector.ping.assert_called_once_with(reconnect=True)
+        self.assertTrue(result)
+
+    # -----------------------------------------------------------------------------------
+    def test_ping_returns_false_when_connector_raises_exception(self) -> None:
+        instance = self.create_instance()
+        self.connector.ping.side_effect = Exception()
+
+        result = instance.ping()
+
+        self.connector.ping.assert_called_once_with(reconnect=True)
+        self.assertFalse(result)
+
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterConnectionCursor(BaseMySQLAdapterTest):
+    """Тесты получения курсора."""
+
+    # -----------------------------------------------------------------------------------
+    def test_get_cursor_creates_cursor_with_connector_when_no_placeholder(self) -> None:
+        instance = self.create_instance()
+        expected_cursor = UM.MagicMock()
+
+        with UM.patch.object(
+            target=tested_module,
+            attribute='MySQLAdapterCursor',
+            autospec=True
+        ) as mock_cursor_cls, \
+                self.patch_is_active(instance, is_active=True):
+            mock_cursor_cls.return_value = expected_cursor
+
+            actual_cursor = instance.get_cursor()
+
+            mock_cursor_cls.assert_called_once_with(connector=self.connector)
+            self.assertIs(actual_cursor, expected_cursor)
+
+    # -----------------------------------------------------------------------------------
+    def test_get_cursor_passes_placeholder_to_cursor_constructor(self) -> None:
+        instance = self.create_instance()
+        placeholder = '%'
+
+        with UM.patch.object(
+            target=tested_module,
+            attribute='MySQLAdapterCursor',
+            autospec=True
+        ) as mock_cursor_cls, \
+                self.patch_is_active(instance, is_active=True):
+
+            instance.get_cursor(special_placeholder=placeholder)
+
+            mock_cursor_cls.assert_called_once_with(
+                connector=self.connector,
                 special_placeholder=placeholder
             )
 
     # -----------------------------------------------------------------------------------
-    def test_commit_behavior_when_connection_is_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
+    def test_get_cursor_raises_when_connection_is_inactive(self) -> None:
+        instance = self.create_instance()
 
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=connector, attribute='commit') as mock_method_commit, \
-                UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare Mock
-            mock_method_is_active.return_value = True
-
-            # Operate
-            op_result = instance.commit()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_commit.assert_called_once()
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_True(obj=op_result)
-        )
-
-
-# _______________________________________________________________________________________
-class TestMySQLAdapterNegative(BaseConnectionTestCase):
-
-    # -----------------------------------------------------------------------------------
-    def test_commit_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        op_result = None
-
-        # Prepare check context
-        with UM.patch.object(target=connector, attribute='commit') as mock_method_commit, \
-                UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare Mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            op_result = instance.commit()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            mock_method_commit.assert_not_called()
-
-        # Post-Check
-        self.assertTrue(
-            expr=InspectingToolKit.is_boolean_False(obj=op_result)
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_get_cursor_behavior_when_connection_is_not_exists(self) -> None:
-        from project_code.shared.exceptions.common import OperationFailedConnectionIsNotActive
-
-        # Build
-        connector: UM.MagicMock = self._connector
-        expected_exception = OperationFailedConnectionIsNotActive
-
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
-
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Prepare check context
-            with self.assertRaises(expected_exception=expected_exception):
-                # Operate
+        with self.patch_is_active(instance, is_active=False):
+            with self.assertRaises(OperationFailedConnectionIsNotActive):
                 instance.get_cursor()
 
-            # Post-Check
-            mock_method_is_active.assert_called_once()
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterConnectionTransaction(BaseMySQLAdapterTest):
+    """Тесты транзакционных операций: commit."""
 
     # -----------------------------------------------------------------------------------
-    def test_close_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
+    def test_commit_calls_connector_commit_when_active(self) -> None:
+        instance = self.create_instance()
 
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
+        with self.patch_is_active(instance, is_active=True):
+            result = instance.commit()
 
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            op_result: bool = instance.close()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            connector.close.assert_not_called()
-
-            # Post-Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_False(obj=op_result)
-            )
+        self.connector.commit.assert_called_once()
+        self.assertTrue(result)
 
     # -----------------------------------------------------------------------------------
-    def test_reconnect_behavior_when_connection_is_not_exists(self) -> None:
-        # Build
-        connector: UM.MagicMock = self._connector
+    def test_commit_does_not_call_connector_when_inactive(self) -> None:
+        instance = self.create_instance()
 
-        instance = self.get_instance_of_tested_cls(
-            connector=connector
-        )
+        with self.patch_is_active(instance, is_active=False):
+            result = instance.commit()
 
-        # Prepare check context
-        with UM.patch.object(target=instance, attribute='is_active') as mock_method_is_active:
-            # Prepare mock
-            mock_method_is_active.return_value = False
-
-            # Operate
-            op_result: bool = instance.reconnect()
-
-            # Check
-            mock_method_is_active.assert_called_once()
-            connector.reconnect.assert_not_called()
-
-            # Post-Check
-            self.assertTrue(
-                expr=InspectingToolKit.is_boolean_False(obj=op_result)
-            )
+        self.connector.commit.assert_not_called()
+        self.assertFalse(result)

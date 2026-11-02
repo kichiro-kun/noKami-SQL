@@ -118,5 +118,5 @@ class MySQLAdapterConnection(ConnectionInterface):
 
     # -----------------------------------------------------------------------------------
     def rollback(self) -> bool:
-        # Реализовать метод rollback для отката
+        # TODO: Реализовать метод rollback для отката
         pass

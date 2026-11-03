@@ -1,400 +1,314 @@
 # -*- coding: utf-8 -*-
 
 """
+Test Case
+
 Copyright 2025 kichiro-kun (Kei)
 Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'TestMySQLAdapterPositive',
+    'TestMySQLAdapterCursorInitialization',
+    'TestMySQLAdapterCursorExecute',
+    'TestMySQLAdapterCursorFetch',
+    'TestMySQLAdapterCursorClose',
+    'TestMySQLAdapterCursorPlaceholder',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # ========================================================================================
 from unittest import mock as UM
-from typing import Any, List, Sequence, Tuple
-
+from unittest import TestCase
 from mysql.connector import MySQLConnection
+from typing import Any, List, LiteralString, Sequence, Tuple
 
+import project_code.sql_core.adapters.cursor.realizations.mysql_adapter_cursor as tested_module
 from project_code.sql_core.adapters.cursor.realizations.mysql_adapter_cursor \
     import MySQLAdapterCursor as tested_cls
-from project_code.sql_core.adapters.cursor.abstract.cursor_interface \
-    import CursorInterface
-
-from project_code.tests.utils.base_test_case_cls import BaseTestCase
-from project_code.tests.utils.toolkit import GeneratingToolKit
-
+from project_code.sql_core.adapters.cursor.abstract.cursor_interface import CursorInterface
 from project_code.shared.constants.global_configuration import MYSQL_QUERY_PLACEHOLDER
 
 
-# _______________________________________________________________________________________
-class TestMySQLAdapterPositive(BaseTestCase):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class BaseMySQLCursorTest(TestCase):
+    TEST_QUERY: str = 'INSERT INTO users (name, email) VALUES (?, ?)'
+    TEST_PARAMS: Tuple[Any, ...] = ('Kei', 'kei@example.com')
+    TEST_DATA: Tuple[Tuple[str, str], ...] = (
+        ('Alice', 'alice@example.com'),
+        ('Bob', 'bob@example.com'),
+        ('Charlie', 'charlie@example.com'),
+    )
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls._default_query_placeholder = MYSQL_QUERY_PLACEHOLDER
+
+        cls._mysql_cursor_patcher: UM._patch = UM.patch.object(
+            target=tested_module,
+            attribute='MySQLCursor',
+            new=UM.MagicMock
+        )
+        cls.mock_mysql_cursor_cls: UM.MagicMock = cls._mysql_cursor_patcher.start()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().tearDownClass()
+
+        cls._mysql_cursor_patcher.stop()
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def setUp(self) -> None:
         super().setUp()
 
-        # Create test elements
-        self._current_connection: UM.MagicMock = self.__get_mock_connection()
-        self._current_cursor: UM.MagicMock = self.__get_mock_cursor()
-
-        # Setup connection
-        self._current_connection.cursor.return_value = self._current_cursor
+        self.connector: UM.MagicMock = self.create_mock_connector()
+        self.cursor: UM.MagicMock = self.create_mock_cursor()
+        self.connector.cursor.return_value = self.cursor
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def __get_mock_connection(self) -> UM.MagicMock:
+    def create_instance(self, **kwargs) -> tested_cls:
+        connector = kwargs.pop('connector', self.connector)
+        return tested_cls(connector=connector, **kwargs)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def create_mock_connector(self) -> UM.MagicMock:
         return UM.MagicMock(autospec=MySQLConnection)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def __get_mock_cursor(self) -> UM.MagicMock:
+    def create_mock_cursor(self) -> UM.MagicMock:
         return UM.MagicMock()
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def get_instance_of_tested_cls(self, **kwargs) -> tested_cls:
-        return tested_cls(**kwargs)
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterCursorInitialization(BaseMySQLCursorTest):
 
     # -----------------------------------------------------------------------------------
-    def test_check_expected_inherit(self) -> None:
+    def test_instance_implements_cursor_interface(self) -> None:
         # Build
-        expected = CursorInterface
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=self._current_connection
-        )
+        instance: tested_cls = self.create_instance()
 
         # Check
-        self.assertIsInstance(
-            obj=instance,
-            cls=expected
-        )
+        self.assertIsInstance(obj=instance, cls=CursorInterface)
 
     # -----------------------------------------------------------------------------------
-    def test_constructor_behavior_when_not_pass_special_placeholder(self) -> None:
+    def test_constructor_creates_underlying_cursor_via_connector(self) -> None:
         # Build
-        expected_connection: UM.MagicMock = self._current_connection
+        self.create_instance()
+
+        # Check
+        self.connector.cursor.assert_called_once()
+
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterCursorExecute(BaseMySQLCursorTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_replaces_placeholder_and_delegates_to_underlying_cursor(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        processed_query = 'PROCESSED_QUERY'
+
+        # Prepare check context
+        with UM.patch.object(
+            target=instance, attribute='_replace_placeholder_to_dbms_default',
+            return_value=processed_query
+        ) as mock_replace:
+            # Operate
+            instance.execute(*self.TEST_PARAMS, query=self.TEST_QUERY)
+
+            # Pre-Check
+            mock_replace.assert_called_once_with(query=self.TEST_QUERY)
+
+            # Check
+            self.cursor.execute.assert_called_once_with(
+                operation=processed_query,
+                params=self.TEST_PARAMS
+            )
+
+    # -----------------------------------------------------------------------------------
+    def test_execute_passes_empty_params_when_no_params_supplied(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+
+        # Prepare check context
+        with UM.patch.object(
+            target=instance, attribute='_replace_placeholder_to_dbms_default',
+            return_value=self.TEST_QUERY
+        ) as mock_replace:
+            # Operate
+            instance.execute(query=self.TEST_QUERY)
+
+            # Pre-Check
+            mock_replace.assert_called_once_with(query=self.TEST_QUERY)
+
+            # Check
+            self.cursor.execute.assert_called_once_with(
+                operation=self.TEST_QUERY,
+                params=()
+            )
+
+    # -----------------------------------------------------------------------------------
+    def test_executemany_replaces_placeholder_and_delegates_to_underlying_cursor(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        processed_query = 'PROCESSED_QUERY'
+
+        # Prepare check context
+        with UM.patch.object(
+            target=instance, attribute='_replace_placeholder_to_dbms_default',
+            return_value=processed_query
+        ) as mock_replace:
+            # Operate
+            instance.executemany(query=self.TEST_QUERY, data=self.TEST_DATA)
+
+            # Pre-Check
+            mock_replace.assert_called_once_with(query=self.TEST_QUERY)
+
+            # Check
+            self.cursor.executemany.assert_called_once_with(
+                operation=processed_query,
+                seq_params=self.TEST_DATA
+            )
+
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterCursorFetch(BaseMySQLCursorTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_fetchone_returns_result_from_underlying_cursor(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
+        expected_data = ('value1', 'value2')
+        self.cursor.fetchone.return_value = expected_data
 
         # Operate
-        instance = self.get_instance_of_tested_cls(
-            connector=expected_connection
-        )
+        result = instance.fetchone()
+
+        # Pre-Check
+        self.cursor.fetchone.assert_called_once()
 
         # Check
-        expected_connection.cursor.assert_called_once()
+        self.assertEqual(first=result, second=expected_data)
 
     # -----------------------------------------------------------------------------------
-    def test_method_execute_behavior(self) -> None:
-        # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
+    def test_fetchmany_uses_default_size_of_one_when_count_not_specified(self) -> None:
+        instance: tested_cls = self.create_instance()
+        expected_data: List[Tuple] = [('value1',)]
+        self.cursor.fetchmany.return_value = expected_data
 
-        raw_query: str = GeneratingToolKit.generate_random_string()
-        expected_params: Tuple[Any] = tuple(
-            GeneratingToolKit.generate_list_of_basic_python_types()
-        )
+        # Operate
+        result: Sequence = instance.fetchmany()
 
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
+        # Pre-Check
+        self.cursor.fetchmany.assert_called_once_with(size=1)
 
-        # Prepare test context
-        with UM.patch.object(target=instance,
-                             attribute='_replace_placeholder_to_dbms_default'
-                             ) as mock_method_replace_placeholder_to_dbms_default:
-            # Prepare data
-            expected_query: str = raw_query + '!'
-
-            # Prepare mock
-            mock_method_replace_placeholder_to_dbms_default.return_value = expected_query
-
-            # Operate
-            instance.execute(
-                query=raw_query,
-                *expected_params
-            )
-
-            # Pre-check
-            mock_method_replace_placeholder_to_dbms_default.assert_called_once_with(
-                query=raw_query
-            )
-
-            # Check
-            expected_cursor.execute.assert_called_with(
-                operation=expected_query,
-                params=expected_params
-            )
+        # Check
+        self.assertEqual(first=result, second=expected_data)
 
     # -----------------------------------------------------------------------------------
-    def test_method_executemany_behavior(self) -> None:
+    def test_fetchmany_passes_explicit_count_to_underlying_cursor(self) -> None:
         # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
+        instance: tested_cls = self.create_instance()
+        expected_data: List[Tuple] = [('v1',), ('v2',), ('v3',)]
+        self.cursor.fetchmany.return_value = expected_data
 
-        raw_query: str = GeneratingToolKit.generate_random_string()
-        expected_data: List[Any] = [
-            tuple(GeneratingToolKit.generate_random_string() for _ in range(3))
-            for _ in range(4)
-        ]
+        # Operate
+        result: Sequence = instance.fetchmany(count=3)
 
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
+        # Pre-Check
+        self.cursor.fetchmany.assert_called_once_with(size=3)
 
-        # Prepare test context
-        with UM.patch.object(target=instance,
-                             attribute='_replace_placeholder_to_dbms_default'
-                             ) as mock_method_replace_placeholder_to_dbms_default:
-            # Prepare data
-            expected_query: str = raw_query + '!'
-
-            # Prepare mock
-            mock_method_replace_placeholder_to_dbms_default.return_value = expected_query
-
-            # Operate
-            instance.executemany(
-                query=raw_query,
-                data=expected_data
-            )
-
-            # Pre-check
-            mock_method_replace_placeholder_to_dbms_default.assert_called_with(
-                query=raw_query
-            )
-
-            # Check
-            expected_cursor.executemany.assert_called_with(
-                operation=expected_query,
-                seq_params=expected_data
-            )
+        # Check
+        self.assertEqual(first=result, second=expected_data)
 
     # -----------------------------------------------------------------------------------
-    def test_method_close_behavior(self) -> None:
+    def test_fetchall_returns_result_from_underlying_cursor(self) -> None:
         # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
+        instance: tested_cls = self.create_instance()
+        expected_data: List[Tuple] = [('v1',), ('v2',), ('v3',)]
+        self.cursor.fetchall.return_value = expected_data
 
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
+        # Operate
+        result: Sequence = instance.fetchall()
+
+        # Pre-Check
+        self.cursor.fetchall.assert_called_once()
+
+        # Check
+        self.assertEqual(first=result, second=expected_data)
+
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterCursorClose(BaseMySQLCursorTest):
+
+    # -----------------------------------------------------------------------------------
+    def test_close_delegates_to_underlying_cursor(self) -> None:
+        # Build
+        instance: tested_cls = self.create_instance()
 
         # Operate
         instance.close()
 
         # Check
-        expected_cursor.close.assert_called_once()
+        self.cursor.close.assert_called_once()
+
+
+# _______________________________________________________________________________________
+class TestMySQLAdapterCursorPlaceholder(BaseMySQLCursorTest):
 
     # -----------------------------------------------------------------------------------
-    def test_method_fetchone_behavior(self) -> None:
+    def test_get_default_placeholder_returns_mysql_placeholder_constant(self) -> None:
         # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
-
-        # Prepare data
-        fetched_data: List[str] = list(
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare mock
-        expected_cursor.fetchone.return_value = fetched_data
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
+        instance: tested_cls = self.create_instance()
 
         # Operate
-        op_result = instance.fetchone()
-
-        # Pre-Check
-        expected_cursor.fetchone.assert_called_once()
+        result: str = instance.get_default_placeholder()
 
         # Check
-        self.assertEqual(
-            first=op_result,
-            second=fetched_data
-        )
+        self.assertEqual(first=result, second=MYSQL_QUERY_PLACEHOLDER)
 
     # -----------------------------------------------------------------------------------
-    def test_method_fetchmany_behavior(self) -> None:
-        from random import randint
-
+    def test_replace_placeholder_returns_query_unchanged_when_no_special_placeholder_set(self) -> None:
         # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
-
-        # Prepare data
-        max_count: int = randint(3, 15)
-        fetched_data: List[str] = list(
-            GeneratingToolKit.generate_random_string(length=max_count)
-        )
-
-        # Prepare mock
-        expected_cursor.fetchmany.return_value = fetched_data
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
-
-        # Operate & Pre-check
-        result_count_none = instance.fetchmany()
-        expected_cursor.fetchmany.assert_called_with(size=1)
-
-        # Operate & Pre-check
-        result_count_one = instance.fetchmany(count=1)
-        expected_cursor.fetchmany.assert_called_with(size=1)
-
-        # Operate & Pre-check
-        result_count_all = instance.fetchmany(count=max_count)
-        expected_cursor.fetchmany.assert_called_with(size=max_count)
-
-        # Prepare test data
-        op_results: Tuple[Sequence, ...] = (
-            result_count_none,
-            result_count_one,
-            result_count_all
-        )
-
-        # Check
-        for op_result in op_results:
-            self.assertEqual(
-                first=op_result,
-                second=fetched_data
-            )
-
-    # -----------------------------------------------------------------------------------
-    def test_method_fetchall_behavior(self) -> None:
-        # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
-
-        # Prepare data
-        fetched_data: List[str] = list(
-            GeneratingToolKit.generate_random_string()
-        )
-
-        # Prepare mock
-        expected_cursor.fetchall.return_value = fetched_data
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
+        instance: tested_cls = self.create_instance()
+        raw_query = 'SELECT * FROM users WHERE id = ?'
 
         # Operate
-        op_result = instance.fetchall()
-
-        # Pre-Check
-        expected_cursor.fetchall.assert_called_once()
+        result: str = instance._replace_placeholder_to_dbms_default(query=raw_query)
 
         # Check
-        self.assertEqual(
-            first=op_result,
-            second=fetched_data
-        )
+        self.assertEqual(first=result, second=raw_query)
 
     # -----------------------------------------------------------------------------------
-    def test_method_replace_placeholder_to_dbms_default_behavior_calls(self) -> None:
+    def test_replace_placeholder_substitutes_special_placeholder_with_default(self) -> None:
         # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
-
-        # Prepare data
-        raw_query: str = GeneratingToolKit.generate_random_string()
-        expected_placeholder: str = GeneratingToolKit.generate_random_string(length=2)
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn, special_placeholder=expected_placeholder
-        )
-
-        # Prepare test context
-        with UM.patch.object(target=instance,
-                             attribute='_replace_placeholder_to_dbms_default',
-                             autospec=True) as mock_method__replace_placeholder_to_dbms_default:
-            # Prepare data
-            expected_query: str = GeneratingToolKit.generate_random_string()
-
-            # Post check
-            self.assertNotEqual(
-                first=raw_query,
-                second=expected_query,
-                msg='Failed! Test data is incorrect!'
-            )
-
-            # Prepare mock
-            mock_method__replace_placeholder_to_dbms_default.return_value = expected_query
-
-            # Operate
-            instance.execute(query=raw_query)
-
-            # Check
-            mock_method__replace_placeholder_to_dbms_default.assert_called_once_with(
-                query=raw_query
-            )
-
-            # Post-check
-            expected_cursor.execute.assert_called_once_with(
-                operation=expected_query,
-                params=()
-            )
-
-    # -----------------------------------------------------------------------------------
-    def test_method_replace_placeholder_to_dbms_default_behavior(self) -> None:
-        # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_cursor: UM.MagicMock = self._current_cursor
         special_placeholder = '?'
-        expected_placeholder: str = self._default_query_placeholder
-        query_string_base: str = 'INSERT INTO berry (title) VALUES '
+        instance: tested_cls = self.create_instance(special_placeholder=special_placeholder)
+        raw_query = 'INSERT INTO berry (title) VALUES (?)'
+        expected_query: LiteralString = f'INSERT INTO berry (title) VALUES ({MYSQL_QUERY_PLACEHOLDER})'
 
-        # Prepare data
-        raw_query: str = query_string_base + f'({special_placeholder})'
+        # Operate
+        result: str = instance._replace_placeholder_to_dbms_default(query=raw_query)
 
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn,
-            special_placeholder=special_placeholder
-        )
+        # Check
+        self.assertEqual(first=result, second=expected_query)
 
-        # Prepare data
-        expected_query: str = query_string_base + f'({expected_placeholder})'
+    # -----------------------------------------------------------------------------------
+    def test_execute_integration_replaces_special_placeholder_in_real_flow(self) -> None:
+        # Build
+        special_placeholder = '?'
+        instance: tested_cls = self.create_instance(special_placeholder=special_placeholder)
+        raw_query = 'INSERT INTO berry (title) VALUES (?)'
+        expected_query: LiteralString = f'INSERT INTO berry (title) VALUES ({MYSQL_QUERY_PLACEHOLDER})'
 
         # Operate
         instance.execute(query=raw_query)
 
         # Check
-        expected_cursor.execute.assert_called_once_with(
+        self.cursor.execute.assert_called_once_with(
             operation=expected_query,
             params=()
-        )
-
-    # -----------------------------------------------------------------------------------
-    def test_method_get_default_placeholder_behavior(self) -> None:
-        # Build
-        conn: UM.MagicMock = self._current_connection
-        expected_placeholder: str = self._default_query_placeholder
-
-        # Prepare instance
-        instance = self.get_instance_of_tested_cls(
-            connector=conn
-        )
-
-        # Operate & Extract
-        actual_placeholder = instance.get_default_placeholder()
-
-        # Check
-        self.assertEqual(
-            first=actual_placeholder,
-            second=expected_placeholder
         )

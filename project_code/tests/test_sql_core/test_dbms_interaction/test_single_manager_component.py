@@ -124,7 +124,7 @@ class TestSingleConnectionManagerSetAdapter(BaseSingleConnectionManagerTest):
         new_adapter: UM.MagicMock = self.create_mock_adapter()
         instance._SingleConnectionManager__perform_adapter.is_active.return_value = False  # type:ignore
 
-        # OPerate
+        # Operate
         result: bool = instance.set_new_adapter(new_adapter=new_adapter)
 
         # CHeck

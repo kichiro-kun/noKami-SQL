@@ -6,19 +6,15 @@ Apache license, version 2.0 (Apache-2.0 license)
 """
 
 __all__: list[str] = [
-    'BaseTestCase'
+    'BaseTestCase',
 ]
 
 __author__ = 'kichiro-kun (Kei)'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
-# =======================================================================================
+
+# ========================================================================================
 from unittest import TestCase
-
-from mysql.connector import MySQLConnection
-
-from project_code.tests.global_testing_config import DB_CONFIG
-
 from typing import Tuple
 
 
@@ -26,7 +22,7 @@ from typing import Tuple
 class BaseTestCase(TestCase):
     # Main Test Table infrastructure
     table_name: str = "test"
-    expected_row_structure: Tuple = ('id', 'title', 'description', 'cost')
+    expected_row_structure: Tuple[str, ...] = ('id', 'title', 'description', 'cost')
     expected_table_row_count: int = 15
 
     # Useful queries

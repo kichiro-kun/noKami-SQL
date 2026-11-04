@@ -18,8 +18,6 @@ from typing import List, Type
 
 from project_code.shared.exceptions import *
 
-from project_code.tests.utils.toolkit import GeneratingToolKit
-
 
 # _______________________________________________________________________________________
 class TestExceptionList(TestCase):
@@ -45,7 +43,7 @@ class TestExceptionList(TestCase):
         for exception in exceptions:
             with self.subTest(pattern=exception):
                 # Build
-                expected_msg: str = GeneratingToolKit.generate_random_string()
+                expected_msg: str = "w34o85BNWN234bjo8my"
 
                 # Operate
                 try:
